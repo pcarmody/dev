@@ -2,6 +2,11 @@ from PIL import Image
 from PIL import ImageDraw
 import datetime
 import json
+import sys
+
+month = sys.argv[1]
+day = sys.argv[2]
+year = sys.argv[3]
 
 window_size = 400
 
@@ -45,40 +50,34 @@ def draw_halves(size, rise_angle, set_angle, day_color, night_color):
 
 ring_number = 0
 
-repeat = 53
-
 today = datetime.date.today()
-birthday = datetime.date(1962, 11, 14)
+birthday = datetime.date(int(year), int(month), int(day)) #(1973, 7, 14)
 days_alive = today - birthday
 
 def draw_circle(level, repeat, day_color, night_color):
-  first_mod = days_alive.days % repeat
-  half_repeat = repeat / 2
-  if(first_mod / half_repeat > 0):
-      mod = first_mod % half_repeat
-  else:
-      mod = -1 * first_mod % half_repeat
-  degrees = mod * 360 / half_repeat
-  
-  if(degrees < 0):
-    moon = draw_halves(ring_size(level), degrees, 0, day_color, night_color)
-  else:   
+  half_repeat = repeat / 2 
+  days = days_alive.days - half_repeat
+  first_mod = days % repeat
+  degrees = (first_mod - half_repeat) * 360 / half_repeat
+  if(degrees > 0):
     moon = draw_halves(ring_size(level), 0, degrees, day_color, night_color)
-
+  else:
+    moon = draw_halves(ring_size(level), 0, degrees, night_color, day_color)
   return moon
 
-day_color = (255,255,255,255)
-night_color = (255,255,255,127)
+day_color = (0, 255,0,255)
+#night_color = (0,255,0,127)
+night_color = (0,0,0,0)
 moon = draw_circle(0, 23, day_color, night_color)
 image.paste(moon, ring_shape(0), moon)
 
 day_color = (255,0,0,255)
-night_color = (255,0,0,127)
+#night_color = (255,0,0,127)
 nest = draw_circle(1, 28, day_color, night_color)
 image.paste(nest, ring_shape(1), nest)
 
-day_color = (0, 255,0,255)
-night_color = (0,255,0,127)
+day_color = (0,0,255,255)
+#night_color = (0,0,255,127)
 nest = draw_circle(2, 33, day_color, night_color)
 image.paste(nest, ring_shape(2), nest)
 

@@ -136,59 +136,59 @@ first_low_time = convert_time_to_minutes(tmp[0], tmp[1], tmp[2])#(4, 10, 'AM')
 tmp = parse_tidal_time(tides[now.day]['Low_2_Time'])
 second_low_time = convert_time_to_minutes(tmp[0], tmp[1], tmp[2])#(4, 39, 'PM')
 
-def draw_quad(first, second, second_time, tide_color):
-  tide = draw_tide_quad(tide_space, first, second, tide_color)
+half_day = convert_time_to_minutes(11, 59, 'am')
+delta_high = (second_high_time - first_high_time - half_day) / 2
+delta_low = (second_low_time - first_low_time - half_day) / 2
+
+def draw_quad(first, second, second_time, delta, tide_color):
+  size = tide_space
+  color = tide_color
+  image = Image.new('RGBA', (size, size), (0,0,0,0))
+  draw = ImageDraw.Draw(image)
+  length = size*second/100
+  height = size*first/100
+  x_dist = (size-length)/2
+  y_dist = (size-height)/2
+  delta_degrees = -360 * delta / min_per_day
+  draw.pieslice((x_dist, y_dist, size-x_dist, size-y_dist), 0, 90+delta_degrees, color, 'black')
+  tide = image
+  #tide = draw_tide_quad(tide_space, first, second, tide_color)
   rotation_factor = -360*second_time/min_per_day
   tide1 = tide.rotate(rotation_factor)
   return tide1
+#def draw_quad(first, second, second_time, tide_color):
+#  tide = draw_tide_quad(tide_space, first, second, tide_color)
+#  rotation_factor = -360*second_time/min_per_day
+#  tide1 = tide.rotate(rotation_factor)
+#  return tide1
 
 # construct each tidal wedge and paste 
 
 if(first_high_time > first_low_time):  #  build counter clockwise
   tide_color = (0, 0, 0, 200)
-  tide1 = draw_quad(first_high, first_low, first_low_time, tide_color)
+  tide1 = draw_quad(first_high, first_low, first_low_time, delta_low, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(first_low, second_high, second_high_time, tide_color)
+  tide1 = draw_quad(first_low, second_high, second_high_time, delta_high, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(second_high, second_low, second_low_time, tide_color)
+  tide1 = draw_quad(second_high, second_low, second_low_time+delta_low*2, -delta_high, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(second_low, first_high, first_high_time, tide_color)
+  tide1 = draw_quad(second_low, first_high, first_high_time, -delta_low*2, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
 else:
-  tide1 = draw_quad(first_low, first_high, first_high_time, tide_color)
+  tide1 = draw_quad(first_low, first_high, first_high_time, 0, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(first_high, second_low, second_low_time, tide_color)
+  tide1 = draw_quad(first_high, second_low, second_low_time, 0, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(second_low, second_high, second_high_time, tide_color)
+  tide1 = draw_quad(second_low, second_high, second_high_time, 0, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(second_high, first_low, first_low_time, tide_color)
+  tide1 = draw_quad(second_high, first_low, first_low_time, 0, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
-
-#tide = draw_tide_quad(tide_space, first_low, first_high, tide_color)
-#first_high_rotation_factor = -360*first_high_time/min_per_day
-#tide1 = tide.rotate(first_high_rotation_factor)
-#image.paste(tide1, high_tidal_ring, tide1)
-
-#tide = draw_tide_quad(tide_space, first_high, second_low, tide_color)
-#first_low_rotation_factor = -360*second_low_time/min_per_day
-#tide1 = tide.rotate(first_low_rotation_factor)
-#image.paste(tide1, high_tidal_ring, tide1)
-#
-#tide = draw_tide_quad(tide_space, second_low, second_high, tide_color)
-#second_high_rotation_factor = -360*second_high_time/min_per_day
-#tide1 = tide.rotate(second_high_rotation_factor)
-#image.paste(tide1, high_tidal_ring, tide1)
-#
-#tide = draw_tide_quad(tide_space, second_high, first_low, tide_color)
-#second_low_rotation_factor = -360*first_low_time/min_per_day
-#tide1 = tide.rotate(second_low_rotation_factor)
-#image.paste(tide1, high_tidal_ring, tide1)
 
 # rotate the entire image based on the current time.
 current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')

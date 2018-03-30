@@ -1,22 +1,23 @@
 from PIL import Image
 from PIL import ImageDraw
+from PIL import ImageColor
 import datetime
 import json
+from os.path import expanduser
+home = expanduser("~")
 
-month = 5
-day = 6
-year = 63
-window_size = 400
+window_size = 800
+ring_width = 20
 
 image = Image.new('RGBA',(window_size,window_size),(0,0,0,0))
 draw = ImageDraw.Draw(image)
 
 def ring_size(level):
-  percentage = window_size * 20/100
+  percentage = window_size * ring_width/100
   return window_size - (level * percentage)
 
 def ring_disp(level):
-  percentage = window_size * 10/100
+  percentage = window_size * (ring_width/2)/100
   return level * percentage
 
 def ring_shape(level):
@@ -44,13 +45,14 @@ def convert_time_to_minutes(hours, minutes, am):
     hours = hours + 12
   return hours * 60 + minutes
 
-def draw_halves(size, moon_rise, moon_set, day_color, night_color):
+def draw_halves(size, moon_rise, moon_set, day_color):
   image = Image.new('RGBA', (size, size), (0,0,0,0))
   draw = ImageDraw.Draw(image)
   rise_angle = 360 * moon_rise / min_per_day
   set_angle = 360 * moon_set / min_per_day
-  draw.pieslice((0,0,size, size), rise_angle, set_angle, day_color, 'black')
+  night_color = (day_color[0]/4, day_color[1]/4, day_color[2]/4)
   draw.pieslice((0,0,size, size), set_angle, rise_angle, night_color, 'black')
+  draw.pieslice((0,0,size, size), rise_angle, set_angle, day_color, 'black')
   return image
 
 def draw_tide_quad(size, low_height, high_height, color):
@@ -75,7 +77,7 @@ def relative_tide_position(feet):
 # retrieve the sun and moon data
 #
 
-sun_moon_file = open('/home/paul/bin/data/sunmoon_201803')
+sun_moon_file = open(home+'/bin/data/sunmoon_201803')
 sun_moon = json.load(sun_moon_file)
 sun_moon_file.close()
 
@@ -91,7 +93,8 @@ moon_rise = convert_time_to_minutes(int(moon_rise[0]), int(moon_rise[1]), moon_r
 moon_set = sun_moon[now.day]['MoonSet'][0].split(':')
 moon_set_am = sun_moon[now.day]['MoonSet'][1]
 moon_set = convert_time_to_minutes(int(moon_set[0]), int(moon_set[1]), moon_set_am)
-moon = draw_halves(moon_space, moon_rise, moon_set, 'white', 'black')
+moon_color = ImageColor.getrgb('white')
+moon = draw_halves(moon_space, moon_rise, moon_set, moon_color)
 image.paste(moon, ring_shape(0), moon)
 
 sun_rise = sun_moon[now.day]['SunRise'][0].split(':')
@@ -100,7 +103,8 @@ sun_rise = convert_time_to_minutes(int(sun_rise[0]), int(sun_rise[1]), sun_rise_
 sun_set = sun_moon[now.day]['SunSet'][0].split(':')
 sun_set_am = sun_moon[now.day]['SunSet'][1]
 sun_set = convert_time_to_minutes(int(sun_set[0]), int(sun_set[1]), sun_set_am)
-sun = draw_halves(sun_space, sun_rise, sun_set, 'yellow', 'brown')
+sun_color = ImageColor.getrgb('yellow')
+sun = draw_halves(sun_space, sun_rise, sun_set, sun_color)
 image.paste(sun, ring_shape(1), sun)
 
 # draw the tidal background
@@ -111,7 +115,7 @@ low_tide = draw.ellipse(low_tidal_ring,'red','blue')
 lowest_tide = draw.ellipse(ring_shape(4),'black','blue')
 
 # retrieve tidal information
-tides_file = open('/home/paul/bin/data/tides_201803')
+tides_file = open(home+'/bin/data/tides_201803')
 tides = json.load(tides_file)
 tides_file.close()
 
@@ -192,4 +196,7 @@ else:
 
 # rotate the entire image based on the current time.
 current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
-image.rotate(360*current_time/min_per_day + 90).show()
+image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
+xxx = image.rotate(360*current_time/min_per_day + 90)
+image2.paste(xxx,ring_shape(0),xxx)
+image2.show()

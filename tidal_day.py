@@ -42,7 +42,10 @@ def convert_time_to_minutes(hours, minutes, am):
     if(hours == 12):
       hours = 0
   else:
-    hours = hours + 12
+    if(hours != 12):
+      hours = hours + 12
+    else:
+      hours = 0
   return hours * 60 + minutes
 
 def draw_halves(size, moon_rise, moon_set, day_color):
@@ -158,61 +161,57 @@ def draw_quad(first, second, second_time, delta, tide_color):
   height = size*first/100
   x_dist = (size-length)/2
   y_dist = (size-height)/2
-  delta_degrees = -360 * delta / min_per_day
+  delta_degrees = 360 * delta / min_per_day
   draw.pieslice((x_dist, y_dist, size-x_dist, size-y_dist), 0, 90+delta_degrees, color, 'black')
   tide = image
-  #tide = draw_tide_quad(tide_space, first, second, tide_color)
   rotation_factor = -360*second_time/min_per_day
   tide1 = tide.rotate(rotation_factor)
   return tide1
-#def draw_quad(first, second, second_time, tide_color):
-#  tide = draw_tide_quad(tide_space, first, second, tide_color)
-#  rotation_factor = -360*second_time/min_per_day
-#  tide1 = tide.rotate(rotation_factor)
-#  return tide1
 
 # construct each tidal wedge and paste 
 
 if(first_high_time > first_low_time):  #  build counter clockwise
-  print "first path"
+  print "first path "+str(delta_low)+" "+str(delta_high)
   tide_color = (0, 0, 0, 200)
-  tide1 = draw_quad(first_high, first_low, first_low_time, delta_low, tide_color)
+  tide1 = draw_quad(first_high, first_low, first_low_time, delta_low, (0,0,0,200))
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(first_low, second_high, second_high_time, delta_high, tide_color)
+  tide1 = draw_quad(first_low, second_high, second_high_time+delta_low, 0, (0,0,0,200))
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(second_high, second_low, second_low_time+delta_low*2, -delta_high, tide_color)
+  tide1 = draw_quad(second_high, second_low, second_low_time+delta_high, delta_low, (0,0,0,200))
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(second_low, first_high, first_high_time, -delta_low*2, tide_color)
+  tide1 = draw_quad(second_low, first_high, first_high_time+delta_high, delta_high, (0,0,0,200))
   image.paste(tide1, high_tidal_ring, tide1)
 else:
-  print "second path"
+  print "second path "+str(delta_low)+" "+str(delta_high)
   tide_color = (0, 0, 0, 200)
   tide1 = draw_quad(first_low, first_high, first_high_time+delta_high, delta_low, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(first_high, second_low, second_low_time, delta_low, tide_color)
+  tide1 = draw_quad(first_high, second_low, second_low_time+delta_low, delta_high, tide_color)
+  image.paste(tide1, high_tidal_ring, tide1) 
+
+  tide1 = draw_quad(second_low, second_high, second_high_time+delta_low, delta_low, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(second_low, second_high, second_high_time-delta_high*2, -delta_high, tide_color)
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_quad(second_high, first_low, first_low_time-delta_high, -delta_high, tide_color)
+  tide1 = draw_quad(second_high, first_low, first_low_time+delta_high, delta_low, tide_color)
   image.paste(tide1, high_tidal_ring, tide1)
 
 def add_lines(beg, end):
   image3 = Image.new('RGBA',(window_size,window_size),(0,0,0,0))
   draw3 = ImageDraw.Draw(image3)
   non_color = (0, 0, 0, 0)
-  line_color = (0, 0, 0, 100)
+  line_color = (0, 0, 0, 50)
+  if(beg % 90 == 0):
+    line_color = (0,0,0,255)
   draw3.pieslice(ring_shape(0), beg, end, non_color, line_color)
   return image3
 
 #draw hourly lines
 for beg in [0, 60, 120, 180, 240, 300]:
-  image3 = add_lines(beg, beg+30)
+  image3 = add_lines(beg, beg+90)
   image.paste(image3, ring_shape(0), image3)
 
 # rotate the entire image based on the current time.

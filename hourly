@@ -1,0 +1,54 @@
+#!/usr/bin/ruby 
+
+require 'csv'
+require 'nokogiri'
+require 'json'
+
+input = `curl 'https://weather.com/weather/hourbyhour/l/94060:4:US' 2>/dev/null`
+#input = `curl 'https://www.weatherforyou.com/tides/tides.php?place=pescadero%2c+CA&month=#{ARGV[0]}&year=#{ARGV[1]}' 2>/dev/null`
+
+document = Nokogiri::HTML(input)
+list = []
+counter = 0
+TIME = 1
+DESCRIPTION = 2
+TEMP = 3
+FEELS = 4
+PRECIP = 5
+HUMIDITY = 6
+WIND = 7
+
+document.at('table').search('tr').each do |row|
+
+#  next if (counter += 1) < 2
+
+  cells = row.search('th, td').map { |cell| cell.text.strip }
+
+  print cells
+  cell_hash = {}
+  cell_hash[:Time] = cells[TIME]
+  cell_hash[:Description] = cells[DESCRIPTION]
+  cell_hash[:Temperature] = cells[TEMP]
+  cell_hash[:Feels] = cells[FEELS]
+  cell_hash[:Precipitation] = cells[PRECIP]
+  cell_hash[:Humidity] = cells[HUMIDITY]
+  cell_hash[:Wind] = cells[WIND]
+
+  list << cell_hash
+
+#  if cells.first.to_i == 18
+#    puts CSV.generate_line(cells)
+#     puts 'DATE = '+cells[DATE]
+#     puts 'HIGH_TIDE_1_TIME = '+cells[HIGH_TIDE_1_TIME]
+#     puts 'HIGH_TIDE_1_HEIGHT = '+cells[HIGH_TIDE_1_HEIGHT]
+#     puts 'HIGH_TIDE_2_TIME = '+cells[HIGH_TIDE_2_TIME]
+#     puts 'HIGH_TIDE_2_HEIGHT = '+cells[HIGH_TIDE_2_HEIGHT]
+#     puts 'LOW_TIDE_1_TIME = '+cells[LOW_TIDE_1_TIME]
+#     puts 'LOW_TIDE_1_HEIGHT = '+cells[LOW_TIDE_1_HEIGHT]
+#     puts 'LOW_TIDE_2_TIME = '+cells[LOW_TIDE_2_TIME]
+#     puts 'LOW_TIDE_2_HEIGHT = '+cells[LOW_TIDE_2_HEIGHT]
+#  end
+
+end
+
+puts list.to_json

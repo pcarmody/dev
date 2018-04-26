@@ -12,12 +12,14 @@ draw = ImageDraw.Draw(image)
 black = (0, 0, 0, 0)
 
 def wedges(count):
-  delta = 360 / (count+1)
-  half = delta / 2
+  accuracy = 1000
+  delta = 360 * accuracy / (count+1)
+  print delta
+  beg = 0
   for i in range(0,count+1):
-    beg = i * delta 
-    end = beg + delta
-    center = (beg + end) / 2
+          #    beg = i * delta / 100
+    end = (i+1) * delta / accuracy 
+#    center = (beg + end) / 2
     center = beg 
     if(center < 180):
       red = 255 * (90 - abs(90 - center))/90
@@ -36,6 +38,7 @@ def wedges(count):
     print beg
     print color
     draw.pieslice((0,0,size, size), beg, end, color, color)
+    beg = end
   return
 
 wedges(15)

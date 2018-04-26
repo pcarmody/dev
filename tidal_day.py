@@ -44,8 +44,6 @@ def convert_time_to_minutes(hours, minutes, am):
   else:
     if(hours != 12):
       hours = hours + 12
-    else:
-      hours = 0
   return hours * 60 + minutes
 
 def draw_halves(size, moon_rise, moon_set, day_color):

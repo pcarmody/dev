@@ -1,0 +1,6 @@
+while true ; do 
+  echo `date`
+  hourly hourly.json > hourly2.json
+  mv hourly2.json hourly.json
+  sleep 300
+done 

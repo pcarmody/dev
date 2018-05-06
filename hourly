@@ -19,6 +19,10 @@ PRECIP = 5
 HUMIDITY = 6
 WIND = 7
 
+#puts 'Bad Document' if !document
+#puts 'found table stuff' if document.css('twc-table').css('tbody')
+#puts 'Bad Document At' if !document.at('table')
+
 document.at('table').search('tr').each do |row|
 
 #  next if (counter += 1) < 2
@@ -48,7 +52,7 @@ document.at('table').search('tr').each do |row|
   cell_hash['Time'] = hours*100
 
   cell_hash['Description'] = cells[DESCRIPTION]
-  cell_hash['Teperature'] = cells[TEMP]
+  cell_hash['Temperature'] = cells[TEMP]
   cell_hash['Feels'] = cells[FEELS]
   cell_hash['Precipitation'] = cells[PRECIP]
   cell_hash['Humidity'] = cells[HUMIDITY]
@@ -60,7 +64,7 @@ document.at('table').search('tr').each do |row|
   if entry
 #    print "updating #{cell_hash['Time']}\n"
     entry['Description'] = cell_hash['Description']
-    entry['Teperature'] = cell_hash['Teperature']
+    entry['Temperature'] = cell_hash['Temperature']
     entry['Feels'] = cell_hash['Feels']
     entry['Precipitation'] = cell_hash['Precipitation']
     entry['Humidity'] = cell_hash['Humidity']
@@ -68,7 +72,25 @@ document.at('table').search('tr').each do |row|
   else
 #    print "appending #{cell_hash['Time']}\n"
     list << cell_hash
+#    list[hours] = cell_hash
   end
 
 end
-puts list.sort_by { |e| e['Time'] }.to_json
+
+new_list = []
+tmp_line = list.last.dup
+(0..23).each do | i |
+  entry = list.select { | e | e['Time'] == i*100 }
+  if !entry || entry.size == 0
+    tmp_line[:Time] = i*100
+#      list << tmp_line
+    new_list[i] = tmp_line
+    tmp_line = list.last.dup
+  else
+    new_list[i] = entry[0]
+  end
+end
+
+#puts list.sort_by { |e| e['Time'] }.to_json
+#puts list.sort!{ |e, f| e['Time'] <=> f['Time'] }.to_json
+puts new_list.to_json

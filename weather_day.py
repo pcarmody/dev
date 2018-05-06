@@ -3,10 +3,12 @@ from PIL import ImageDraw
 from PIL import ImageColor
 import datetime
 import json
+import sys
 from os.path import expanduser
+
 home = expanduser("~")
 
-window_size = 800
+window_size = 400
 ring_width = 20
 
 image = Image.new('RGBA',(window_size,window_size),(0,0,0,0))
@@ -152,7 +154,7 @@ def add_lines(beg, end):
 def draw_temp_ring(shape):
   image = Image.new('RGBA',(window_size,window_size),(0,0,0,0))
   draw = ImageDraw.Draw(image)
-  num_wedges = 100
+  num_wedges = 300
   delta_hour = num_wedges / 24
   wedge = 36000 / num_wedges
   for j in range(0,num_wedges):
@@ -165,11 +167,12 @@ def draw_temp_ring(shape):
     delta_A = delta_hour - delta_B
     beg = wedge * j / 100
     end = (j+1) * wedge / 100
-    temp1 = int(weather[first]['Teperature'][0]) * 10 + int(weather[first]['Teperature'][1])
-    temp2 = int(weather[second]['Teperature'][0]) * 10 + int(weather[second]['Teperature'][1])
-    temp = (temp1*delta_A + temp2*delta_B) / delta_hour
-    print str(j)+':'+str(first)+':'+str(temp)+':'+str(beg)+':'+str(end)
-    color = get_color(110-temp, (20, 110)) 
+    temp1 = int(weather[first]['Temperature'][0]) * 10 + int(weather[first]['Temperature'][1])
+    temp2 = int(weather[second]['Temperature'][0]) * 10 + int(weather[second]['Temperature'][1])
+#    print str(temp1*100)+':'+str(temp2*100)
+    temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
+#    print str(j)+':'+str(first)+':'+str(temp)+':'+str(beg)+':'+str(end)
+    color = get_color(11000-temp, (2000, 11000)) 
     draw.pieslice(shape, beg, end, color, color)
   return image
 
@@ -184,7 +187,6 @@ def draw_wind_ring(shape):
     dirstr = wind[0]
     if(dirstr == 'Calm'):
       color = (0, 0, 0, 255)
-      speed = 0
     else:
       direction = 0
       tmp = 0
@@ -192,7 +194,6 @@ def draw_wind_ring(shape):
         if(j == dirstr):
           direction = tmp
         tmp = tmp + 1
-      speed = int(wind[1])
       color = get_white_color(direction, (0,15), 255)
 
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
@@ -202,6 +203,7 @@ def wind_speed(shape):
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
   wedge = 360 / 24
+  max_speed = 18
   for i in range(0,24):
     beg = wedge * i
     end = beg + wedge
@@ -212,7 +214,6 @@ def wind_speed(shape):
       speed = 0
     else:
       speed = int(wind[1])
-    max_speed = 15
     speed_color = (0,0,0,255*(max_speed - speed)/max_speed)
     draw.pieslice((0,0,shape,shape), beg, end, speed_color, speed_color)
   return image
@@ -220,24 +221,47 @@ def wind_speed(shape):
 def precip_ring(shape):
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
-  wedge = 360 / 24
-  for i in range(0,24):
-    beg = wedge * i
-    end = beg + wedge
-    precip = int(weather[i]['Precipitation'].split('%')[0])
-    color = get_color(precip, (0,50)) #(0,0,0,255*speed/8)
+  num_wedges = 200
+  delta_hour = num_wedges / 24
+  wedge = 36000 / num_wedges
+  for j in range(0,num_wedges):
+    first = ((j*100)/num_wedges) * 24/100
+    beg = wedge * j / 100
+    end = (j+1) * wedge / 100
+    if(first == 23):
+      second = 0
+    else:
+      second = first + 1
+    delta_B = j % delta_hour
+    delta_A = delta_hour - delta_B
+    precip1 = int(weather[first]['Precipitation'].split('%')[0])
+    precip2 = int(weather[second]['Precipitation'].split('%')[0])
+    precip = (precip1*100*delta_A + precip2*100*delta_B) / delta_hour
+    #precip = (precip1 + precip2) / 2
+    color = get_color(precip/100, (0,50)) #(0,0,0,255*speed/8)
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 
 def humidity_ring(shape):
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
-  wedge = 360 / 24
-  for i in range(0,24):
-    beg = wedge * i
-    end = beg + wedge
-    precip = int(weather[i]['Humidity'].split('%')[0])
-    color = get_color(precip, (0,100)) #(0,0,0,255*speed/8)
+  num_wedges = 200
+  delta_hour = num_wedges / 24
+  wedge = 36000 / num_wedges
+  for j in range(0,num_wedges):
+    first = ((j*100)/num_wedges) * 24/100
+    beg = wedge * j / 100
+    end = (j+1) * wedge / 100
+    if(first == 23):
+      second = 0
+    else:
+      second = first + 1
+    delta_B = j % delta_hour
+    delta_A = delta_hour - delta_B
+    humid1 = int(weather[first]['Humidity'].split('%')[0])
+    humid2 = int(weather[second]['Humidity'].split('%')[0])
+    humid = (humid1*100*delta_A + humid2*100*delta_B) / delta_hour
+    color = get_color(humid/100, (0,100)) #(0,0,0,255*speed/8)
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 

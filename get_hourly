@@ -1,6 +1,11 @@
 while true ; do 
   echo `date`
   hourly hourly.json > hourly2.json
-  mv hourly2.json hourly.json
+  actualsize=$(wc -c <"hourly2.json")
+  if [ $actualsize -le 0 ]; then
+    echo NO DATA RETRIEVED
+  else
+    mv hourly2.json hourly.json
+  fi
   sleep 300
 done 

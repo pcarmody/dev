@@ -51,12 +51,28 @@ document.at('table').search('tr').each do |row|
   end
   cell_hash['Time'] = hours*100
 
+#   "Time": 100,
+
   cell_hash['Description'] = cells[DESCRIPTION]
-  cell_hash['Temperature'] = cells[TEMP]
-  cell_hash['Feels'] = cells[FEELS]
-  cell_hash['Precipitation'] = cells[PRECIP]
-  cell_hash['Humidity'] = cells[HUMIDITY]
-  cell_hash['Wind'] = cells[WIND]
+#   "Temperature": "49\u00b0",
+  exit_error "Bad temperature format: #{cells[TEMP]}" if cells[TEMP] !~ /(\d.*)/
+  cell_hash['Temperature'] = $1.to_i
+
+#   "Feels": "46\u00b0",
+  exit_error "Bad feels format: #{cells[FEELS]}" if cells[FEELS] !~ /(\d.*)/
+  cell_hash['Feels'] = $1.to_i
+  
+#   "Precipitation": "10%",
+  exit_error "Bad precipitation format: #{cells[PRECIP]}" if cells[PRECIP] !~ /(\d.*)/
+  cell_hash['Precipitation'] = $1.to_i
+
+#   "Humidity": "90%",
+  exit_error "Bad humidity format: #{cells[HUMIDITY]}" if cells[HUMIDITY] !~ /(\d.*)/
+  cell_hash['Humidity'] = $1.to_i
+
+#   "Wind": "N 7 mph"
+  exit_error "Bad wind format: #{cells[WIND]}" if cells[WIND] !~ /(.*) (\d.*) mph/
+  cell_hash['Wind'] = { :Direction => $1, :Speed => $2.to_i }
 
   entry = nil
   list.each { | e | entry = e if e['Time'] == cell_hash['Time'] }

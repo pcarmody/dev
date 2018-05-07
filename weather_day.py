@@ -164,11 +164,15 @@ def draw_temp_ring(shape):
     else:
       second = first + 1
     delta_B = j % delta_hour
+#    if(delta_B == 0):
+#      delta_B = delta_hour
     delta_A = delta_hour - delta_B
     beg = wedge * j / 100
     end = (j+1) * wedge / 100
-    temp1 = int(weather[first]['Temperature'][0]) * 10 + int(weather[first]['Temperature'][1])
-    temp2 = int(weather[second]['Temperature'][0]) * 10 + int(weather[second]['Temperature'][1])
+#    temp1 = int(weather[first]['Temperature'][0]) * 10 + int(weather[first]['Temperature'][1])
+#    temp2 = int(weather[second]['Temperature'][0]) * 10 + int(weather[second]['Temperature'][1])
+    temp1 = int(weather[first]['Temperature'])
+    temp2 = int(weather[second]['Temperature'])
 #    print str(temp1*100)+':'+str(temp2*100)
     temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
 #    print str(j)+':'+str(first)+':'+str(temp)+':'+str(beg)+':'+str(end)
@@ -183,8 +187,8 @@ def draw_wind_ring(shape):
   for i in range(0,24):
     beg = wedge * i
     end = beg + wedge
-    wind = weather[i]['Wind'].split(' ')
-    dirstr = wind[0]
+#    wind = weather[i]['Wind'].split(' ')
+    dirstr = weather[i]['Wind']['Direction']
     if(dirstr == 'Calm'):
       color = (0, 0, 0, 255)
     else:
@@ -207,13 +211,13 @@ def wind_speed(shape):
   for i in range(0,24):
     beg = wedge * i
     end = beg + wedge
-    wind = weather[i]['Wind'].split(' ')
-    dirstr = wind[0]
+#    wind = weather[i]['Wind'].split(' ')
+    dirstr = weather[i]['Wind']['Direction']
     if(dirstr == 'Calm'):
       color = (0, 0, 0, 255)
       speed = 0
     else:
-      speed = int(wind[1])
+      speed = int(weather[i]['Wind']['Speed'])
     speed_color = (0,0,0,255*(max_speed - speed)/max_speed)
     draw.pieslice((0,0,shape,shape), beg, end, speed_color, speed_color)
   return image
@@ -234,8 +238,10 @@ def precip_ring(shape):
       second = first + 1
     delta_B = j % delta_hour
     delta_A = delta_hour - delta_B
-    precip1 = int(weather[first]['Precipitation'].split('%')[0])
-    precip2 = int(weather[second]['Precipitation'].split('%')[0])
+#    precip1 = int(weather[first]['Precipitation'].split('%')[0])
+#    precip2 = int(weather[second]['Precipitation'].split('%')[0])
+    precip1 = int(weather[first]['Precipitation'])
+    precip2 = int(weather[second]['Precipitation'])
     precip = (precip1*100*delta_A + precip2*100*delta_B) / delta_hour
     #precip = (precip1 + precip2) / 2
     color = get_color(precip/100, (0,50)) #(0,0,0,255*speed/8)
@@ -258,8 +264,8 @@ def humidity_ring(shape):
       second = first + 1
     delta_B = j % delta_hour
     delta_A = delta_hour - delta_B
-    humid1 = int(weather[first]['Humidity'].split('%')[0])
-    humid2 = int(weather[second]['Humidity'].split('%')[0])
+    humid1 = int(weather[first]['Humidity'])
+    humid2 = int(weather[second]['Humidity'])
     humid = (humid1*100*delta_A + humid2*100*delta_B) / delta_hour
     color = get_color(humid/100, (0,100)) #(0,0,0,255*speed/8)
     draw.pieslice((0,0,shape,shape), beg, end, color, color)

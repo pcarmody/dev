@@ -150,7 +150,7 @@ def draw_quad(first, second, second_time, delta, tide_color):
   tide1 = tide.rotate(rotation_factor)
   return tide1
 
-num_tidal_wedges = 20
+num_tidal_wedges = 40
 width_tidal_wedge = 360 / num_tidal_wedges
 
 def draw_tide_quad(size, low_height, high_height, end, color):

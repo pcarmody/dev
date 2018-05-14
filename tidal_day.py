@@ -56,17 +56,6 @@ def draw_halves(size, moon_rise, moon_set, day_color):
   draw.pieslice((0,0,size, size), rise_angle, set_angle, day_color, 'black')
   return image
 
-def draw_tide_quad(size, low_height, high_height, color):
-  image = Image.new('RGBA', (size, size), (0,0,0,0))
-  draw = ImageDraw.Draw(image)
-  length = size*high_height/100
-  height = size*low_height/100
-  x_dist = (size-length)/2
-  y_dist = (size-height)/2
-#  draw.ellipse((x_dist, y_dist, size-x_dist, size-y_dist), color, 'black')
-  draw.pieslice((x_dist, y_dist, size-x_dist, size-y_dist), -10, 100, color, 'black')
-  return image
-
 def relative_tide_position(feet):
   max_tide = 200
   min_tide = 0
@@ -161,37 +150,111 @@ def draw_quad(first, second, second_time, delta, tide_color):
   tide1 = tide.rotate(rotation_factor)
   return tide1
 
+num_tidal_wedges = 20
+width_tidal_wedge = 360 / num_tidal_wedges
+
+def draw_tide_quad(size, low_height, high_height, end, color):
+  image = Image.new('RGBA', (size, size), (0,0,0,0))
+  draw = ImageDraw.Draw(image)
+  length = size*high_height/100
+  height = size*low_height/100
+  x_dist = (size-length)/2
+  y_dist = (size-height)/2
+#  draw.ellipse((x_dist, y_dist, size-x_dist, size-y_dist), color, 'black')
+  draw.pieslice((x_dist, y_dist, size-x_dist, size-y_dist), 0, end, color, 'black')
+  return image
+
+def draw_delta_arc(beg_arc, end_arc, beg_length, end_length):
+  size = tide_space
+  image = Image.new('RGBA', (size, size), (0,0,0,0))
+  draw = ImageDraw.Draw(image)
+  tide_color = (0, 0, 0, 200)
+  x_dist = (size-beg_length)/2
+  y_dist = (size-end_length)/2
+  draw.pieslice((x_dist, y_dist, x_dist+beg_length, y_dist+end_length), beg_arc, end_arc, tide_color, 'black')
+  return image
+
+
+def draw_tidal_arc(start, end):
+  size = tide_space
+  image = Image.new('RGBA', (size, size), (0,0,0,0))
+  draw = ImageDraw.Draw(image)
+  tide_color = (0, 0, 0, 200)
+  beg_length = size * start[1] / 100
+  end_length = size * end[1] / 100
+  x_start = (size-end_length)/2
+  y_start = (size-beg_length)/2
+
+  start_arc = 360*start[0]/min_per_day
+  end_arc = 360*end[0]/min_per_day
+#  tmp = draw_delta_arc(end_arc, start_arc, end_length, beg_length)
+#  image.paste(tmp, high_tidal_ring, tmp)
+#  return image
+#  draw.pieslice((x_start, y_start, x_start+end_length, y_start + beg_length), end_arc, start_arc, tide_color, tide_color)
+#  return image
+  num_arc = abs(end_arc - start_arc) / width_tidal_wedge
+#  delta_length = (start[1] - end[1]) / num_arc
+  delta_length = (beg_length - end_length) / num_arc
+
+  beg_arc = end_arc
+  beg_length = start[1]
+  for i in range(0,num_arc+1):
+
+    end_arc = beg_arc + width_tidal_wedge
+    end_length = beg_length + delta_length
+#    delta_B = 100 * i / num_arc
+#    delta_A = 100 - delta_A
+
+#    tmp = draw_tide_quad(size, low, high, width_tidal_wedge, tide_color).rotate(beg)
+    tmp = draw_delta_arc(beg_arc, end_arc, beg_length, end_length)
+    image.paste(tmp, high_tidal_ring, tmp)
+    beg_arc = end_arc
+    beg_length = end_length
+  return image.rotate(-start_arc)
+
 # construct each tidal wedge and paste 
 
 if(first_high_time > first_low_time):  #  build counter clockwise
   print "first path "+str(tides[day]['LowTide'])
   print "first path "+str(tides[day]['HighTide'])
   tide_color = (0, 0, 0, 200)
-  tide1 = draw_quad(first_high, first_low, first_low_time, 0, (0,0,0,200))
-  image.paste(tide1, high_tidal_ring, tide1)
+  start = (first_high_time, first_high)
+  end = (first_low_time, first_low)
   
-  tide1 = draw_quad(first_low, second_high, second_high_time, 0, (0,0,0,200))
+  tide1 = draw_tidal_arc(start, end)
   image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_quad(second_high, second_low, second_low_time, 0, (0,0,0,200))
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_quad(second_low, first_high, first_high_time, 0, (0,0,0,200))
-  image.paste(tide1, high_tidal_ring, tide1)
+#  tide_color = (0, 0, 0, 200)
+#  tide1 = draw_quad(first_high, first_low, first_low_time, 0, (0,0,0,200))
+#  image.paste(tide1, high_tidal_ring, tide1)
+#  
+#  tide1 = draw_quad(first_low, second_high, second_high_time, 0, (0,0,0,200))
+#  image.paste(tide1, high_tidal_ring, tide1)
+#  
+#  tide1 = draw_quad(second_high, second_low, second_low_time, 0, (0,0,0,200))
+#  image.paste(tide1, high_tidal_ring, tide1)
+#  
+#  tide1 = draw_quad(second_low, first_high, first_high_time, 0, (0,0,0,200))
+#  image.paste(tide1, high_tidal_ring, tide1)
 else:
   print "second path "+str(delta_low)+" "+str(delta_high)
   tide_color = (0, 0, 0, 200)
-  tide1 = draw_quad(first_low, first_high, first_high_time, 0, tide_color)
+  start = (first_high_time, first_high)
+  end = (first_low_time, first_low)
+  
+  tide1 = draw_tidal_arc(start, end)
   image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_quad(first_high, second_low, second_low_time, 0, tide_color)
-  image.paste(tide1, high_tidal_ring, tide1) 
-
-  tide1 = draw_quad(second_low, second_high, second_high_time, 0, tide_color)
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_quad(second_high, first_low, first_low_time, 0, tide_color)
-  image.paste(tide1, high_tidal_ring, tide1)
+#  tide1 = draw_quad(first_low, first_high, first_high_time, 0, tide_color)
+#  image.paste(tide1, high_tidal_ring, tide1)
+#  
+#  tide1 = draw_quad(first_high, second_low, second_low_time, 0, tide_color)
+#  image.paste(tide1, high_tidal_ring, tide1) 
+#
+#  tide1 = draw_quad(second_low, second_high, second_high_time, 0, tide_color)
+#  image.paste(tide1, high_tidal_ring, tide1)
+#  
+#  tide1 = draw_quad(second_high, first_low, first_low_time, 0, tide_color)
+#  image.paste(tide1, high_tidal_ring, tide1)
 
 def add_lines(beg, end):
   image3 = Image.new('RGBA',(window_size,window_size),(0,0,0,0))
@@ -211,7 +274,7 @@ for beg in [0, 60, 120, 180, 240, 300]:
 # rotate the entire image based on the current time.
 
 current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
-xxx = image.rotate(360*current_time/min_per_day + 90)
+xxx = image#.rotate(360*current_time/min_per_day + 90)
 
 image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
 image2.paste(xxx,ring_shape(0),xxx)

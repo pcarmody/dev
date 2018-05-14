@@ -183,14 +183,16 @@ def draw_temp_ring(shape):
 def draw_wind_ring(shape):
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
+  max_speed = 18
   wedge = 360 / 24
   for i in range(0,24):
     beg = wedge * i
     end = beg + wedge
-#    wind = weather[i]['Wind'].split(' ')
     dirstr = weather[i]['Wind']['Direction']
+    speed = int(weather[i]['Wind']['Speed']) 
+    speed_color = 255*(speed)/max_speed
     if(dirstr == 'Calm'):
-      color = (0, 0, 0, 255)
+      color = (0, 0, 0, speed_color)
     else:
       direction = 0
       tmp = 0
@@ -198,28 +200,16 @@ def draw_wind_ring(shape):
         if(j == dirstr):
           direction = tmp
         tmp = tmp + 1
-      color = get_white_color(direction, (0,15), 255)
+      color = get_white_color(direction, (0,15), speed_color)
 
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 
-def wind_speed(shape):
+def wind_speed(shape):      #draw a black background
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
-  wedge = 360 / 24
-  max_speed = 18
-  for i in range(0,24):
-    beg = wedge * i
-    end = beg + wedge
-#    wind = weather[i]['Wind'].split(' ')
-    dirstr = weather[i]['Wind']['Direction']
-    if(dirstr == 'Calm'):
-      color = (0, 0, 0, 255)
-      speed = 0
-    else:
-      speed = int(weather[i]['Wind']['Speed'])
-    speed_color = (0,0,0,255*(max_speed - speed)/max_speed)
-    draw.pieslice((0,0,shape,shape), beg, end, speed_color, speed_color)
+  black = (0,0,0,255)
+  draw.pieslice((0,0,shape,shape), 0, 360, black,black)
   return image
 
 def precip_ring(shape):
@@ -275,12 +265,12 @@ def humidity_ring(shape):
 img = draw_temp_ring(ring_shape(0))
 image.paste(img, ring_shape(0), img)
 
-#wind_ring = draw.ellipse(ring_shape(1),'red','blue')
-img = draw_wind_ring(ring_size(1))
+wind_ring = draw.ellipse(ring_shape(1),'red','blue')
+img = wind_speed(ring_size(1))
 image.paste(img, ring_shape(1), img)
 
 #wind_ring = draw.ellipse(ring_shape(1),'red','blue')
-img = wind_speed(ring_size(1))
+img = draw_wind_ring(ring_size(1))
 image.paste(img, ring_shape(1), img)
 
 #precip_tide = draw.ellipse(ring_shape(2),'yellow','blue')

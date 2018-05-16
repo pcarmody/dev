@@ -150,7 +150,7 @@ def draw_quad(first, second, second_time, delta, tide_color):
   tide1 = tide.rotate(rotation_factor)
   return tide1
 
-num_tidal_wedges = 40
+num_tidal_wedges = 200
 width_tidal_wedge = 360 / num_tidal_wedges
 
 def draw_tide_quad(size, low_height, high_height, end, color):
@@ -173,35 +173,28 @@ def draw_tidal_arc(start, end):
   end_length = size * end[1] / 100
   x_start = (size-end_length)/2
   y_start = (size-beg_length)/2
-  print 'size = '+str(size)
-  print 'beg_length = '+str(beg_length)
-  print 'end_length = '+str(end_length)
-  print 'x_start = '+str(x_start)
-  print 'y_start = '+str(y_start)
 
   start_arc = 360*start[0]/min_per_day
   end_arc = 360*end[0]/min_per_day
+  if(start_arc > end_arc):
+    start_arc = 360-start_arc
 #  draw.pieslice((x_start, y_start, x_start+end_length, y_start + beg_length), start_arc, end_arc, tide_color, tide_color)
 #  return image
   num_arc = abs(start_arc - end_arc) / width_tidal_wedge
-  delta_length = (end_length - beg_length) / num_arc
+  delta_length = 100*(end_length - beg_length) / num_arc
+  beg_length = beg_length *100
+  print 'beg_length = '+str(beg_length)+ ' end_length = '+str(end_length)+' delta_length = '+str(delta_length)+' num_arc = '+str(num_arc)
 
   beg_arc = start_arc
   for i in range(0,num_arc):
 
     end_arc = beg_arc + width_tidal_wedge
     end_length = beg_length + delta_length
+    print '  beg_length = '+str(beg_length)+ ' end_length = '+str(end_length)
 
-    x_start = (size-end_length)/2
-    y_start = (size-beg_length)/2
-    print '  beg_length = '+str(beg_length)
-    print '  end_length = '+str(end_length)
-    print '  x_start = '+str(x_start)
-    print '  y_start = '+str(y_start)
-    draw.pieslice((x_start, y_start, x_start+end_length, y_start + beg_length), beg_arc, end_arc, tide_color, tide_color)
-#    tmp = draw_tide_quad(size, low, high, width_tidal_wedge, tide_color).rotate(beg)
-#    tmp = draw_delta_arc(beg_arc, end_arc, beg_length, end_length)
-#    image.paste(tmp, high_tidal_ring, tmp)
+    x_start = (size-end_length/100)/2
+    y_start = (size-beg_length/100)/2
+    draw.pieslice((x_start, y_start, x_start+end_length/100, y_start + beg_length/100), beg_arc, end_arc, tide_color, tide_color)
     beg_arc = end_arc
     beg_length = end_length
   return image#.rotate(-start_arc)
@@ -212,13 +205,30 @@ if(first_high_time > first_low_time):  #  build counter clockwise
   print "first path "+str(tides[day]['LowTide'])
   print "first path "+str(tides[day]['HighTide'])
   tide_color = (0, 0, 0, 200)
-  start = (first_high_time, first_high)
-  end = (first_low_time, first_low)
+  one = (first_high_time, first_high)
+  two = (first_low_time, first_low)
+  three= (second_high_time, second_high)
+  four = (second_low_time, second_low)
+  
+  tide1 = draw_tidal_arc(one, two)
+  image.paste(tide1, high_tidal_ring, tide1)
+  
+  tide1 = draw_tidal_arc(two, three)
+  image.paste(tide1, high_tidal_ring, tide1)
+  
+  tide1 = draw_tidal_arc(three,four)
+  image.paste(tide1, high_tidal_ring, tide1)
+  
+  tide1 = draw_tidal_arc(four, one)
+  image.paste(tide1, high_tidal_ring, tide1)
+
 #  start = (6*60, 95)
 #  end = (9*60, 70)
+#  tide1 = draw_tidal_arc((6*60, 95), (12*60, 50))
+#  image.paste(tide1, high_tidal_ring, tide1)
+#  tide1 = draw_tidal_arc((12*60, 50), (18*60, 95))
+#  image.paste(tide1, high_tidal_ring, tide1)
   
-  tide1 = draw_tidal_arc(start, end)
-  image.paste(tide1, high_tidal_ring, tide1)
 #  tide_color = (0, 0, 0, 200)
 #  tide1 = draw_quad(first_high, first_low, first_low_time, 0, (0,0,0,200))
 #  image.paste(tide1, high_tidal_ring, tide1)
@@ -237,8 +247,18 @@ else:
   start = (first_high_time, first_high)
   end = (first_low_time, first_low)
   
-  tide1 = draw_tidal_arc(start, end)
+  tide1 = draw_tidal_arc((1*60, 50),(7*60, 90))
   image.paste(tide1, high_tidal_ring, tide1)
+  
+  tide1 = draw_tidal_arc((7*60, 90),(12*60, 60))
+  image.paste(tide1, high_tidal_ring, tide1)
+  
+  tide1 = draw_tidal_arc((12*60, 60),(19*60, 80))
+  image.paste(tide1, high_tidal_ring, tide1)
+  
+  tide1 = draw_tidal_arc((19*60, 80),(23*60+55, 50))
+  image.paste(tide1, high_tidal_ring, tide1)
+  
   
 #  tide1 = draw_quad(first_low, first_high, first_high_time, 0, tide_color)
 #  image.paste(tide1, high_tidal_ring, tide1)
@@ -270,7 +290,7 @@ for beg in [0, 60, 120, 180, 240, 300]:
 # rotate the entire image based on the current time.
 
 current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
-xxx = image#.rotate(360*current_time/min_per_day + 90)
+xxx = image.rotate(360*current_time/min_per_day + 90)
 
 image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
 image2.paste(xxx,ring_shape(0),xxx)

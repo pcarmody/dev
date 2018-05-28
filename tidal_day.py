@@ -6,7 +6,7 @@ import json
 from os.path import expanduser
 home = expanduser("~")
 
-window_size = 800
+window_size = 400
 ring_width = 20
 
 image = Image.new('RGBA',(window_size,window_size),(0,0,0,0))
@@ -57,11 +57,11 @@ def draw_halves(size, moon_rise, moon_set, day_color):
   return image
 
 def relative_tide_position(feet):
-  max_tide = 200
-  min_tide = 0
-  feet = feet + 40
+  max_tide = 180
+  min_tide = -50
+#  feet = feet + 40
   tidal_range = max_tide - min_tide
-  retval = 33+66*(feet - min_tide)/tidal_range
+  retval = 100*(feet - min_tide)/tidal_range
   return retval
 
 #
@@ -69,7 +69,8 @@ def relative_tide_position(feet):
 #
 
 now = datetime.datetime.now()
-day = now.day
+print now
+day = now.day + 1
 month = now.month
 year = now.year
 
@@ -88,10 +89,14 @@ while day != sun_moon[i]['Date']:
 day = i
 
 def time_to_min(time):
-    return time/100*60 + time%60
+    return (time/100)*60 + time%100
 
 moon_rise = time_to_min(sun_moon[day]['MoonRise'])
-moon_set = time_to_min(sun_moon[day]['MoonSet'])
+moon_set = (moon_rise + 1200) % 2400
+
+if 'MoonSet' in sun_moon[day]:
+  moon_set = time_to_min(sun_moon[day]['MoonSet'])
+
 moon_color = ImageColor.getrgb('white')
 
 if(moon_rise < moon_set):
@@ -118,159 +123,124 @@ lowest_tide = draw.ellipse(ring_shape(4),'black','blue')
 #tides_file = open(home+'/bin/data/tides_'+str(year)+("%0.02d" % month))
 #tides = json.load(tides_file)
 #tides_file.close()
-tides = sun_moon
+#tides = sun_moon
 
-first_high = relative_tide_position(tides[day]['HighTide'][0]['Height'])
-second_high = relative_tide_position(tides[day]['HighTide'][1]['Height'])
-first_low = relative_tide_position(tides[day]['LowTide'][0]['Height'])
-second_low = relative_tide_position(tides[day]['LowTide'][1]['Height'])
+tides = [0] * 4
+tides[0] = {}
+tides[1] = {}
+tides[2] = {}
+tides[3] = {}
 
-first_high_time = time_to_min(tides[day]['HighTide'][0]['Time'])
-second_high_time = time_to_min(tides[day]['HighTide'][1]['Time'])
-first_low_time = time_to_min(tides[day]['LowTide'][0]['Time'])
-second_low_time = time_to_min(tides[day]['LowTide'][1]['Time'])
+tides[0]['Time'] = time_to_min(sun_moon[day]['HighTide'][0]['Time'])
+tides[0]['Height'] = relative_tide_position(sun_moon[day]['HighTide'][0]['Height'])
+#tides[1]['Time'] = tides[0]['Time']
+#tides[1]['Height'] = tides[0]['Height']
+#if 1 in sun_moon[day]['HighTide'][1]:
+tides[1]['Time'] = time_to_min(sun_moon[day]['HighTide'][1]['Time'])
+tides[1]['Height'] = relative_tide_position(sun_moon[day]['HighTide'][1]['Height']) 
 
+tides[2]['Time'] = time_to_min(sun_moon[day]['LowTide'][0]['Time'])
+tides[2]['Height'] = relative_tide_position(sun_moon[day]['LowTide'][0]['Height'])
+#tides[3]['Time'] = tides[2]['Time']
+#tides[3]['Height'] = tides[2]['Height']
+#if 1 in sun_moon[day]['LowTide']:
+tides[3]['Time'] = time_to_min(sun_moon[day]['LowTide'][1]['Time'])
+tides[3]['Height'] = relative_tide_position(sun_moon[day]['LowTide'][1]['Height'])
+
+# sort the tidal data by time of day.
+
+for i in [0, 1, 2]:
+  for j in range(i,4):
+    if(tides[i]['Time'] > tides[j]['Time']):
+      tmp = tides[i]
+      tides[i] = tides[j]
+      tides[j] = tmp
+print str(sun_moon[day])
+print str(tides)
 half_day = convert_time_to_minutes(11, 59, 'am')
-delta_high = (second_high_time - first_high_time - half_day) / 2
-delta_low = (second_low_time - first_low_time - half_day) / 2
-
-def draw_quad(first, second, second_time, delta, tide_color):
-  size = tide_space
-  color = tide_color
-  image = Image.new('RGBA', (size, size), (0,0,0,0))
-  draw = ImageDraw.Draw(image)
-  length = size*second/100
-  height = size*first/100
-  x_dist = (size-length)/2
-  y_dist = (size-height)/2
-  delta_degrees = 360 * delta / min_per_day
-  draw.pieslice((x_dist, y_dist, size-x_dist, size-y_dist), 0, 90+delta_degrees, color, 'black')
-  tide = image
-  rotation_factor = -360*second_time/min_per_day
-  tide1 = tide.rotate(rotation_factor)
-  return tide1
-
-num_tidal_wedges = 200
+num_tidal_wedges = 360
 width_tidal_wedge = 360 / num_tidal_wedges
 
-def draw_tide_quad(size, low_height, high_height, end, color):
-  image = Image.new('RGBA', (size, size), (0,0,0,0))
-  draw = ImageDraw.Draw(image)
-  length = size*high_height/100
-  height = size*low_height/100
-  x_dist = (size-length)/2
-  y_dist = (size-height)/2
-#  draw.ellipse((x_dist, y_dist, size-x_dist, size-y_dist), color, 'black')
-  draw.pieslice((x_dist, y_dist, size-x_dist, size-y_dist), 0, end, color, 'black')
-  return image
+def get_weighted_avg_height(now):
+  if(now <= tides[0]['Time']):
+    when = "  pre-morning"
+    i = -1
+    left_time = tides[3]['Time'] - min_per_day
+    left_height = tides[3]['Height']
+    right_time = tides[0]['Time']
+    right_height = tides[0]['Height']
+  elif(now <= tides[1]['Time']):
+    when = "  morning"
+    i = 1
+    left_time = tides[0]['Time']
+    left_height = tides[0]['Height']
+    right_time = tides[1]['Time']
+    right_height = tides[1]['Height']
+  elif(now <= tides[2]['Time']):
+    when = "  noon"
+    i = 0
+    left_time = tides[1]['Time']
+    left_height = tides[1]['Height']
+    right_time = tides[2]['Time']
+    right_height = tides[2]['Height']
+  elif(now <= tides[3]['Time']):
+    when = "  afternoon"
+    i = 0
+    left_time = tides[2]['Time']
+    left_height = tides[2]['Height']
+    right_time = tides[3]['Time']
+    right_height = tides[3]['Height']
+  else:
+    when = "  night"
+    i = 3
+    left_time = tides[3]['Time']
+    left_height = tides[3]['Height']
+    right_time = min_per_day + tides[0]['Time']
+    right_height = tides[0]['Height']
 
-def draw_tidal_arc(start, end):
-  size = tide_space
-  image = Image.new('RGBA', (size, size), (0,0,0,0))
-  draw = ImageDraw.Draw(image)
-  tide_color = (0, 0, 0, 200)
-  beg_length = size * start[1] / 100
-  end_length = size * end[1] / 100
-  x_start = (size-end_length)/2
-  y_start = (size-beg_length)/2
+  space_between = (right_time - left_time)
+  delta_B = (right_time - now) * 100 / space_between
+  delta_A = (now - left_time) * 100 / space_between
 
-  start_arc = 360*start[0]/min_per_day
-  end_arc = 360*end[0]/min_per_day
-  if(start_arc > end_arc):
-    start_arc = 360-start_arc
-#  draw.pieslice((x_start, y_start, x_start+end_length, y_start + beg_length), start_arc, end_arc, tide_color, tide_color)
-#  return image
-  num_arc = abs(start_arc - end_arc) / width_tidal_wedge
-  delta_length = 100*(end_length - beg_length) / num_arc
-  beg_length = beg_length *100
-  print 'beg_length = '+str(beg_length)+ ' end_length = '+str(end_length)+' delta_length = '+str(delta_length)+' num_arc = '+str(num_arc)
+  lowest = left_height
+  highest = right_height
+  if lowest > right_height:
+    lowest = right_height
+  if highest < left_height:
+    highest = left_height
 
-  beg_arc = start_arc
-  for i in range(0,num_arc):
+  retval =  (left_height * delta_B + right_height * delta_A) / 100
 
-    end_arc = beg_arc + width_tidal_wedge
-    end_length = beg_length + delta_length
-    print '  beg_length = '+str(beg_length)+ ' end_length = '+str(end_length)
+  if retval < lowest:
+    return lowest
+  if retval > highest:
+    return highest
+  return retval
 
-    x_start = (size-end_length/100)/2
-    y_start = (size-beg_length/100)/2
-    draw.pieslice((x_start, y_start, x_start+end_length/100, y_start + beg_length/100), beg_arc, end_arc, tide_color, tide_color)
-    beg_arc = end_arc
-    beg_length = end_length
-  return image#.rotate(-start_arc)
+tidal_image = Image.new('RGBA',(tide_space, tide_space),(0,0,0,0))
+tidal_draw = ImageDraw.Draw(tidal_image)
+tidal_color = (0,0,0, 200)
+delta_time = min_per_day / num_tidal_wedges
+arc_time = 0
+beg = 0
 
-# construct each tidal wedge and paste 
+for i in range(0,num_tidal_wedges):
+  height = 100 - get_weighted_avg_height(arc_time)
+  inner_ring = ring_size(4)
+  outer_ring = ring_size(1)
+  height = (inner_ring - outer_ring) * height/ 100 + inner_ring
 
-if(first_high_time > first_low_time):  #  build counter clockwise
-  print "first path "+str(tides[day]['LowTide'])
-  print "first path "+str(tides[day]['HighTide'])
-  tide_color = (0, 0, 0, 200)
-  one = (first_high_time, first_high)
-  two = (first_low_time, first_low)
-  three= (second_high_time, second_high)
-  four = (second_low_time, second_low)
-  
-  tide1 = draw_tidal_arc(one, two)
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_tidal_arc(two, three)
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_tidal_arc(three,four)
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_tidal_arc(four, one)
-  image.paste(tide1, high_tidal_ring, tide1)
+  x_dist = (ring_size(4) - height)/2
+  tide_arc_box = (x_dist, x_dist, tide_space-x_dist, tide_space-x_dist)
 
-#  start = (6*60, 95)
-#  end = (9*60, 70)
-#  tide1 = draw_tidal_arc((6*60, 95), (12*60, 50))
-#  image.paste(tide1, high_tidal_ring, tide1)
-#  tide1 = draw_tidal_arc((12*60, 50), (18*60, 95))
-#  image.paste(tide1, high_tidal_ring, tide1)
-  
-#  tide_color = (0, 0, 0, 200)
-#  tide1 = draw_quad(first_high, first_low, first_low_time, 0, (0,0,0,200))
-#  image.paste(tide1, high_tidal_ring, tide1)
-#  
-#  tide1 = draw_quad(first_low, second_high, second_high_time, 0, (0,0,0,200))
-#  image.paste(tide1, high_tidal_ring, tide1)
-#  
-#  tide1 = draw_quad(second_high, second_low, second_low_time, 0, (0,0,0,200))
-#  image.paste(tide1, high_tidal_ring, tide1)
-#  
-#  tide1 = draw_quad(second_low, first_high, first_high_time, 0, (0,0,0,200))
-#  image.paste(tide1, high_tidal_ring, tide1)
-else:
-  print "second path "+str(delta_low)+" "+str(delta_high)
-  tide_color = (0, 0, 0, 200)
-  start = (first_high_time, first_high)
-  end = (first_low_time, first_low)
-  
-  tide1 = draw_tidal_arc((1*60, 50),(7*60, 90))
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_tidal_arc((7*60, 90),(12*60, 60))
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_tidal_arc((12*60, 60),(19*60, 80))
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  tide1 = draw_tidal_arc((19*60, 80),(23*60+55, 50))
-  image.paste(tide1, high_tidal_ring, tide1)
-  
-  
-#  tide1 = draw_quad(first_low, first_high, first_high_time, 0, tide_color)
-#  image.paste(tide1, high_tidal_ring, tide1)
-#  
-#  tide1 = draw_quad(first_high, second_low, second_low_time, 0, tide_color)
-#  image.paste(tide1, high_tidal_ring, tide1) 
-#
-#  tide1 = draw_quad(second_low, second_high, second_high_time, 0, tide_color)
-#  image.paste(tide1, high_tidal_ring, tide1)
-#  
-#  tide1 = draw_quad(second_high, first_low, first_low_time, 0, tide_color)
-#  image.paste(tide1, high_tidal_ring, tide1)
+  end = beg + width_tidal_wedge 
+
+  tidal_draw.pieslice(tide_arc_box, beg, end, tidal_color, tidal_color)
+
+  arc_time = arc_time + delta_time
+  beg = end
+
+image.paste(tidal_image, high_tidal_ring, tidal_image)
 
 def add_lines(beg, end):
   image3 = Image.new('RGBA',(window_size,window_size),(0,0,0,0))
@@ -289,7 +259,10 @@ for beg in [0, 60, 120, 180, 240, 300]:
 
 # rotate the entire image based on the current time.
 
-current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
+if(now.hour == 12):
+  current_time = convert_time_to_minutes(now.hour, now.minute, 'pm')#(4, 45, 'PM')
+else:
+  current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
 xxx = image.rotate(360*current_time/min_per_day + 90)
 
 image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))

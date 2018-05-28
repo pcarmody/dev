@@ -1,0 +1,113 @@
+#!/usr/bin/ruby 
+
+require 'csv'
+require 'nokogiri'
+require 'json'
+
+list = []
+list = JSON.parse(File.read(ARGV[0])) if ARGV[0]
+
+input = `curl 'https://weather.com/weather/tenday/l/94060:4:US' 2> /dev/null`
+
+document = Nokogiri::HTML(input)
+DAY = 1
+DESCRIPTION = 2
+TEMP = 3
+PRECIP = 4
+HUMIDITY = 6
+WIND = 5
+
+def exit_error msg
+  puts msg
+  exit -1
+end
+
+#8 = showers/rain/
+#7 = mostly rainy
+#6 = few showers or mostly rainy
+#5 = cloudy/fog
+#4 = mostly cloudy
+#3 = partly cloudy
+#2 = partly sunny
+#1 = mostly sunny
+#0 = sunny clear
+
+def conditions description
+  value = 0
+  if description =~ /shower/i || description =~ /rain/i
+    value = 8
+    value = 7 if description =~ /mostly/i
+    value = 6 if description =~ /few/i
+    value = 6 if description =~ /part/i
+  end
+  if description =~ /cloud/i || description =~ /fog/i
+    value = 5
+    value -= 1 if description =~ /mostly/i
+    value -= 2 if description =~ /partly/i
+  end
+  if description =~ /clear/i || description =~ /sun/i
+    value = 0
+    value += 1 if description =~ /mostly/i
+    value += 2 if description =~ /partly/i
+  end
+  return value
+end
+
+
+document.at('table').search('tr').each do |row|
+
+  cells = row.search('th, td').map { |cell| cell.text.strip }
+
+  next if cells[DAY] == 'Description'
+
+#  print cells
+  cell_hash = {}
+
+#"Today\nMAY 6", 
+  exit_error "Bad day format '#{cells[DAY]}'" if cells[DAY] !~ /(.*)([A-Z]{3}) (\d*)/
+  cell_hash['Day'] = { :Month => $2, :Date => $3.to_i }
+
+#"Partly Cloudy", 
+  description = cells[DESCRIPTION]
+  cell_hash['Description'] = description
+
+  cell_hash['Condition'] = {}
+  if description =~ /(.*)\/(.*)/
+    left = $1
+    right = $2
+    cell_hash['Condition']['AM'] = conditions(left)
+    cell_hash['Condition']['PM'] = conditions(right)
+  else
+    value = conditions(description)
+    cell_hash['Condition']['AM'] = value
+    cell_hash['Condition']['PM'] = value
+  end
+
+#"57°46°", 
+#  exit_error "Bad temperature format '#{cells[TEMP]}'" if 
+  cells[TEMP] !~ /(\d*)°(\d*)°/
+  cell_hash['Temperature'] = { :High => $1.to_i, :Low => $2.to_i }
+
+#"10%", 
+  exit_error "Bad precipitation format '#{cells[PRECIP]}'" if cells[PRECIP] !~ /(\d*)%/
+  cell_hash['Precipitation'] = $1.to_i
+
+#"NNW 13 mph", 
+  if cells[WIND] == ''
+    cell_hash['Wind'] = { :Direction => 'N', :Speed => 0 }
+  else
+    exit_error "Bad wind format '#{cells[WIND]}'" if cells[WIND] !~ /(.*) (\d*) mph/
+    cell_hash['Wind'] = { :Direction => $1, :Speed => $2.to_i }
+  end
+
+#"79%"]
+  exit_error "Bad humidity format '#{cells[HUMIDITY]}'" if cells[HUMIDITY] !~ /(\d*)%/
+  cell_hash['Humidity'] = $1.to_i
+
+  list << cell_hash
+
+end
+
+list << list.last
+#puts list.sort_by { |e| e['Day'] }.to_json
+puts list.to_json

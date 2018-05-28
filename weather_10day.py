@@ -8,13 +8,17 @@ from os.path import expanduser
 
 home = expanduser("~")
 
+data_elements = 16
 window_size = 400
 ring_width = 16
+pixel_ring_width = window_size * ring_width/100
 num_wedges = 300
-delta_hour = num_wedges / 24
+delta_hour = num_wedges / data_elements
 wedge = 36000 / num_wedges
 
-image = Image.new('RGBA',(window_size,window_size),(0,0,0,0))
+my_yellow = (150, 150, 255, 0)
+
+image = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
 draw = ImageDraw.Draw(image)
 
 def ring_size(level):
@@ -28,6 +32,18 @@ def ring_disp(level):
 def ring_shape(level):
   disp = ring_disp(level)
   size = ring_size(level)
+  retval = (disp, disp, size+disp, size+disp)
+  return retval
+
+def inner_half_size(level):
+  return ring_size(level) - pixel_ring_width/2
+
+def inner_half_disp(level):
+  return ring_disp(level) + pixel_ring_width/4
+
+def inner_half_shape(level):
+  disp = inner_half_disp(level)
+  size = inner_half_size(level)
   retval = (disp, disp, size+disp, size+disp)
   return retval
 
@@ -136,7 +152,8 @@ year = now.year
 #
 
 #wind_temp_file = open(home+'/bin/data/suntemp_'+str(year)+("%0.02d" % month))
-wind_temp_file = open('hourly.json')
+#wind_temp_file = open('hourly.json')
+wind_temp_file = open('10day.json')
 weather = json.load(wind_temp_file)
 wind_temp_file.close()
 
@@ -154,31 +171,72 @@ def add_lines(beg, end):
 # draw the temperature ring
 #
 
-def draw_temp_ring(shape):
+def draw_sun_ring(shape):
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
-#  num_wedges = 300
-#  delta_hour = num_wedges / 24
-#  wedge = 36000 / num_wedges
   for j in range(0,num_wedges):
-    first = ((j*100)/num_wedges) * 24/100
-    if(first == 23):
+    first = ((j*100)/num_wedges) * data_elements/100
+    if(first == data_elements):
       second = 0
     else:
-      second = first + 1
+      second = (first + 1) % data_elements
     delta_B = j % delta_hour
-#    if(delta_B == 0):
-#      delta_B = delta_hour
     delta_A = delta_hour - delta_B
     beg = wedge * j / 100
     end = (j+1) * wedge / 100
-#    temp1 = int(weather[first]['Temperature'][0]) * 10 + int(weather[first]['Temperature'][1])
-#    temp2 = int(weather[second]['Temperature'][0]) * 10 + int(weather[second]['Temperature'][1])
-    temp1 = int(weather[first]['Temperature'])
-    temp2 = int(weather[second]['Temperature'])
-#    print str(temp1*100)+':'+str(temp2*100)
+
+    if delta_A <= delta_hour / 2:
+      temp1 = int(weather[first]['Condition']['AM'])
+      temp2 = int(weather[first]['Condition']['PM'])
+    else:
+      temp1 = int(weather[first]['Condition']['PM'])
+      temp2 = int(weather[second]['Condition']['AM'])
+
+    temp = 800 - (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
+#    print str(temp)
+
+    my_yellow = (255, 255, 0, 55 + temp * 200 / 800)
+    draw.pieslice((0,0,shape,shape), beg, end, my_yellow, my_yellow)
+  return image
+
+def draw_temp_high_ring(shape):
+  image = Image.new('RGBA',(shape,shape),(0,0,0,0))
+  draw = ImageDraw.Draw(image)
+  offset = ring_width/2
+  for j in range(0,num_wedges):
+    first = ((j*100)/num_wedges) * data_elements/100
+    if(first == data_elements):
+      second = 0
+    else:
+      second = (first + 1) % data_elements
+    delta_B = j % delta_hour
+    delta_A = delta_hour - delta_B
+    beg = wedge * j / 100
+    end = (j+1) * wedge / 100
+
+    temp1 = int(weather[first]['Temperature']['High'])
+    temp2 = int(weather[second]['Temperature']['High'])
     temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
-#    print str(j)+':'+str(first)+':'+str(temp)+':'+str(beg)+':'+str(end)
+    color = get_color(11000-temp, (2000, 11000)) 
+    draw.pieslice((0,0,shape,shape), beg, end, color, color)
+  return image
+
+def draw_temp_low_ring(shape):
+  image = Image.new('RGBA',(shape,shape),(0,0,0,0))
+  draw = ImageDraw.Draw(image)
+  for j in range(0,num_wedges):
+    first = ((j*100)/num_wedges) * data_elements/100
+    if(first == data_elements):
+      second = 0
+    else:
+      second = (first + 1) % data_elements
+    delta_B = j % delta_hour
+    delta_A = delta_hour - delta_B
+    beg = wedge * j / 100
+    end = (j+1) * wedge / 100
+    temp1 = int(weather[first]['Temperature']['Low'])
+    temp2 = int(weather[second]['Temperature']['Low'])
+    temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
     color = get_color(11000-temp, (2000, 11000)) 
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
@@ -187,8 +245,8 @@ def draw_wind_ring(shape):
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
   max_speed = 18
-  wedge = 360 / 24
-  for i in range(0,24):
+  wedge = 360 / data_elements
+  for i in range(0,data_elements):
     beg = wedge * i
     end = beg + wedge
     dirstr = weather[i]['Wind']['Direction']
@@ -218,17 +276,14 @@ def wind_speed(shape):      #draw a black background
 def precip_ring(shape):
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
-#  num_wedges = 200
-#  delta_hour = num_wedges / 24
-#  wedge = 36000 / num_wedges
   for j in range(0,num_wedges):
-    first = ((j*100)/num_wedges) * 24/100
+    first = ((j*100)/num_wedges) * data_elements/100
     beg = wedge * j / 100
     end = (j+1) * wedge / 100
     if(first == 23):
       second = 0
     else:
-      second = first + 1
+      second = (first + 1) % data_elements
     delta_B = j % delta_hour
     delta_A = delta_hour - delta_B
 #    precip1 = int(weather[first]['Precipitation'].split('%')[0])
@@ -244,17 +299,14 @@ def precip_ring(shape):
 def humidity_ring(shape):
   image = Image.new('RGBA',(shape,shape),(0,0,0,0))
   draw = ImageDraw.Draw(image)
-#  num_wedges = 200
-#  delta_hour = num_wedges / 24
-#  wedge = 36000 / num_wedges
   for j in range(0,num_wedges):
-    first = ((j*100)/num_wedges) * 24/100
+    first = ((j*100)/num_wedges) * data_elements/100
     beg = wedge * j / 100
     end = (j+1) * wedge / 100
     if(first == 23):
       second = 0
     else:
-      second = first + 1
+      second = (first + 1) % data_elements
     delta_B = j % delta_hour
     delta_A = delta_hour - delta_B
     humid1 = int(weather[first]['Humidity'])
@@ -265,36 +317,49 @@ def humidity_ring(shape):
   return image
 
 #temp_ring = draw.ellipse(ring_shape(0),'blue','blue')
-img = draw_temp_ring(ring_size(0))
+img = draw_sun_ring(ring_size(0))
 image.paste(img, ring_shape(0), img)
 
-wind_ring = draw.ellipse(ring_shape(1),'red','blue')
-img = wind_speed(ring_size(1))
+img = draw_temp_high_ring(ring_size(1))
 image.paste(img, ring_shape(1), img)
 
-#wind_ring = draw.ellipse(ring_shape(1),'red','blue')
-img = draw_wind_ring(ring_size(1))
-image.paste(img, ring_shape(1), img)
+#img = draw_temp_low_ring(ring_size(2))
+#image.paste(img, ring_shape(2), img)
+img = draw_temp_low_ring(inner_half_size(1))
+image.paste(img, inner_half_shape(1), img)
 
-#precip_tide = draw.ellipse(ring_shape(2),'yellow','blue')
-img = precip_ring(ring_size(2))
+wind_ring = draw.ellipse(ring_shape(2),'red','blue')
+img = wind_speed(ring_size(2))
 image.paste(img, ring_shape(2), img)
 
-img = humidity_ring(ring_size(3))
+#wind_ring = draw.ellipse(ring_shape(1),'red','blue')
+img = draw_wind_ring(ring_size(2))
+image.paste(img, ring_shape(2), img)
+
+#precip_tide = draw.ellipse(ring_shape(2),'yellow','blue')
+img = precip_ring(ring_size(3))
 image.paste(img, ring_shape(3), img)
 
-precip_tide = draw.ellipse(ring_shape(4),'black','blue')
+img = humidity_ring(ring_size(4))
+image.paste(img, ring_shape(4), img)
 
-#draw hourly lines
-for beg in [0, 60, 120, 180, 240, 300]:
-  image3 = add_lines(beg, beg+90)
+precip_tide = draw.ellipse(ring_shape(5),'black','blue')
+
+#draw day lines
+#for beg in [0, 60, 120, 180, 240, 300]:
+#for beg in [0, 36, 72, 108, 144, 180, 216, 242, 278, 314]:
+inc = 36000 / data_elements
+for i in range(0, data_elements):
+  beg = i*inc / 100
+  image3 = add_lines(beg, beg+inc)
   image.paste(image3, ring_shape(0), image3)
 
 # rotate the entire image based on the current time.
 
-current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
-xxx = image.rotate(360*current_time/min_per_day + 90)
+#current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
+xxx = image.rotate(90)
+xxx.show()
 
-image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
-image2.paste(xxx,ring_shape(0),xxx)
-image2.show()
+#image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
+#image2.paste(xxx,ring_shape(0),xxx)
+#image2.show()

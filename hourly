@@ -23,6 +23,11 @@ WIND = 7
 #puts 'found table stuff' if document.css('twc-table').css('tbody')
 #puts 'Bad Document At' if !document.at('table')
 
+def exit_error msg
+  abort(msg)
+end
+
+
 document.at('table').search('tr').each do |row|
 
 #  next if (counter += 1) < 2
@@ -71,8 +76,12 @@ document.at('table').search('tr').each do |row|
   cell_hash['Humidity'] = $1.to_i
 
 #   "Wind": "N 7 mph"
-  exit_error "Bad wind format: #{cells[WIND]}" if cells[WIND] !~ /(.*) (\d.*) mph/
-  cell_hash['Wind'] = { :Direction => $1, :Speed => $2.to_i }
+  if cells[WIND] =~ /calm/i
+    cell_hash['Wind'] = { :Direction => "N", :Speed => 0 }
+  else
+    exit_error "Bad wind format: #{cells[WIND]}" if cells[WIND] !~ /(.*) (\d.*) mph/
+    cell_hash['Wind'] = { :Direction => $1, :Speed => $2.to_i }
+  end
 
   entry = nil
   list.each { | e | entry = e if e['Time'] == cell_hash['Time'] }

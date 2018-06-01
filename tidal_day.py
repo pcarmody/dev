@@ -70,7 +70,7 @@ def relative_tide_position(feet):
 
 now = datetime.datetime.now()
 print now
-day = now.day + 1
+day = now.day
 month = now.month
 year = now.year
 

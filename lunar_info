@@ -103,6 +103,7 @@ list.each do | e |
     e[:LowTide] << second
   end
     
+  e[:MoonRise] = 0 if !e[:MoonRise]
   e[:MoonSet] = (e[:MoonRise] + 1200) % 2400 if !e[:MoonSet]
 
 end

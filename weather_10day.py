@@ -217,7 +217,7 @@ def draw_temp_high_ring(shape):
     temp1 = int(weather[first]['Temperature']['High'])
     temp2 = int(weather[second]['Temperature']['High'])
     temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
-    color = get_color(11000-temp, (2000, 11000)) 
+    color = get_color(10000-temp, (3000, 10000)) 
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 
@@ -237,7 +237,7 @@ def draw_temp_low_ring(shape):
     temp1 = int(weather[first]['Temperature']['Low'])
     temp2 = int(weather[second]['Temperature']['Low'])
     temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
-    color = get_color(11000-temp, (2000, 11000)) 
+    color = get_color(10000-temp, (3000, 10000)) 
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 

@@ -57,7 +57,7 @@ def draw_halves(size, moon_rise, moon_set, day_color):
   return image
 
 def relative_tide_position(feet):
-  max_tide = 180
+  max_tide = 185
   min_tide = -50
 #  feet = feet + 40
   tidal_range = max_tide - min_tide

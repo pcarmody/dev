@@ -55,12 +55,12 @@ wind_space = ring_size(1)
 wind_disp = ring_disp(1)
 
 def convert_time_to_minutes(hours, minutes, am):
-  if(am == 'AM' or am == 'am'):
-    if(hours == 12):
-      hours = 0
-  else:
-    if(hours != 12):
-      hours = hours + 12
+#  if(am == 'AM' or am == 'am'):
+#    if(hours == 12):
+#      hours = 0
+#  else:
+#    if(hours != 12):
+#      hours = hours + 12
   return hours * 60 + minutes
 
 def get_white_color(center, scope, trans):
@@ -179,7 +179,7 @@ def draw_temp_ring(shape):
 #    print str(temp1*100)+':'+str(temp2*100)
     temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
 #    print str(j)+':'+str(first)+':'+str(temp)+':'+str(beg)+':'+str(end)
-    color = get_color(11000-temp, (2000, 11000)) 
+    color = get_color(10000-temp, (2000, 10000)) 
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 
@@ -292,6 +292,7 @@ for beg in [0, 60, 120, 180, 240, 300]:
 
 # rotate the entire image based on the current time.
 
+print now
 current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
 xxx = image.rotate(360*current_time/min_per_day + 90)
 

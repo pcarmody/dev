@@ -50,7 +50,7 @@ def wedges(size, count, trans):
   return image.rotate(delta/accuracy/2)
 
 #print json.dumps(table)
-tmp = wedges(size, 15, 255)
+tmp = wedges(size, 31, 255)
 image.paste(tmp, (0,0,size,size), tmp)
 
 image.rotate(90).show()

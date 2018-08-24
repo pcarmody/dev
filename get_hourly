@@ -8,5 +8,5 @@ while true ; do
     mv hourly2.json hourly.json
   fi
   exit
-  sleep 300
+  sleep 1800
 done 

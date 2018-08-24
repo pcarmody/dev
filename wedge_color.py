@@ -11,6 +11,38 @@ draw = ImageDraw.Draw(image)
 
 black = (0, 0, 0, 0)
 
+color_list = (
+    (0, 0, 0, 255),
+    (255, 0, 0, 255),
+    (255, 255, 0, 255),
+    (0, 255, 0, 255),
+    #(189, 151, 230, 255),        #add8e6
+    (0, 0, 255, 255),           #4b0082
+    (75, 0, 130, 255),           #4b0082
+    (238, 130, 238, 255),         # ee82ee
+    (255, 255, 255, 255),
+    (0, 0, 0, 255),
+)
+color_count = 7
+
+def map_color_value(value, scope):
+        
+  delta = scope / color_count           # how wide the wedge of color is
+  left = value / delta                  # the color of the wedge
+#  right = (left + 1) % color_count      # the next color
+  right = (left + 1)                     # the next color
+  mod = value % delta                   # how deep into the wedge of color
+  
+  right_weight = mod * 100 / delta      
+  left_weight = (delta - mod) * 100 / delta
+
+  ret_val= []
+
+  for i in range(0,4):
+    ret_val.append( ( color_list[left][i] * left_weight + color_list[right][i] * right_weight) / 100 )
+
+  return ( ret_val[0], ret_val[1], ret_val[2], ret_val[3])
+  
 def get_white_color(center, scope):
   half = (scope[1] - scope[0] ) / 2
   first = (scope[1] - scope[0] ) / 4
@@ -56,6 +88,7 @@ def get_black_color(center, scope):
 
 def get_color(center, scope):
   half = (scope[1] - scope[0] ) / 2
+  return map_color_value(center, 360)
   if center > half:
     return get_white_color(center, scope)
   return get_black_color(center, scope)

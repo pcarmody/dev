@@ -31,6 +31,42 @@ def ring_shape(level):
   retval = (disp, disp, size+disp, size+disp)
   return retval
 
+#  temperature color
+
+color_list = (
+    (0, 0, 0, 255),
+    (255, 255, 255, 255),
+    (238, 130, 238, 255),         # ee82ee
+    (75, 0, 130, 255),           #4b0082
+    #(189, 151, 230, 255),        #add8e6
+    (0, 0, 255, 255),           #4b0082
+    (0, 255, 0, 255),
+    (255, 255, 0, 255),
+    (255, 0, 0, 255),
+    (0, 0, 0, 255),
+)
+color_count = 8
+
+def map_color_value(value, scope):
+        
+  delta = scope / color_count           # how wide the wedge of color is
+  left = value / delta                  # the color of the wedge
+#  right = (left + 1) % color_count      # the next color
+  right = (left + 1)                     # the next color
+  mod = value % delta                   # how deep into the wedge of color
+  
+  right_weight = mod * 100 / delta      
+  left_weight = (delta - mod) * 100 / delta
+
+  ret_val= []
+
+  for i in range(0,4):
+    ret_val.append( ( color_list[left][i] * left_weight + color_list[right][i] * right_weight) / 100 )
+
+  return ( ret_val[0], ret_val[1], ret_val[2], ret_val[3])
+
+# wind color
+
 wind_color =  ( (255, 255, 255, 255),
                 (255, 192, 192, 255),
                 (255, 127, 127, 255),
@@ -167,19 +203,16 @@ def draw_temp_ring(shape):
     else:
       second = first + 1
     delta_B = j % delta_hour
-#    if(delta_B == 0):
-#      delta_B = delta_hour
     delta_A = delta_hour - delta_B
     beg = wedge * j / 100
     end = (j+1) * wedge / 100
-#    temp1 = int(weather[first]['Temperature'][0]) * 10 + int(weather[first]['Temperature'][1])
-#    temp2 = int(weather[second]['Temperature'][0]) * 10 + int(weather[second]['Temperature'][1])
     temp1 = int(weather[first]['Temperature'])
     temp2 = int(weather[second]['Temperature'])
 #    print str(temp1*100)+':'+str(temp2*100)
     temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
 #    print str(j)+':'+str(first)+':'+str(temp)+':'+str(beg)+':'+str(end)
-    color = get_color(10000-temp, (2000, 10000)) 
+#    color = get_color(10000-temp, (2000, 10000)) 
+    color = map_color_value(temp-1000, 10000)
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 
@@ -298,4 +331,5 @@ xxx = image.rotate(360*current_time/min_per_day + 90)
 
 image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
 image2.paste(xxx,ring_shape(0),xxx)
+image2.save(sys.argv[1])
 image2.show()

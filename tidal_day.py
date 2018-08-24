@@ -3,6 +3,7 @@ from PIL import ImageDraw
 from PIL import ImageColor
 import datetime
 import json
+import sys
 from os.path import expanduser
 home = expanduser("~")
 
@@ -267,4 +268,5 @@ xxx = image.rotate(360*current_time/min_per_day + 90)
 
 image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
 image2.paste(xxx,ring_shape(0),xxx)
+image2.save(sys.argv[1])
 image2.show()

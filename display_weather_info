@@ -1,0 +1,11 @@
+
+while true ; do
+    for pngs in *`today`.png; do
+        echo $pngs
+        display $pngs &
+        png_pid=$!
+        sleep 30
+        kill $png_pid
+    #    ps aux | grep "$pngs" | cut -c9-14
+    done
+done

@@ -1,5 +1,6 @@
+SLEEPTIME=${1:-300}    # default sleep time is 5 minutes
 while true ; do 
-  echo `date`
+#  echo `date`
   hourly hourly.json > hourly2.json
   actualsize=$(wc -c <"hourly2.json")
   if [ $actualsize -le 0 ]; then
@@ -8,5 +9,5 @@ while true ; do
     mv hourly2.json hourly.json
   fi
   exit
-  sleep 1800
+#  sleep $SLEEPTIME
 done 

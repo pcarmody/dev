@@ -395,7 +395,7 @@ for i in range(0, data_elements):
 #current_time = convert_time_to_minutes(now.hour, now.minute, 'am')#(4, 45, 'PM')
 xxx = image.rotate(90)
 xxx.save(sys.argv[1])
-xxx.show()
+#xxx.show()
 
 #image2 = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
 #image2.paste(xxx,ring_shape(0),xxx)

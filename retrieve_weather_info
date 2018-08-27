@@ -1,0 +1,54 @@
+#!/usr/bin/ruby
+
+#
+#   this program updates the periodically PNG files for display
+#   all times are in minutes
+#
+
+hourly_update = 5
+last_hourly = 60
+
+tenday_update = 60      # once per hour
+last_tenday = 60
+
+tidal_update = 5
+last_tidal = 60
+
+while true do
+
+    current_minutes = `date +%M`.to_i
+    today = `today`.chop
+
+#  do we need to get the hourly weather data
+
+    elapsed = current_minutes - last_hourly
+    if current_minutes < last_hourly || elapsed > hourly_update then
+
+        last_hourly = current_minutes
+        puts "Getting Hourly and displaying weather_day #{hourly_update} and #{current_minutes} and #{elapsed}"
+        `get_hourly`
+        `python weather_day.py day_#{today}.png`
+
+    end
+
+    elapsed = current_minutes - last_tenday
+    if current_minutes < last_tenday || elapsed > tenday_update then
+
+        last_tenday = current_minutes
+        puts "Getting Tenday and displaying weather_10day #{tenday_update} and #{current_minutes} and #{elapsed}"
+       `10day > 10day.json` 
+        `python weather_10day.py tenday_#{today}.png`
+
+    end
+
+    elapsed = current_minutes - last_tidal
+    if current_minutes < last_tidal || elapsed > tidal_update then
+
+        last_tidal = current_minutes
+        puts "Getting Tenday and displaying weather_tidal #{tidal_update} and #{current_minutes} and #{elapsed}"
+#        get_tidal
+        `python tidal_day.py tidal_day_#{today}.png`
+
+    end
+
+end

@@ -1,5 +1,6 @@
-
-while true ; do
+COUNT=${1-1000000}
+while [[ $COUNT > 0 ]]; do
+    COUNT=`expr $COUNT - 1`
     for pngs in *`today`.png; do
         echo $pngs
         display $pngs &

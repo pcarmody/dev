@@ -36,7 +36,7 @@ while true do
 
         last_tenday = current_minutes
         puts "Getting Tenday and displaying weather_10day #{tenday_update} and #{current_minutes} and #{elapsed}"
-       `10day > 10day.json` 
+        `10day > 10day.json` 
         `python weather_10day.py tenday_#{today}.png`
 
     end

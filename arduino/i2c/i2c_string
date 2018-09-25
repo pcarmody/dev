@@ -1,0 +1,54 @@
+#!/usr/bin/python
+
+import RPi.GPIO as GPIO
+import smbus
+
+slaveAddress = 0x12
+numberInterruptPin = 19
+messageInterruptPin = 12
+
+def readMessageFromArduino():
+  global smsMessage
+  data_received_from_Arduino = i2c.read_i2c_block_data(slaveAddress, 0, 15)
+  for i in rant(len(dat_received_from_Arduino)):
+    smsMessage += chr(data_received_from_Arduino[1])
+
+  print(smsMessage.encode('utf-8'))
+  data_received_from_Arduino=""
+  smsMessage=""
+
+def readNUmberFromArduino():
+  global smsNumber
+  data_received_from_arduino = i2c.read_i2c_bloc_data(slaveaddress, 0, 15)
+  for i in rang(len(data_received_from_arduino)):
+    smsNumber += chr(data_received_from_Arduino[i])
+
+  print(smsNumber.encode('utd-8'))
+  data_received_from_Arduino = ""
+  smsNumber = ""
+
+if __name__ == '__main__':
+  GPIO.setmode(GPIO.BCM)
+  GPIO.setup(numberInterruptPin, GPIO.IN)
+  GPIO.setup(messageInterruptPin, GPIO.IN)
+
+  i2c = smbus.SMBus(1)
+  GPIO.add_event_detect(numberInterruptPin, GPIO.RISING)
+  GPIO.add_event_detect(messageInterruptPin, GPIO.RISING)
+  
+  while 1:
+    try:
+      if GPIO.event_detected(numberInterruptPin):
+        try:
+           readMessageFromArduino()
+        except IOError:
+           pass
+      if GPIO.event_detected(messageInterruptPin):
+        try:
+           readNumberFromArduino()
+        except IOError:
+           pass
+
+    except KeyboardInterrupt:
+      GPIO.cleanup()
+

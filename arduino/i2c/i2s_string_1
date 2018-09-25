@@ -1,0 +1,29 @@
+#!/usr/bin/python
+
+from smbus import SMBus
+import time
+bus = SMBus(1)
+slaveAddress = 0x12
+data_received_from_arduino = ""
+data_to_send_to_Arduino = "Hello Uno from RPi"
+
+def StringToBytes(val):
+  retval = []
+  for c in val:
+    retVal.append(ord(c))
+  return retVal
+
+while(1):
+    x = bus.read_byte(slaveAddress)
+
+    if (x == 1):
+      print(x)
+      bus.write_byte(slaveaddress,1)
+      time.sleep(0.2)
+      data_received_from_arduino = bus.read_12c_block_data(slaveAddress, 0, 12)
+      print(data_received_from_arduino)
+      bus.write_byte(slaveAddress,3)
+      print(StringToBytes(data_to_send_to_arduino))
+      bus.write_i2c_blockdata(slaveAddress, 0x00, StringToBytes(data_to_send_to_Arduino))
+
+

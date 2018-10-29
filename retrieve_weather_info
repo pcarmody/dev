@@ -5,6 +5,8 @@
 #   all times are in minutes
 #
 
+count = ARGV[0] || 10000
+
 hourly_update = 5
 last_hourly = 60
 
@@ -14,7 +16,8 @@ last_tenday = 60
 tidal_update = 5
 last_tidal = 60
 
-while true do
+#while true do
+(0..count.to_i).each do
 
     current_minutes = `date +%M`.to_i
     today = `today`.chop
@@ -45,7 +48,7 @@ while true do
     if current_minutes < last_tidal || elapsed > tidal_update then
 
         last_tidal = current_minutes
-        puts "Getting Tenday and displaying weather_tidal #{tidal_update} and #{current_minutes} and #{elapsed}"
+        puts "Getting Tidal and displaying weather_tidal #{tidal_update} and #{current_minutes} and #{elapsed}"
 #        get_tidal
         `python tidal_day.py tidal_day_#{today}.png`
 

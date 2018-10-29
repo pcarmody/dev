@@ -1,0 +1,58 @@
+#!/usr/bin/ruby 
+
+require 'csv'
+
+# set up background process
+#spawn "cat rig_in | ~/hamlib/tests/rigctl -m 135 -r /dev/ttyUSB0 -s 38400 > rig_out" 
+
+# header list
+# Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,Mode,TStep,Skip,Comment,URCALL,RPT1CALL,RPT2CALL,DVCODE
+
+rigctl = "" #"~/hamlib/tests/rigctl -m 135 -r /dev/ttyUSB0 -s 38400  "
+$config = {}
+
+$rig_in = File.open('rig_in', "w")
+#$rig_out = File.open('rig_out', "r")
+#puts $rig_out.read
+
+def set_param name, value
+  $config[name] = value if $config[name] != value 
+#  puts name + ' ' + value
+  retval = name + ' ' + value + ';'
+  $rig_in.puts retval
+  return retval
+end
+
+count = 0
+
+CSV.foreach(ARGV[0], headers: true) do | row |
+#  puts row['Name'].to_s + 
+#    ', ' + row['Frequency'].to_s +
+#    ', ' + row['Tone'].to_s +
+#    ', ' + row['rToneFreq'].to_s +
+#    ', ' + row['Comment'].to_s 
+  count = count + 1
+#  break if count > 4
+
+  freq = (row['Frequency'].to_f * 1000000).to_i  # convert from string to MHz
+  rig_cmd = '' + #"#{rigctl} " + 
+    set_param("F", freq.to_s % "%09d") + 
+    set_param("M", "FM 0")
+
+#  puts row['rToneFreq'].to_s + ' ' + row['Tone'].to_s
+  row['rToneFreq']  = '0' if !row['Tone']
+
+  rig_cmd += set_param("C",  row['rToneFreq'].gsub('.','')) #if row['Tone'].to_s == 'Tone' 
+
+#  rig_cmd += set_param("set_dcs_tone",  row['rToneFreq']) if row['Tone'].to_s == 'DTCS'
+  next if row['Tone'].to_s == 'DTCS'
+
+  rig_cmd += set_param("w", 'SM0')
+
+  puts count.to_s + ': ' + rig_cmd
+  $rig_in.puts rig_cmd
+#  while line= $rig_out.gets do
+#    puts ">>> "+ line
+#  end
+end
+#puts rig_out = File.open('rig_out', "r").read

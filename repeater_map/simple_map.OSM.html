@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<style type="text/css">
+#map{
+    width:400px;
+    height:300px;
+}
+</style>
+<script type="text/javascript" src="http://maplib.khtml.org/khtml.maplib/khtml_all.js">
+<script type="text/javascript">
+var mr=new Object(khtml.maplib);
+var map=null; //global map object
+
+function init(){
+   map=new mr.Map(document.getElementById("map"));
+   var center=new mr.LatLng(48.2,15.6);
+   map.centerAndZoom(center,12); //12 = zoomlevel
+   //now the map is working, if you don't need overlays you are finished
+
+   //marker at center
+   var img=document.createElement("img");
+   img.setAttribute("src","marker.png");
+   var marker=new mr.Marker(center,img);
+   map.featureCollection.appendChild(marker);
+
+
+
+   //add polyline
+   var pArray=new Array();
+   pArray.push(new mr.LatLng(48.2,15.6);
+   pArray.push(new mr.LatLng(48.21,15.8);
+   pArray.push(new mr.LatLng(48.22,15.3);
+   pArray.push(new mr.LatLng(48.24,15.2);
+   var line=new mr.geometry.Feature({type:"LineString",coordinates:pArray);
+   line.style.stroke="blue";
+   line.style.fill="red";
+   map.featureCollection.appendChil(line);
+
+}
+</script>
+</head>
+<body onload="init()">
+<div id="map"> </div>
+
+</body>
+</html>

@@ -25,48 +25,30 @@
     var zoom=10;
     var markers = new OpenLayers.Layer.Markers( "Markers" );
 
-function add_freq_marker(markers, lat, lon, callsign) {
-    var lonLat = new OpenLayers.LonLat(lon, lat) //-122.365530, 37.251690) 
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
-          );
-    var size = new OpenLayers.Size(26,32);
-    var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-    var icon = new OpenLayers.Icon("http://maps.gstatic.com/intl/de_de/mapfiles/ms/micons/red-pushpin.png", size, offset);
-    marker = new OpenLayers.Marker(lonLat, icon);
-//    marker.events.register( 'click', markers, function () {
-//        alert(callsign);
-//    });
-    marker.events.register( 'mouseover', markers, function () {
-        alert(callsign);
-    });
-    
-    markers.addMarker(marker);
-//    markers.addMarker(new OpenLayers.Marker(lonLat, icon));
-}
+    function add_freq_marker(markers, lat, lon, callsign) {
+        var lonLat = new OpenLayers.LonLat(lon, lat) //-122.365530, 37.251690) 
+              .transform(
+                new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                map.getProjectionObject() // to Spherical Mercator Projection
+              );
+        var size = new OpenLayers.Size(26,32);
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+        var icon = new OpenLayers.Icon("http://maps.gstatic.com/intl/de_de/mapfiles/ms/micons/red-pushpin.png", size, offset);
+        marker = new OpenLayers.Marker(lonLat, icon);
+        marker.events.register( 'click', markers, function () {
+            alert(callsign+" begin");
+            map.setCenter (lonlat, zoom);
+            alert(callsign+" end");
+        });
+        
+        markers.addMarker(marker);
+    };
     
     add_freq_marker(markers, 37.251690, -122.365530, "Base");
-//    add_freq_marker(-122.365530, 37.251690);
     map.addLayer(markers);
     
     map.setCenter (lonLat, zoom);
 
-//
-// add click event
-//
-
-/*    map.getViewport().addEventListener("click", function(e) {
-alert("qqq");
-    var coord = ol.proj.transform(e.coordinate, 'EPSG:3857', 'EPSG:4326');
-    var lon = coord[0];
-    var lat = coord[1];
-    alert(lon);
-    alert(lat);
-        map.forEachFeatureAtPixel(map.getEventPixel(e), function (feature, layer) {
-            alert(feature);//do something
-        });
-    });*/
   </script>
 <div id="RightDiv" style="margin-left: 220px; scroll;"> Right </div>
 <div id="BottomDiv" style="clear: both;">Below</div>
@@ -75,12 +57,11 @@ function loadDoc() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-//     document.getElementById("RightDiv").innerHTML = this.responseText;
-     var Right = document.getElementById("RightDiv");
-     Right.innerHTML = this.responseText;
-     var arr = Right.getElementsByTagName('script')
-     for (var n = 0; n < arr.length; n++)
-        eval(arr[n].innerHTML);
+      var Right = document.getElementById("RightDiv");
+      Right.innerHTML = this.responseText;
+      var arr = Right.getElementsByTagName('script')
+      for (var n = 0; n < arr.length; n++)
+         eval(arr[n].innerHTML);
     };
   };
   xhttp.open("GET", "right.php", true);

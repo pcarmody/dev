@@ -1,7 +1,13 @@
 <html><body>
-  <div id="mapdiv" style="width: 50%; float: left;"></div>
+  <div id="mapdiv" style="width: 50%; float: left;">
+      <div id="popup" class="ol-popup">
+          <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+          <div id="popup-content"></div>
+      </div>
+  </div>
   <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
   <script>
+    var ppp = 0;
     map = new OpenLayers.Map("mapdiv", {
         controls:[
             new OpenLayers.Control.Navigation(),
@@ -16,17 +22,48 @@
             new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
             map.getProjectionObject() // to Spherical Mercator Projection
           );
-    var lonLat2 = new OpenLayers.LonLat(-122.27306, 37.3719172) 
-          .transform(
-            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
-            map.getProjectionObject() // to Spherical Mercator Projection
-          );
           
     var zoom=10;
     var markers = new OpenLayers.Layer.Markers( "Markers" );
 
-    function add_freq_marker(markers, lat, lon, callsign) {
-        var lonLat = new OpenLayers.LonLat(lon, lat) //-122.365530, 37.251690) 
+//
+//  define the popups
+//
+    function onPopupClose(evt) {
+      var pops = map.popups;
+      for(var a = 0; a < pops.length; a++){
+         map.removePopup(map.popups[a]);
+      };
+    }
+    function onFeatureSelect(evt) {
+        feature = evt.feature;
+        popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+                                 feature.geometry.getBounds().getCenterLonLat(),
+                                 new OpenLayers.Size(100,100),
+                                 "<h2>"+feature.attributes.title + "</h2>" +
+                                 feature.attributes.description,
+                                 null, true, onPopupClose);
+        feature.popup = popup;
+        popup.feature = feature;
+        map.addPopup(popup);
+    }
+    function onFeatureUnselect(evt) {
+//        feature = evt.feature;
+        if (feature.popup) {
+/*            popup.feature = null;
+            map.removePopup(feature.popup);
+            feature.popup.destroy();
+            feature.popup = null;*/
+            map.removePopup(popup);
+            popup.destroy();
+        }
+    }
+
+//
+// add a marker 
+//
+    function add_freq_marker(markers, repeater) {
+        var lonLat = new OpenLayers.LonLat(repeater.Lon, repeater.Lat) //-122.365530, 37.251690) 
               .transform(
                 new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
                 map.getProjectionObject() // to Spherical Mercator Projection
@@ -36,16 +73,26 @@
         var icon = new OpenLayers.Icon("http://maps.gstatic.com/intl/de_de/mapfiles/ms/micons/red-pushpin.png", size, offset);
         marker = new OpenLayers.Marker(lonLat, icon);
         marker.events.register( 'click', markers, function () {
-            alert(callsign+" begin");
-            map.setCenter (lonlat, zoom);
-            alert(callsign+" end");
+//            feature = evt.feature;
+            ppp = new OpenLayers.Popup.FramedCloud("popup",
+//                                 feature.geometry.getBounds().getCenterLonLat(),
+                                 lonLat,
+                                 new OpenLayers.Size(100,100),
+//                                 "<h2>"+feature.attributes.title + "</h2>" +
+//                                 feature.attributes.description,
+                                 "<h2>"+repeater.CallSign+"</h2>" + 
+                                 repeater.Frequency+"/"+repeater.Tone+"<br>" +
+                                 "<bold>"+repeater.Comment+"</bold>",
+                                 null, true, onPopupClose);
+//            feature.popup = popup;
+//            popup.feature = feature;
+            map.addPopup(ppp);
         });
         
         markers.addMarker(marker);
     };
     
-    add_freq_marker(markers, 37.251690, -122.365530, "Base");
-    map.addLayer(markers);
+//    add_freq_marker(markers, 37.251690, -122.365530, "Base");    map.addLayer(markers);
     
     map.setCenter (lonLat, zoom);
 

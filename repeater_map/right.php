@@ -1,10 +1,17 @@
 <script>
     var markers = new OpenLayers.Layer.Markers( "Markers2" );
-    add_freq_marker(markers, 37.437250, -122.371140, "test");
+    var RepeaterEntry = 0;
+//    add_freq_marker(markers, 37.437250, -122.371140, "test");
 //    map.addLayer(markers);
 </script>
+<table>
 <?php
-echo "<table>";
+function str_attr($name, $value) {
+    return "    RepeaterEntry.".$name."= \"".$value."\"";
+}
+function num_attr($name, $value) {
+    return "    RepeaterEntry.".$name."= ".$value;
+}
 $f = fopen("newmaster3.csv", "r");
 while (($line = fgetcsv($f)) !== false) {
 
@@ -19,13 +26,22 @@ while (($line = fgetcsv($f)) !== false) {
         echo "</tr>\n";
     if(is_numeric($line[19]) && is_numeric($line[20])) {
         echo "<script>\n";
-        echo "   add_freq_marker(markers, ", $line[19].", ".$line[20].", \"".$line[1]."\");";
+        echo "   var RepeaterEntry = new Object;\n"; 
+        echo str_attr("CallSign", $line[1]).";\n";
+        echo str_attr("Frequency", $line[2]).";\n";
+        echo str_attr("Tone", $line[6]).",\n";
+        echo str_attr("Comment", $line[13]).";\n";
+        echo num_attr("Lon", $line[20]).";\n";
+        echo num_attr("Lat", $line[19]).";\n";
+#        echo "   };\n";
+#        echo "   add_freq_marker(markers, ".$line[19].", ".$line[20].", \"".$line[1]."\", RepeaterEntry );\n";
+        echo "   add_freq_marker(markers, RepeaterEntry );\n";
         echo "</script>\n";
     }
 }
 fclose($f);
-echo "</table>";
 ?>
+</table>
 <script>
     map.addLayer(markers);
 </script>

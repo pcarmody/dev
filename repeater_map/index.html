@@ -58,6 +58,7 @@
             popup.destroy();
         }
     }
+    var RepeaterEntries = new Array();
 
 //
 // add a marker 
@@ -70,10 +71,12 @@
               );
         var size = new OpenLayers.Size(26,32);
         var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
-        var icon = new OpenLayers.Icon("http://maps.gstatic.com/intl/de_de/mapfiles/ms/micons/red-pushpin.png", size, offset);
+//        var icon = new OpenLayers.Icon("http://maps.gstatic.com/intl/de_de/mapfiles/ms/micons/red-pushpin.png", size, offset);
+//        var icon = new OpenLayers.Icon("http://127.0.0.1/repeatermap/icons/icons8-push-pin-48.png", size, offset);
+        var icon = new OpenLayers.Icon(repeater.Icon);
         marker = new OpenLayers.Marker(lonLat, icon);
-        marker.events.register( 'click', markers, function () {
-//            feature = evt.feature;
+        marker.events.register( 'click', markers, function () { //            feature = evt.feature;
+            onPopupClose();
             ppp = new OpenLayers.Popup.FramedCloud("popup",
 //                                 feature.geometry.getBounds().getCenterLonLat(),
                                  lonLat,
@@ -82,14 +85,25 @@
 //                                 feature.attributes.description,
                                  "<h2>"+repeater.CallSign+"</h2>" + 
                                  repeater.Frequency+"/"+repeater.Tone+"<br>" +
-                                 "<bold>"+repeater.Comment+"</bold>",
+                                 "<bold>"+repeater.Comment+"</bold><br>" + 
+                                 "Lon: "+repeater.Lon + " Lat: "+repeater.Lat,
                                  null, true, onPopupClose);
 //            feature.popup = popup;
 //            popup.feature = feature;
             map.addPopup(ppp);
         });
         
+        repeater.marker = marker;
         markers.addMarker(marker);
+        RepeaterEntries.push(repeater);
+    };
+    function open_popup(marker) {
+//        alert('bang'+marker+RepeaterEntries.length);
+        for(i=0; i<RepeaterEntries.length; i++) {
+            if(RepeaterEntries[i].CallSign == marker) {
+                RepeaterEntries[i].marker.events.triggerEvent("click");
+            }
+        }
     };
     
 //    add_freq_marker(markers, 37.251690, -122.365530, "Base");    map.addLayer(markers);

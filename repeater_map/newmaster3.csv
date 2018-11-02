@@ -19,7 +19,7 @@ Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPola
 17,Barnabe,149.7,,0.6,Tone,167.9,94.8,23,NN,FM,5,,"Mt. Barnabe,  K6GWE",,,,,,38.02678,-122.716341
 18,K6PEG,443.175,+,5,,94.8,88.5,23,NN,FM,5,,Mill Valley,,,,,,37.9,-122.52
 19,Tamalpais,149.7,,0.6,Tone,179.9,94.8,23,NN,FM,5,,"Mt. Tamalpais,  K6GWE",,,,,,37.889283,-122.537564
-20,WA6AFT,440.725,+,5,,88.5,88.5,23,NN,FM,5,,Pacifica,,,,,,37.87722,-122.17861
+20,WA6AFT,440.725,+,5,,88.5,88.5,23,NN,FM,5,,Pacifica,,,,,,37.59,-122.48.
 21,K6CV,440.7,+,5,Tone,123,88.5,23,NN,FM,5,,Brisbane,,,,,,37.8125,-122.375
 22,KA6TGI,224.52,-,1.6,Tone,136.5,88.5,23,NN,FM,5,,Daly City,,,,,,37.775002,-122.41832
 23,WD6INC,146.835,-,0.6,Tone,123,88.5,23,NN,FM,5,,Daly City,,,,,,37.69245,-122.47224
@@ -37,8 +37,6 @@ Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPola
 35,WA6TOW,441.075,+,5,Tone,114.8,88.5,23,NN,FM,5,,"Pacifica, Montara Mountain",,,,,,37.57477,-122.48308
 36,W6MTF,147.675,+,0.6,Tone,114.8,88.5,23,NN,FM,5,,Redwood City,,,,,,37.567194,-122.31284
 37,W6MTF,52.62,-,0.5,Tone,192.8,192.8,23,NN,FM,5,,Woodside,,,,,,37.567194,-122.31284
-38,W6EZE,443.95,+,5,Tone,114.8,114.8,23,NN,FM,5,,Moss Beach,,,,,,37.5208333,-122.54166
-39,W6EZE,146.955,-,0.6,Tone,114.8,114.8,23,NN,FM,5,,Moss Beach,,,,,,37.5208333,-122.54166
 40,KR6WP,440.075,+,5,Tone,114.8,114.8,23,NN,FM,5,,Belmont,,,,,,37.520279,-122.27471
 41,WB6CKT,147.09,+,0.6,Tone,100,88.5,23,NN,FM,5,,"Belmont, City Hall",,,,,,37.5183,-122.278
 42,W6CBS,441.6125,+,5,Tone,100,88.5,23,NN,FM,5,,San Carlos,,,,,,37.50988,-122.2704

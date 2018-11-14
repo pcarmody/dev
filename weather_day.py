@@ -47,6 +47,16 @@ color_list = (
 )
 color_count = 8
 
+cloud_color_list = (
+#    (0, 0, 255, 255),   # Bright Blue,
+#    (0x87, 0xce, 0xeb, 255),   # sky blue #87ceeb
+    (0x00, 0xbf, 0xff, 255),   # sky blue ##00bfff
+    (255, 255, 255, 255), # Black,
+    (0, 0, 0, 255),     # White,
+    (0, 0, 0, 255),
+)
+cloud_color_count = 2
+
 def map_color_value(value, scope):
         
   delta = scope / color_count           # how wide the wedge of color is
@@ -157,6 +167,24 @@ def draw_halves(size, temp_rise, temp_set, day_color):
   draw.pieslice((0,0,size, size), set_angle, rise_angle, night_color, 'black')
   draw.pieslice((0,0,size, size), rise_angle, set_angle, day_color, 'black')
   return image
+
+def get_cloud_color_value(value, scope):
+        
+  delta = scope / cloud_color_count           # how wide the wedge of color is
+  left = value / delta                  # the color of the wedge
+#  right = (left + 1) % color_count      # the next color
+  right = (left + 1)                     # the next color
+  mod = value % delta                   # how deep into the wedge of color
+  
+  right_weight = mod * 100 / delta      
+  left_weight = (delta - mod) * 100 / delta
+
+  ret_val= []
+
+  for i in range(0,4):
+    ret_val.append( ( cloud_color_list[left][i] * left_weight + cloud_color_list[right][i] * right_weight) / 100 )
+
+  return ( ret_val[0], ret_val[1], ret_val[2], ret_val[3])
 
 #
 # construct today's image
@@ -297,6 +325,26 @@ def humidity_ring(shape):
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 
+def cloud_ring(shape):
+  image = Image.new('RGBA',(shape,shape),(0,0,0,0))
+  draw = ImageDraw.Draw(image)
+  for j in range(0,num_wedges):
+    first = ((j*100)/num_wedges) * 24/100
+    beg = wedge * j / 100
+    end = (j+1) * wedge / 100
+    if(first == 23):
+      second = 0
+    else:
+      second = first + 1
+    delta_B = j % delta_hour
+    delta_A = delta_hour - delta_B
+    cloud1 = int(weather[first]['Condition'])
+    cloud2 = int(weather[second]['Condition'])
+    cloud = (cloud1*100*delta_A + cloud2*100*delta_B) / delta_hour
+    color = get_cloud_color_value(cloud, 900) 
+    draw.pieslice((0,0,shape,shape), beg, end, color, color)
+  return image
+
 #temp_ring = draw.ellipse(ring_shape(0),'blue','blue')
 img = draw_temp_ring(ring_size(0))
 image.paste(img, ring_shape(0), img)
@@ -316,7 +364,10 @@ image.paste(img, ring_shape(2), img)
 img = humidity_ring(ring_size(3))
 image.paste(img, ring_shape(3), img)
 
-precip_tide = draw.ellipse(ring_shape(4),'black','blue')
+img = cloud_ring(ring_size(4))
+image.paste(img, ring_shape(4), img)
+
+precip_tide = draw.ellipse(ring_shape(5),'black','blue')
 
 #draw hourly lines
 for beg in [0, 60, 120, 180, 240, 300]:

@@ -69,11 +69,11 @@
                 new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
                 map.getProjectionObject() // to Spherical Mercator Projection
               );
+        repeater.lonLat = lonLat;
         var size = new OpenLayers.Size(26,32);
         var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
 //        var icon = new OpenLayers.Icon("http://maps.gstatic.com/intl/de_de/mapfiles/ms/micons/red-pushpin.png", size, offset);
-//        var icon = new OpenLayers.Icon("http://127.0.0.1/repeatermap/icons/icons8-push-pin-48.png", size, offset);
-        var icon = new OpenLayers.Icon(repeater.Icon);
+        var icon = new OpenLayers.Icon(repeater.Icon, size, offset);
         marker = new OpenLayers.Marker(lonLat, icon);
         marker.events.register( 'click', markers, function () { //            feature = evt.feature;
             onPopupClose();
@@ -97,13 +97,26 @@
         markers.addMarker(marker);
         RepeaterEntries.push(repeater);
     };
+    var old_entry= 0;
     function open_popup(marker) {
-//        alert('bang'+marker+RepeaterEntries.length);
         for(i=0; i<RepeaterEntries.length; i++) {
             if(RepeaterEntries[i].CallSign == marker) {
-                RepeaterEntries[i].marker.events.triggerEvent("click");
+//                RepeaterEntries[i].marker.setUrl("http://127.0.0.1/repeatermap/icons/icons8-push-pin-48.png");
+                RepeaterEntries[i].marker.setUrl("http://127.0.0.1/repeatermap/icons/antenna_large.png");
+                if(old_entry > 0)
+                    RepeaterEntries[old_entry].marker.setUrl(RepeaterEntries[old_entry].Icon);
+                old_entry = i;
+                markers.redraw();
+                break;
             }
         }
+        return RepeaterEntries[i];
+    };
+    function center_zoom(marker) {
+        repeater = open_popup(marker);
+        map.setCenter (repeater.lonLat, zoom);
+        repeater = open_popup(marker);
+        marker.events.triggerEvent("click");
     };
     
 //    add_freq_marker(markers, 37.251690, -122.365530, "Base");    map.addLayer(markers);
@@ -111,7 +124,7 @@
     map.setCenter (lonLat, zoom);
 
   </script>
-<div id="RightDiv" style="margin-left: 220px; scroll;"> Right </div>
+<div id="RightDiv" style="margin-left: 220px; "> Right </div>
 <div id="BottomDiv" style="clear: both;">Below</div>
 <script>
 function loadDoc() {

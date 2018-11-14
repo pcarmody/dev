@@ -63,6 +63,16 @@ color_list = (
 )
 color_count = 8
 
+cloud_color_list = (
+#    (0, 0, 255, 255),   # Bright Blue,
+#    (0x87, 0xce, 0xeb, 255),   # sky blue #87ceeb
+    (0x00, 0xbf, 0xff, 255),   # sky blue ##00bfff
+    (255, 255, 255, 255), # Black,
+    (0, 0, 0, 255),     # White,
+    (0, 0, 0, 255),
+)
+cloud_color_count = 2
+
 def map_color_value(value, scope):
         
   delta = scope / color_count           # how wide the wedge of color is
@@ -78,6 +88,24 @@ def map_color_value(value, scope):
 
   for i in range(0,4):
     ret_val.append( ( color_list[left][i] * left_weight + color_list[right][i] * right_weight) / 100 )
+
+  return ( ret_val[0], ret_val[1], ret_val[2], ret_val[3])
+
+def get_cloud_color_value(value, scope):
+        
+  delta = scope / cloud_color_count           # how wide the wedge of color is
+  left = value / delta                  # the color of the wedge
+#  right = (left + 1) % color_count      # the next color
+  right = (left + 1)                     # the next color
+  mod = value % delta                   # how deep into the wedge of color
+  
+  right_weight = mod * 100 / delta      
+  left_weight = (delta - mod) * 100 / delta
+
+  ret_val= []
+
+  for i in range(0,4):
+    ret_val.append( ( cloud_color_list[left][i] * left_weight + cloud_color_list[right][i] * right_weight) / 100 )
 
   return ( ret_val[0], ret_val[1], ret_val[2], ret_val[3])
 
@@ -135,7 +163,10 @@ def get_white_color(center, scope, trans):
       green = 255 * abs(third - center)/first
       red = 255 * abs(third - center)/first
       blue = 255
-  return (red, green, blue, trans)
+  red = trans * red / 100
+  green = trans * green / 100
+  blue = trans * blue / 100
+  return (red, green, blue, 255)
 
 def get_black_color(center, scope):
   half = (scope[1] - scope[0] ) / 2
@@ -159,7 +190,7 @@ def get_black_color(center, scope):
 def get_color(center, scope):
   half = (scope[1] - scope[0] ) / 2
   if center > half:
-    return get_white_color(center, scope, 255)
+    return get_white_color(center, scope, 100)
   return get_black_color(center, scope)
 
 def draw_halves(size, temp_rise, temp_set, day_color):
@@ -226,10 +257,12 @@ def draw_sun_ring(shape):
       temp1 = int(weather[first]['Condition']['PM'])
       temp2 = int(weather[second]['Condition']['AM'])
 
-    temp = 800 - (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
+    temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
+#    temp = 800 - (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
 #    print str(temp)
 
-    my_yellow = (255, 255, 0, 55 + temp * 200 / 800)
+#    my_yellow = (255, 255, 0, 55 + temp * 200 / 800)
+    my_yellow = get_cloud_color_value(temp, 900) 
     draw.pieslice((0,0,shape,shape), beg, end, my_yellow, my_yellow)
   return image
 
@@ -288,6 +321,7 @@ def draw_wind_ring(shape):
     dirstr = weather[i]['Wind']['Direction']
     speed = int(weather[i]['Wind']['Speed']) 
     speed_color = 255*(speed)/max_speed
+    speed_factor = (speed*100)/max_speed
     if(dirstr == 'Calm'):
       color = (0, 0, 0, speed_color)
     else:
@@ -297,7 +331,7 @@ def draw_wind_ring(shape):
         if(j == dirstr):
           direction = tmp
         tmp = tmp + 1
-      color = get_white_color(direction, (0,15), speed_color)
+      color = get_white_color(direction, (0,15), speed_factor)
 
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image

@@ -29,6 +29,27 @@ def exit_error msg
   abort(msg)
 end
 
+def conditions description
+  value = 0
+  if description =~ /shower/i || description =~ /rain/i
+    value = 8
+    value = 7 if description =~ /mostly/i
+    value = 6 if description =~ /few/i
+    value = 6 if description =~ /part/i
+  end
+  if description =~ /cloud/i || description =~ /fog/i
+    value = 5
+    value -= 1 if description =~ /mostly/i
+    value -= 2 if description =~ /partly/i
+  end
+  if description =~ /clear/i || description =~ /sun/i
+    value = 0
+    value += 1 if description =~ /mostly/i
+    value += 2 if description =~ /partly/i
+  end
+  return value
+end
+
 
 document.at('table').search('tr').each do |row|
 
@@ -61,6 +82,7 @@ document.at('table').search('tr').each do |row|
 #   "Time": 100,
 
   cell_hash['Description'] = cells[DESCRIPTION]
+  cell_hash['Condition'] = conditions(cells[DESCRIPTION])
 #   "Temperature": "49\u00b0",
   exit_error "Bad temperature format: #{cells[TEMP]}" if cells[TEMP] !~ /(\d.*)/
   cell_hash['Temperature'] = $1.to_i
@@ -91,6 +113,7 @@ document.at('table').search('tr').each do |row|
   if entry
 #    print "updating #{cell_hash['Time']}\n"
     entry['Description'] = cell_hash['Description']
+    entry['Condition'] = cell_hash['Condition']
     entry['Temperature'] = cell_hash['Temperature']
     entry['Feels'] = cell_hash['Feels']
     entry['Precipitation'] = cell_hash['Precipitation']
@@ -112,6 +135,7 @@ tmp_line = list.last.dup
     tmp_line[:Time] = i*100
 #      list << tmp_line
     new_list[i] = tmp_line
+    new_list[i]["Condition"] ||= 0
     tmp_line = list.last.dup
   else
     new_list[i] = entry[0]

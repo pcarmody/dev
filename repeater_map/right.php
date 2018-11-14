@@ -50,8 +50,7 @@ while (($line = fgetcsv($f)) !== false) {
         echo "</script>\n";
     }
     echo "<tr>";
-    echo "<td onclick=\"open_popup('".$line[1]."');\">" . htmlspecialchars($line[1]) . "</td>";
-#    echo "<td onclick=\"alert('bang');\">" . htmlspecialchars($line[1]) . "</td>";
+    echo "<td onclick=\"open_popup('".$line[1]."');\" ondblclick=\"center_zoom('".$line[1]."');\">" . htmlspecialchars($line[1]) . "</td>";
     echo "<td>" . htmlspecialchars($line[2]) . "</td>";
     echo "<td>" . htmlspecialchars($line[6]) . "</td>";
     echo "<td>" . htmlspecialchars($line[13]) . "</td>";

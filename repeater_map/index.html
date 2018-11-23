@@ -59,6 +59,9 @@
         }
     }
     var RepeaterEntries = new Array();
+    var ActiveEntries = new Array();
+    var Column2Entries = new Array();
+    var Column3Entries = new Array();
 
 //
 // add a marker 
@@ -95,7 +98,7 @@
         
         repeater.marker = marker;
         markers.addMarker(marker);
-        RepeaterEntries.push(repeater);
+//        RepeaterEntries.push(repeater);
     };
     var old_entry= 0;
     function open_popup(marker) {
@@ -128,11 +131,11 @@
 <table>
 <tbody>
 <tr id="Row">
-  <td id="ActiveDiv" valign="top" height="100%">
+  <td id="ColumnDiv1" valign="top" height="100%">
     <p> stuff and nonsense</p>
   </td>
-  <td id="FirstDiv" valign="top" style="diplay: flex; flex-direction: column;"> Secondary </td>
-  <td id="SecondDiv" valign="top" style="diplay: flex; flex-direction: column;">
+  <td id="ColumnDiv2" valign="top" style="diplay: flex; flex-direction: column;"> Secondary </td>
+  <td id="ColumnDiv3" valign="top" style="diplay: flex; flex-direction: column;">
 Right 
 </td>
 </tr>
@@ -140,24 +143,41 @@ Right
 <table>
 <div id="BottomDiv" style="clear: both;">Below</div>
 <script>
-function fill_column(file, div) {
+function fill_column(arr) {
+  var output_html = "<table>";
+
+  for (var n = 0; n < arr.length; n++) {
+    output_html += "<tr> <td onclick=\"open_popup('"+
+        arr[n].CallSign +
+        "') ondblclick=\"center_zoom('" + 
+        arr[n].CallSign +
+        "');\">" 
+        arr[n].CallSign +
+        "</td><td>" + 
+        arr[n].Comment + 
+        "</td></tr>\n";
+    }
+
+  return output_html;
+};
+function fill_array(file, column) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      var Right = document.getElementById(div);
+      var Right = document.getElementById("ColumnDiv"+column);
       Right.innerHTML = this.responseText;
       var arr = Right.getElementsByTagName('script')
       for (var n = 0; n < arr.length; n++)
          eval(arr[n].innerHTML);
     };
   };
-  xhttp.open("GET", "right.php?file="+file+"&div="+div, true);
-//  xhttp.open("GET", "right.php?file=RATS.csv&div=FirstDiv", true);
+  xhttp.open("GET", "right.php?file="+file+"&column="+column, true);
+//  xhttp.open("GET", "right.php?file=RATS.csv&div=ColumnDiv2", true);
   xhttp.send();
 }
 function loadDoc() {
-  fill_column("RATS.csv", "FirstDiv");
-  fill_column("San Mateo County Fire.csv", "SecondDiv");
+  fill_array("RATS.csv", 2);
+  fill_array("San Mateo County Fire.csv", 3);
 }
 loadDoc();
 </script>

@@ -44,19 +44,15 @@ while (($line = fgetcsv($f)) !== false) {
         echo str_attr("Icon", get_icon($line[2])).";\n";
         echo num_attr("Lon", $line[20]).";\n";
         echo num_attr("Lat", $line[19]).";\n";
-#        echo "   };\n";
-#        echo "   add_freq_marker(markers, ".$line[19].", ".$line[20].", \"".$line[1]."\", RepeaterEntry );\n";
         echo "   add_freq_marker(markers, RepeaterEntry );\n";
+        echo "   RepeaterEntries.push(RepeaterEntry);\n";
+        echo "   Column".$_GET['column']."Entries.push(RepeaterEntry);\n";
+#        echo "   alert(\"Column".$_GET['column']."\");\n";
         echo "</script>\n";
     }
     echo "<tr>";
     echo "<td onclick=\"open_popup('".$line[1]."');\" ondblclick=\"center_zoom('".$line[1]."');\">" . htmlspecialchars($line[1]) . "</td>";
-#    echo "<td>" . htmlspecialchars($line[2]) . "</td>";
-#    echo "<td>" . htmlspecialchars($line[6]) . "</td>";
     echo "<td>" . htmlspecialchars($line[13]) . "</td>";
-#        foreach ($line as $cell) {
-#                echo "<td>" . htmlspecialchars($cell) . "</td>";
-#        }
     echo "</tr>\n";
 }
 fclose($f);

@@ -103,6 +103,7 @@
             if(RepeaterEntries[i].CallSign == marker) {
 //                RepeaterEntries[i].marker.setUrl("http://127.0.0.1/repeatermap/icons/icons8-push-pin-48.png");
                 RepeaterEntries[i].marker.setUrl("http://127.0.0.1/repeatermap/icons/antenna_large.png");
+                map.setCenter (RepeaterEntries[i].lonLat, zoom);
                 if(old_entry > 0)
                     RepeaterEntries[old_entry].marker.setUrl(RepeaterEntries[old_entry].Icon);
                 old_entry = i;
@@ -124,22 +125,39 @@
     map.setCenter (lonLat, zoom);
 
   </script>
-<div id="RightDiv" style="margin-left: 220px; "> Right </div>
+<table>
+<tbody>
+<tr id="Row">
+  <td id="ActiveDiv" valign="top" height="100%">
+    <p> stuff and nonsense</p>
+  </td>
+  <td id="FirstDiv" valign="top" style="diplay: flex; flex-direction: column;"> Secondary </td>
+  <td id="SecondDiv" valign="top" style="diplay: flex; flex-direction: column;">
+Right 
+</td>
+</tr>
+</tbody>
+<table>
 <div id="BottomDiv" style="clear: both;">Below</div>
 <script>
-function loadDoc() {
+function fill_column(file, div) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      var Right = document.getElementById("RightDiv");
+      var Right = document.getElementById(div);
       Right.innerHTML = this.responseText;
       var arr = Right.getElementsByTagName('script')
       for (var n = 0; n < arr.length; n++)
          eval(arr[n].innerHTML);
     };
   };
-  xhttp.open("GET", "right.php", true);
+  xhttp.open("GET", "right.php?file="+file+"&div="+div, true);
+//  xhttp.open("GET", "right.php?file=RATS.csv&div=FirstDiv", true);
   xhttp.send();
+}
+function loadDoc() {
+  fill_column("RATS.csv", "FirstDiv");
+  fill_column("San Mateo County Fire.csv", "SecondDiv");
 }
 loadDoc();
 </script>

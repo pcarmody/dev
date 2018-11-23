@@ -131,7 +131,10 @@ def get_white_color(center, scope, trans):
       green = 255 * abs(third - center)/first
       red = 255 * abs(third - center)/first
       blue = 255
-  return (red, green, blue, trans)
+  red = trans * red / 100
+  green = trans * green / 100
+  blue = trans * blue / 100
+  return (red, green, blue, 255)
 
 def get_black_color(center, scope):
   half = (scope[1] - scope[0] ) / 2
@@ -255,6 +258,7 @@ def draw_wind_ring(shape):
     dirstr = weather[i]['Wind']['Direction']
     speed = int(weather[i]['Wind']['Speed']) 
     speed_color = 255*(speed)/max_speed
+    speed_factor = (speed*100)/max_speed
     if(dirstr == 'Calm'):
       color = (0, 0, 0, speed_color)
     else:
@@ -264,7 +268,7 @@ def draw_wind_ring(shape):
         if(j == dirstr):
           direction = tmp
         tmp = tmp + 1
-      color = get_white_color(direction, (0,15), speed_color)
+      color = get_white_color(direction, (0,15), speed_factor)
 
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image

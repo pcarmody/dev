@@ -31,7 +31,7 @@ function get_icon($freq) {
      
     return "http://127.0.0.1/repeatermap/icons/".$color;
 }
-$f = fopen("newmaster3.csv", "r");
+$f = fopen("StationLists/".$_GET["file"], "r");
 while (($line = fgetcsv($f)) !== false) {
 
     if(is_numeric($line[19]) && is_numeric($line[20])) {
@@ -51,8 +51,8 @@ while (($line = fgetcsv($f)) !== false) {
     }
     echo "<tr>";
     echo "<td onclick=\"open_popup('".$line[1]."');\" ondblclick=\"center_zoom('".$line[1]."');\">" . htmlspecialchars($line[1]) . "</td>";
-    echo "<td>" . htmlspecialchars($line[2]) . "</td>";
-    echo "<td>" . htmlspecialchars($line[6]) . "</td>";
+#    echo "<td>" . htmlspecialchars($line[2]) . "</td>";
+#    echo "<td>" . htmlspecialchars($line[6]) . "</td>";
     echo "<td>" . htmlspecialchars($line[13]) . "</td>";
 #        foreach ($line as $cell) {
 #                echo "<td>" . htmlspecialchars($cell) . "</td>";

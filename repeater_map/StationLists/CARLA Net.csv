@@ -1,0 +1,69 @@
+Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,Mode,TStep,Skip,Comment,URCALL,RPT1CALL,RPT2CALL,DVCODE,,Latitude,Longitude
+133,Carl2,442.075+,,0,Tone,162.2,88.5,23,NN,FM,5,,Carla Net 2 San Francisco,,,,,,37.794575,-122.399948
+134,Carl3,443.075+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 3 Pt. Arena,,,,,,32.61717,-116.46291
+135,Carl4,442.075+,,0,Tone,167.9,88.5,23,NN,FM,5,,Carla Net 4 Greenfield,,,,,,35.26683,-119.00073
+136,Carl5,443.050+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 5 Oakland,,,,,,37.880878,-122.186127
+137,Carl6,443.075+,,0,Tone,167.9,88.5,23,NN,FM,5,,Carla Net 6 Willows,,,,,,40.15052,-122.2379
+138,Carl7,443.075+,,0,Tone,162.2,88.5,23,NN,FM,5,,Carla Net 7 San Jose,,,,,,37.29787,-121.86034
+139,Carl8,442.075+,,0,Tone,151.4,88.5,23,NN,FM,5,,Carla Net 8 South Lake Tahoe,,,,,,38.8248,-120.03402
+140,Carl9,442.075+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 9 Modesto,,,,,,37.72695,-121.43031
+141,Carl10,443.475+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 10 Monterey Bay,,,,,,37.17839,-121.81725
+142,Carl11,443.475+,,0,Tone,162.2,88.5,23,NN,FM,5,,Carla Net 11 Walnut Creek,,,,,,37.91367,-122.01807
+143,Carl12,442.075+,,0,Tone,156.7,88.5,23,NN,FM,5,,Carla Net 12 Pleasanton,,,,,,37.65836,-121.95966
+144,Carl13,442.075+,,0,Tone,167.9,88.5,23,NN,FM,5,,Carla Net 13 Shasta Lake,,,,,,40.86072,-122.39739
+145,Carl14,443.475+,,0,Tone,156.7,88.5,23,NN,FM,5,,Carla Net 14 Cisco Grove,,,,,,39.30716,-120.53786
+146,Carl15,440.750+,,0,Tone,162.2,88.5,23,NN,FM,5,,Carla Net 15 Fresno,,,,,,36.26978,-120.40018
+147,Carl16,440.750+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 16 Sacramento,,,,,,38.34842,-121.90865
+148,Carl17,443.475+,,0,Tone,151.4,88.5,23,NN,FM,5,,Carla Net 17 Sonora,,,,,,38.0659,-120.27574
+149,Carl18,443.475+,,0,Tone,167.9,88.5,23,NN,FM,5,,Carla Net 18 Topaz Lake,,,,,,38.69727,-119.54934
+150,Carl19,443.325+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 19 Hayward,,,,,,37.65836,-121.95966
+151,Carl20,440.750+,,0,Tone,156.7,88.5,23,NN,FM,5,,Carla Net 20 Burney,,,,,,40.92382,-121.82634
+152,Carl21,440.750+,,0,Tone,156.7,88.5,23,NN,FM,5,,Carla Net 21 Reno,,,,,,39.61352,-119.89635
+153,Carl22,440.725+,,0,Tone,156.7,88.5,23,NN,FM,5,,Carla Net 22 Hawthorne,,,,,,38.50394,-118.65292
+154,Carl23,441.550+,,0,Tone,156.7,88.5,23,NN,FM,5,,Carla Net 23 North Lake Tahoe,,,,,,39.43387,-119.80736
+155,Carl24,443.325+,,0,Tone,156.7,88.5,23,NN,FM,5,,Carla Net 24 Carson Valley,,,,,,39.2325,-119.68697
+156,Carl25,444.325+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 25 Redding,,,,,,40.60878,-122.34735
+157,Carl26,443.475+,,0,Tone,167.9,88.5,23,NN,FM,5,,Carla Net 26 Geyserville,,,,,,38.82653,-122.99658
+158,Carl27,440.725+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 27 Quincy,,,,,,40.04083,-120.88001
+159,Carl28,443.475+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 28 Mt. Shasta,,,,,,41.20867,-122.31135
+160,Carl29,443.500+,,0,Tone,162.2,88.5,23,NN,FM,5,,Carla Net 29 San Luis Obispo,,,,,,35.48077,-120.66644
+161,Carl30,443.075+,,0,Tone,162.2,88.5,23,NN,FM,5,,Carla Net 30 Bakersfield,,,,,,34.95963,-119.44521
+162,Carl31,448.080-,,0,Tone,162.2,88.5,23,NN,FM,5,,Carla Net 31 Los Angeles,,,,,,33.71447,-117.77079
+163,Carl32,440.725+,,0,Tone,167.9,88.5,23,NN,FM,5,,Carla Net 32 Pacifica,,,,,,37.57477,-122.48308
+164,Carl33,147.000+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 33 Gualala,,,,,,38.76752,-123.5297
+165,Carl35,146.850-,,0,Tone,162.2,88.5,23,NN,FM,5,,Carla Net 35 Oakland,,,,,,37.880878,-122.186127
+166,Carl36,146.115+,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla Net 36 Willows,,,,,,49.39278,-119.90995
+167,Carl2 L,442.075+,,0,Tone,100,88.5,23,NN,FM,5,,Carla Net 2 local San Francisco,,,,,,37.794575,-122.399948
+168,Carl3 L,443.075+,,0,Tone,100,88.5,23,NN,FM,5,,Carla Net 3 local Pt. Arena,,,,,,32.61717,-116.46291
+169,Carl4 L,442.075+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 4 local Greenfield,,,,,,35.26683,-119.00073
+170,Carl5 L,443.050+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 5 local Oakland,,,,,,37.880878,-122.186127
+171,Carl6 L,443.075+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 6 local Willows,,,,,,40.15052,-122.2379
+172,Carl7 L,443.075+,,0,Tone,123,88.5,23,NN,FM,5,,Carla Net 7 local San Jose,,,,,,37.29787,-121.86034
+173,Carl8 L,442.075+,,0,Tone,127.3,88.5,23,NN,FM,5,,Carla Net 8 local South Lake Tahoe,,,,,,38.8248,-120.03402
+174,Carl9 L,442.075+,,0,Tone,123,88.5,23,NN,FM,5,,Carla Net 9 local Modesto,,,,,,37.72695,-121.43031
+175,Carl10 L,443.475+,,0,Tone,123,88.5,23,NN,FM,5,,Carla Net 10 local Monterey Bay,,,,,,37.17839,-121.81725
+176,Carl11 L,443.475+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 11 local Walnut Creek,,,,,,37.91367,-122.01807
+177,Carl12 L,442.075+,,0,Tone,103.5,88.5,23,NN,FM,5,,Carla Net 12 local Pleasanton,,,,,,37.65836,-121.95966
+178,Carl13 L,442.075+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 13 local Shasta Lake,,,,,,40.86072,-122.39739
+179,Carl14 L,443.475+,,0,Tone,100,88.5,23,NN,FM,5,,Carla Net 14 local Cisco Grove,,,,,,39.30716,-120.53786
+180,Carl15 L,440.750+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 15 local Fresno,,,,,,36.26978,-120.40018
+181,Carl16 L,440.750+,,0,Tone,107.2,88.5,23,NN,FM,5,,Carla Net 16 local Sacramento,,,,,,38.34842,-121.90865
+182,Carl17 L,443.475+,,0,Tone,103.5,88.5,23,NN,FM,5,,Carla Net 17 local Sonora,,,,,,38.0659,-120.27574
+183,Carl18 L,443.475+,,0,Tone,110.9,88.5,23,NN,FM,5,,Carla Net 18 local Topaz Lake,,,,,,38.69727,-119.54934
+184,Carl19 L,443.325+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 19 local Hayward,,,,,,37.65836,-121.95966
+185,Carl20 L,440.750+,,0,Tone,123,88.5,23,NN,FM,5,,Carla Net 20 local Burney,,,,,,40.92382,-121.82634
+186,Carl21 L,440.750+,,0,Tone,127.3,88.5,23,NN,FM,5,,Carla Net 21 local Reno,,,,,,39.61352,-119.89635
+187,Carl22 L,440.725+,,0,Tone,127.3,88.5,23,NN,FM,5,,Carla Net 22 local Hawthorne,,,,,,38.50394,-118.65292
+188,Carl23 L,441.550+,,0,Tone,127.3,88.5,23,NN,FM,5,,Carla Net 23 local North Lake Tahoe,,,,,,39.43387,-119.80736
+189,Carl24 L,443.325+,,0,Tone,127.3,88.5,23,NN,FM,5,,Carla Net 24 local Carson Valley,,,,,,39.2325,-119.68697
+190,Carl25 L,444.325+,,0,Tone,100,88.5,23,NN,FM,5,,Carla Net 25 local Redding,,,,,,40.60878,-122.34735
+191,Carl26 L,443.475+,,0,Tone,110.9,88.5,23,NN,FM,5,,Carla Net 26 local Geyserville,,,,,,38.82653,-122.99658
+192,Carl27 L,440.725+,,0,Tone,100,88.5,23,NN,FM,5,,Carla Net 27 local Quincy,,,,,,40.04083,-120.88001
+193,Carl28 L,443.475+,,0,Tone,107.2,88.5,23,NN,FM,5,,Carla Net 28 local Mt. Shasta,,,,,,41.20867,-122.31135
+194,Carl29 L,443.500+,,0,Tone,100,88.5,23,NN,FM,5,,Carla Net 29 local San Luis Obispo,,,,,,35.48077,-120.66644
+195,Carl30 L,443.075+,,0,Tone,127.3,88.5,23,NN,FM,5,,Carla Net 30 local Bakersfield,,,,,,34.95963,-119.44521
+196,Carl31 L,448.080-,,0,Tone,88.5,88.5,23,NN,FM,5,,Carla Net 31 local Los Angeles,,,,,,33.71447,-117.77079
+197,Carl32 L,440.725+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 32 local Pacifica,,,,,,37.57477,-122.48308
+198,Carl33 L,147.000+,,0,Tone,114.8,88.5,23,NN,FM,5,,Carla Net 33 local Gualala,,,,,,38.76752,-123.5297
+199,Carl35 L,146.850-,,0,Tone,103.5,88.5,23,NN,FM,5,,Carla Net 35 local Oakland,,,,,,37.880878,-122.186127
+200,Carl36 L,146.115+,,0,Tone,123,88.5,23,NN,FM,5,,Carla Net 36 local Willows,,,,,,49.39278,-119.90995

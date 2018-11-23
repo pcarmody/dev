@@ -1,0 +1,10 @@
+#!/bin/sh
+
+url='http://maps.yahoo.com/ajax/geocode'
+args='?appid=onestep&qt=1&id=m&qs='
+converter="$url$args"
+
+addr="$(echo $* | sed 's/ /+/g')"
+echo "$converter$addr"
+curl -s "$converter$addr"
+exit 0

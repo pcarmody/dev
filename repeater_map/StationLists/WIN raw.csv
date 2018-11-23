@@ -1,0 +1,77 @@
+Number,Service Area,ST/PR,CallSign,FREQ/Offset/PL,Location Information,AllStar or IRLP,Node #
+1,Vista,CA,K6JSI,448.800* (-) 100.0,"Shorty's house, 560' + 53'",AllStar,1330
+2,Escondido,CA,K6JSI,449.080* (-) 123.0,"Palomar Mtn. 5,648' + 50'",AllStar,1350
+3,San Diego,CA,K6JSI,447.640* (-) 100.0,"Mt. Otay 3,565' + 20'",AllStar,1350
+4,Greater Los Angeles,CA,K6JSI,448.060  (-) 100.0,"Santiago Pk. 5,687' + 60'",AllStar,1350
+5,Bakersfield,CA,K6JSI,447.640* (-) 100.0,"Breckenridge Mtn. Bakersfield 7,571' + 70'",IRLP,3421
+6,Santa Barbara,CA,K6JSI,448.900* (-) 123.0,"Santa Ynez Peak. 4,288'  +  100'",AllStar,1360
+7,"Pomona, Riverside",CA,K6JSI,147.210  (+) 100.0,"Sunset Ridge, 5,210' + 100'",AllStar,1350
+8,"Pomona, Riverside",CA,K6JSI,224.160  (-) 71.9,"Sunset Ridge 5,210' + 100'",AllStar,1350
+9,Yuma,AZ,KJ6IZQ,448.000 (-) 100.0,,AllStar,1530
+10,Los Angeles and San Fernando Valley,CA,K6JSI,448.900* (-) 100.0,"Loop Canyon 3,780' + 55'",AllStar,1350
+11,San Fernando Valley,CA,K6JSI,446.460  (-) 100.0,"CA San Fernando Vly. Angeles repeater, 5,985' + 40'",AllStar,1350
+12,Santa Anita Ridge,CA,K6JSI,447.580  (-) 100.0,"CA. Arcadia, 3.2 miles N. at 3,320' + 35'",AllStar,1350
+13,Fresno,CA,K6JSI,444.250  (+) 100.0,"Meadow Lakes, 4,580' + 40'",IRLP,3421
+14,Fresno,CA,K6JSI,146.790* (-) 100.0,"Meadow Lakes, 4,580' + 40'",IRLP,3421
+15,,,,,,,
+16,Modesto - Stockton,CA,K6JSI,443.525  (+) 107.2,"Mt. Oso 3,347' + 30'",IRLP,3421
+17,Thousand Oaks,CA,K6JSI,448.940  (-) 100.0,"T.O. Moorpark, Simi, Oxnard, Calabasas",IRLP,3449
+19,Las Vegas,NV,K6JSI,447.950  (-) 100.0,"Blue Diamond Hill, Great Vegas coverage",AllStar,1780
+20,Las Vegas,NV,K6JSI,145.250  (-) 100.0,Bob's house   OFF AIR FOR NOW,,
+21,Pahrump,NV,KF6QYX,447.400 (-) 100.0,,AllStar,1760
+22,Glendale,AZ,K7CAE,446.600  (-) 103.5,West Valley coverage at 51st Avenue and Bell Road,AllStar,46586
+23,Williams,AZ,K6JSI,449.750  (-) 123.0,"Bill Williams mountain, Arizona. Elevation 9,260'",AllStar,1540
+24,Bastrop,TX,N5ZUA,147.200 (+) 103.5,28 Miles East of Austin,AllStar,2414
+25,Austin,TX,N5ZUA,145.110  (-) 103.5,700'  ,AllStar,2434
+26,Cat Spring,TX,N5ZUA,146.880* (-) 103.5,60 miles west of Houston,AllStar,2430
+27,Houston,TX,N5ZUA,444.300 (+) 123.0,700',AllStar,2433
+28,Klamath,CA,K6JSI,146.940  (-) 100.0 X,"Requa, Northern California Coast, 852' + 100'",,
+29,Laytonville,CA,K6JSI,443.000* (+) 100.0 X,"Cahto Peak, north of Willits, 4,044' + 200'",AllStar,1460
+30,Smith River,CA,K6SLS,443.100  (+) 100.0,Shorty & Susan's house. Good local coverage,AllStar,42044
+31,Paradise,CA,K6JSI,147.330  (+) 123.0,"Paradise - Chico, CA",AllStar,1410
+32,Loma Prieta,CA,K6JSI,442.900  (+) 162.2,"Santa Cruz to San Jose, 3,380'",IRLP,3847
+34,Tehachapi,CA,W6SLZ,440.625  (+) 100.0,"Tehachapi Mtns. 6,300' + 40'",AllStar,1402
+35,Ridgecrest,CA,WI6RE,448.800* (-) 100.0,"El Paso Pk. 4,500' + 100'",AllStar,1801
+36,Omaha,NE,KF6SWL,443.725  (+) 100.0,"Omaha, Nebraska",IRLP,7943
+38,Napa,CA,WA7G,441.675  (+) 100.0,Sugarloaf between Napa airport & Fairfield,AllStar,1440
+40,Berryville,AR,N6WI,443.800  (+) 91.5,"Terry's house 1,324' + 25'",AllStar,27330
+41,Chinook,WA,NM7R,444.925* (+) 82.5,"Long Beach, WA 1,315' + 20'",IRLP,3105
+43,Saskatoon,SK,VE5FUN,441.650  (+) 100.0,"Saskatoon, Saskatchewan, Canada",IRLP,1667
+44,Oklahoma City,OK,W5DEL,443.300  (+) 162.2,"Oklahoma City, OK",IRLP,8440
+45,Green Valley,AZ,WE7GV,449.375  (-) 107.2,"Elephant Head, 5,863' 
+Tucson coverage",AllStar,27144
+49,San Antonio,TX,KL7SLM,438.450 Simplex 100.0,"At Scott's house in San Antonio, TX",IRLP,8424
+51,Seattle,WA,W7TWA,441.625  (+) 100.0,"Seattle, WA Mount Baldy, 3,975' + 50'",IRLP,7377
+52,Grants Pass,OR,WA6HWW,147.570 Simplex 100.0,"At Bob's house, great Grants Pass coverage",IRLP,3143
+54,Sydney,NSW,VK2RSW,439.775  (-)  123.0,"Blaxland, New South Wales, Australia  500'",IRLP,6662
+55,Oahu (Honolulu),HI,WH6FM,444.725* (+) 123.0,Honolulu Metro,AllStar,27169
+56,Woodbridge,CA,KE5JTS,441.000 Simplex 107.2,"Near Lodi, at Jason's house",AllStar,3622
+58,Ridgecres - Inyokernt,CA,WI6RE,147.975  (-)  100.0,"El Paso Pk. 4,500' + 100' ",AllStar,27167
+59,Blythe,CA,K6JRM,446.860  (-) 100.0,"John's house in Ehrenberg, AZ",AllStar,44236
+61,Downtown Hilo,HI,WH6FM,444.725* (+) 123.0,"Hilo, Hawaii",AllStar,2598
+62,Willits,CA,K7WWA,444.925* (+) 100.0,"Laughlin Range, 3,250' + 100'",AllStar,1460
+64,San Antonio,TX,KE6LGE,441.500  (+) 100.0,TX. San Antonio. Al's house                 A29896  &,IRLP,3865
+65,San Diego,CA,KG6PH,446.075 Simplex 123.0,"Chuck's house, good local coverage",IRLP,3923
+66,Hacienda Heights,CA,AF6SP,445.000 Simplex 100.0,Ken's house,IRLP,3767
+67,Red Bluff to Redding,CA,K6JSI,147.300  (+)  123.0,"Cottonwood, At Tom's house 600'",AllStar,1480
+69,Las Vegas,NV,KF6QYX,448.050  (-) 123.0,"At Bob's house, good Vegas coverage",AllStar,1779
+71,Fort Myers,FL,NQ6U,442.500 (+)  Dig 072,Fort Myers  50' elevation,AllStar,40597
+72,Miami,FL,K4GET,147.480 Simplex 110.9,"Plantation FL, 24 Miles North of Miami, FL",IRLP,8091
+73,Mt. Mauna Loa,HI,WH6FM,146.820  (-) 100.0,East Hawaii,AllStar,27582
+75,"Paulden, Arizona",AZ,W7BNW,446.550  (-) 100.0,20 miles North of Prescott,AllStar,41158
+79,Mackay,QLD,VK4RBY,438.600  (-)  91.5,"13km NW of Mackay, Queensland, Australia",IRLP,6762
+80,Santa Rosa/Hopland,CA,WA6RQX,444.750* (+) 123.0,"Sanel Mountain, 3,329', ",AllStar,1460
+81,El Paso,TX,WB5LJO,442.100  (+) 123.0,"3,941'  City of El Paso",AllStar,27669
+83,"Mesa,  East Valley",AZ,N7OKN,440.675  (+) 107.2 ,"John's house, 46' tower
+@ Main & Dobson  ",AllStar,29600
+84,Lake Havasu City,AZ,K6PNG,449.125  (-)  67.0,Lake Havasu City,,
+85,Costa Mesa,CA,K6IXQ,145.725 Simplex  67.0,"Costa Mesa, good local coverage",IRLP,3653
+86,Omaha,NE,KF6SWL,442.350  (+)  100.0,"Ashland, NE.  25 miles SW of Omaha   Off Air",IRLP,4120
+89,Eureka,CA,WA6RQX,444.750* (+) 100.0,"Bunker Hill, 2,457' + 100'",,
+90,Willits,CA,K7WWA,147.120  (+) 103.5,"Laughlin Range, 3,250' + 100'",AllStar,1460
+91,Miami,FL,K4GET,441.425  (+) 103.5,"Plantation FL, 24 Miles North of Miami, FL",AllStar,29888
+92,SW Phoenix,AZ,AJ9Y,448.075  (-)  100.0,"At Bob's house in Tolleson, AZ.",IRLP,3423
+93,Crescent City,CA,KF6QBW,444.825  (+) 100.0,,AllStar,28839
+94,Seattle,WA,W7VTX,445.800 Simplex 103.5,Rich's House - Maple Leaf Neighborhood - 370 feet above sea level - 30' above the ground,AllStar,43667
+95,Seattle,WA,W7VTX,146.550 Simplex 123.0,Rich's House - Maple Leaf Neighborhood - 370 feet above sea level - 30' above the ground,AllStar,45911
+96,Chicago,IL,K2NSX,442.125   (+) 107.2,30',AllStar,29040

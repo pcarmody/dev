@@ -151,16 +151,18 @@ function fill_column(arr) {
         arr[n].CallSign +
         "') ondblclick=\"center_zoom('" + 
         arr[n].CallSign +
-        "');\">" 
+        "');\">" +
         arr[n].CallSign +
         "</td><td>" + 
         arr[n].Comment + 
         "</td></tr>\n";
     }
 
+  output_html += "</table>";
+
   return output_html;
 };
-function fill_array(file, column) {
+function fill_array(file, column, entries) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -169,6 +171,8 @@ function fill_array(file, column) {
       var arr = Right.getElementsByTagName('script')
       for (var n = 0; n < arr.length; n++)
          eval(arr[n].innerHTML);
+      var element = document.getElementById("ColumnDiv"+column);
+      element.innerHTML = fill_column(entries);
     };
   };
   xhttp.open("GET", "right.php?file="+file+"&column="+column, true);
@@ -176,8 +180,8 @@ function fill_array(file, column) {
   xhttp.send();
 }
 function loadDoc() {
-  fill_array("RATS.csv", 2);
-  fill_array("San Mateo County Fire.csv", 3);
+  fill_array("RATS.csv", 2, Column2Entries);
+  fill_array("San Mateo County Fire.csv", 3, Column3Entries);
 }
 loadDoc();
 </script>

@@ -3,8 +3,6 @@
     var RepeaterEntry = 0;
 //    add_freq_marker(markers, 37.437250, -122.371140, "test");
 //    map.addLayer(markers);
-</script>
-<table>
 <?php
 function str_attr($name, $value) {
     return "    RepeaterEntry.".$name."= \"".$value."\"";
@@ -35,7 +33,6 @@ $f = fopen("StationLists/".$_GET["file"], "r");
 while (($line = fgetcsv($f)) !== false) {
 
     if(is_numeric($line[19]) && is_numeric($line[20])) {
-        echo "<script>\n";
         echo "   var RepeaterEntry = new Object;\n"; 
         echo str_attr("CallSign", $line[1]).";\n";
         echo str_attr("Frequency", $line[2]).";\n";
@@ -48,16 +45,9 @@ while (($line = fgetcsv($f)) !== false) {
         echo "   RepeaterEntries.push(RepeaterEntry);\n";
         echo "   Column".$_GET['column']."Entries.push(RepeaterEntry);\n";
 #        echo "   alert(\"Column".$_GET['column']."\");\n";
-        echo "</script>\n";
     }
-    echo "<tr>";
-    echo "<td onclick=\"open_popup('".$line[1]."');\" ondblclick=\"center_zoom('".$line[1]."');\">" . htmlspecialchars($line[1]) . "</td>";
-    echo "<td>" . htmlspecialchars($line[13]) . "</td>";
-    echo "</tr>\n";
 }
 fclose($f);
 ?>
-</table>
-<script>
     map.addLayer(markers);
 </script>

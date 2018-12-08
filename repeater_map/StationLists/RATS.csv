@@ -1,17 +1,17 @@
 Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,Mode,TStep,Skip,Comment,URCALL,RPT1CALL,RPT2CALL,DVCODE,,Latitude,Longitude
-117,WB6JKV,443.325,,0,Tone,100,88.5,23,NN,FM,5,,RATS Orinda-SF bay area coverage,,,,,,37.87,-122.18
-118,WA6BTH,440.75,,0,Tone,100,88.5,23,NN,FM,5,,RATS Sacramento Coverage,,,,,,38.94,-120.29
-119,WA6BTH,440.75,,0,Tone,173.8,88.5,23,NN,FM,5,,RATS Carla 16,,,,,,38.94,-120.29
-120,WA6EWV,442.475,,0,Tone,100,88.5,23,NN,FM,5,,RATS Tahoe South Shore,,,,,,38.941631,-119.977219
-121,WA6BTH,146.865,,0,Tone,100,88.5,23,NN,FM,5,,RATS Outingdale: Placerville.,,,,,,38.61646,-120.72812
-122,WA6BTH,146.865,,0,Tone,107.2,88.5,23,NN,FM,5,,"RATS Sac Valley, Woodland",,,,,,38.7874833333333,122.12285
-123,WA6BTH,146.865,,0,Tone,146.2,88.5,23,NN,FM,5,,RATS Pollock Pines Sac Valley.,,,,,,38.75693,-120.57511
-124,WA6KQV,442.475,,0,Tone,123,88.5,23,NN,FM,5,,"RATS Pollock Pines,",,,,,,38.75693,-120.57511
-125,WA6BTH,442.475,,0,Tone,110.9,88.5,23,NN,FM,5,,"RATS Outingdale, Fairplay, Somerset, Stockton",,,,,,37.95754,-121.29245
-126,WA6BTH,442.475,,0,Tone,114.8,88.5,23,NN,FM,5,,RATS Diamond Springs,,,,,,38.69432,-120.81511
-127,WA6BTH,440.7,,0,Tone,123,88.5,23,NN,FM,5,,"RATS Placerville, SSB 2 Meter remote 144.200.",,,,,,38.729649,-120.799149
-128,WB6JKV,440.725,,0,Tone,123,88.5,23,NN,FM,5,,"RATS Stockton, Merced ,Madera",,,,,,39.30716,-120.53786
-129,KJ6KO,441.45,,0,Tone,100,88.5,23,NN,FM,5,,RATS Sacramento,,,,,,38.7874833333333,122.12285
-130,WA6AFT,440.725,,0,Tone,114.8,88.5,23,NN,FM,5,,"RATS Pacifica, SF",,,,,,37.57477,-122.48308
-131,WA6AFT,146.85,,0,Tone,162.2,88.5,23,NN,FM,5,,"RATS SF, Pacifica (Original Gorilla Machine)",,,,,,37.57477,-122.48308
+117,WB6JKV,443.325,,0,Tone,100,88.5,23,NN,FM,5,,Orinda-SF bay area coverage,,,,,,37.87,-122.18
+118,WA6BTH,440.75,,0,Tone,100,88.5,23,NN,FM,5,,Sacramento Coverage,,,,,,38.94,-120.29
+119,WA6BTH,440.75,,0,Tone,173.8,88.5,23,NN,FM,5,,Carla 16,,,,,,38.94,-120.29
+120,WA6EWV,442.475,,0,Tone,100,88.5,23,NN,FM,5,,Tahoe South Shore,,,,,,38.941631,-119.977219
+121,WA6BTH,146.865,,0,Tone,100,88.5,23,NN,FM,5,,Outingdale: Placerville.,,,,,,38.61646,-120.72812
+122,WA6BTH,146.865,,0,Tone,107.2,88.5,23,NN,FM,5,,"Sac Valley, Woodland",,,,,,38.7874833333333,-122.12285
+123,WA6BTH,146.865,,0,Tone,146.2,88.5,23,NN,FM,5,,Pollock Pines Sac Valley.,,,,,,38.75693,-120.57511
+124,WA6KQV,442.475,,0,Tone,123,88.5,23,NN,FM,5,,"Pollock Pines,",,,,,,38.75693,-120.57511
+125,WA6BTH,442.475,,0,Tone,110.9,88.5,23,NN,FM,5,,"Outingdale, Fairplay, Somerset, Stockton",,,,,,37.95754,-121.29245
+126,WA6BTH,442.475,,0,Tone,114.8,88.5,23,NN,FM,5,,Diamond Springs,,,,,,38.69432,-120.81511
+127,WA6BTH,440.7,,0,Tone,123,88.5,23,NN,FM,5,,"Placerville, SSB 2 Meter remote 144.200.",,,,,,38.729649,-120.799149
+128,WB6JKV,440.725,,0,Tone,123,88.5,23,NN,FM,5,,"Stockton, Merced ,Madera",,,,,,39.30716,-120.53786
+129,KJ6KO,441.45,,0,Tone,100,88.5,23,NN,FM,5,,Sacramento,,,,,,38.7874833333333,-122.12285
+130,WA6AFT,440.725,,0,Tone,114.8,88.5,23,NN,FM,5,,"Pacifica, SF",,,,,,37.57477,-122.48308
+131,WA6AFT,146.85,,0,Tone,162.2,88.5,23,NN,FM,5,,"SF, Pacifica (Original Gorilla Machine)",,,,,,37.57477,-122.48308
 132,WB6DAX,52.98,,0,Tone,141.3,88.5,23,NN,FM,5,,Placerville,,,,,,,

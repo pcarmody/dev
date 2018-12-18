@@ -222,6 +222,7 @@
 #    $titles = "<tr><th>Favorites</th>";
     $titles = "";
     $new_row = "<tr><td id='Col Favorites'></td>";
+    $new_fill = "";
     $i = 0;
     while (($line = fgetcsv($f)) !== false) {
         $i = $i + 1;
@@ -233,14 +234,28 @@
         $titles = $titles. " + " . $new_obj.".add_title()";
         $col_title = "Col ".$line[0];
         $new_row = $new_row."<td id=\"".$col_title."\" valign='top'></td>";
+        $new_array = "Column".$i."Entries ";
+        $arrays = $arrays. "    var ".$new_array."= new Array();\n";
+#        $new_fill = $new_fill . "    fill_array(\"".$line[0]."\", \"".$line[1]."\", ".$i.", \"".$col_title."\", ".$new_array.");\n";
         $arrays = $arrays ."    var ".$new_obj." = ColumnObject(\"".$line[0]."\", \"".$line[1]."\", ".$i.", titles, datarow);\n";
         $arrays = $arrays ."    ColumnObjects.push(".$new_obj.");\n";
     }
 #    $titles = $titles."</tr>\n";
     $new_row = $new_row."</tr>\n";
+    $new_fill = $new_fill."";
     echo $arrays;
 ?>
     function loadDoc() {
+//      var titles = document.getElementById("TitleRow");
+ //     var titles, datarow = document.getElementById("DataRow");
+//      titles.innerHTML = Favorites.add_title() <?php echo $titles; ?>;
+//      for(var a = 0; a < ColumnObjects.length; a++){
+//          titles.innerHTML += ColumnObjects[a].add_title();
+//          titles, datarow.innerHTML += ColumnObjects[1].add_row();
+//      }
+<?php
+      echo $new_fill;
+?>
 
     }
     loadDoc();

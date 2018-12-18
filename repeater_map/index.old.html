@@ -1,0 +1,174 @@
+<html><body>
+  <div id="mapdiv" style="width: 50%; float: left;">
+      <div id="popup" class="ol-popup">
+          <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+          <div id="popup-content"></div>
+      </div>
+  </div>
+<h1>this is a header</h1>
+<table>
+<tbody>
+<tr id="TitleRow">
+</tr>
+<tr id="DataRow">
+  <td id="ColumnDiv1" valign="top" height="100%">
+    <p> stuff and nonsense</p>
+  </td>
+  <td id="ColumnDiv2" valign="top" style="diplay: flex; flex-direction: column;"> Secondary </td>
+  <td id="ColumnDiv3" valign="top" style="diplay: flex; flex-direction: column;">
+Right 
+</td>
+</tr>
+</tbody>
+<table>
+<div id="BottomDiv" style="clear: both;">Below</div>
+  <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
+  <script>
+    var ppp = 0;
+    map = new OpenLayers.Map("mapdiv", {
+        controls:[
+            new OpenLayers.Control.Navigation(),
+            new OpenLayers.Control.PanZoomBar(),
+            new OpenLayers.Control.LayerSwitcher()
+        ]
+    });
+    map.addLayer(new OpenLayers.Layer.OSM());
+
+    var lonLat = new OpenLayers.LonLat(-122.365530, 37.251690) 
+          .transform(
+            new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+            map.getProjectionObject() // to Spherical Mercator Projection
+          );
+          
+    var zoom=10;
+    var markers = new OpenLayers.Layer.Markers( "Markers" );
+
+//
+//  define the popups
+//
+    function onPopupClose(evt) {
+      var pops = map.popups;
+      for(var a = 0; a < pops.length; a++){
+         map.removePopup(map.popups[a]);
+      };
+    }
+    function onFeatureSelect(evt) {
+        feature = evt.feature;
+        popup = new OpenLayers.Popup.FramedCloud("featurePopup",
+                                 feature.geometry.getBounds().getCenterLonLat(),
+                                 new OpenLayers.Size(100,100),
+                                 "<h2>"+feature.attributes.title + "</h2>" +
+                                 feature.attributes.description,
+                                 null, true, onPopupClose);
+        feature.popup = popup;
+        popup.feature = feature;
+        map.addPopup(popup);
+    }
+    function onFeatureUnselect(evt) {
+        if (feature.popup) {
+            map.removePopup(popup);
+            popup.destroy();
+        }
+    }
+    var RepeaterEntries = new Array();
+    var ActiveEntries = new Array();
+    var Column2Entries = new Array();
+    var Column3Entries = new Array();
+
+//
+// add a marker 
+//
+    function add_freq_marker(markers, repeater) {
+        var lonLat = new OpenLayers.LonLat(repeater.Lon, repeater.Lat) 
+              .transform(
+                new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
+                map.getProjectionObject() // to Spherical Mercator Projection
+              );
+        repeater.lonLat = lonLat;
+        var size = new OpenLayers.Size(26,32);
+        var offset = new OpenLayers.Pixel(-(size.w/2), -size.h);
+//        var icon = new OpenLayers.Icon("http://maps.gstatic.com/intl/de_de/mapfiles/ms/micons/red-pushpin.png", size, offset);
+        var icon = new OpenLayers.Icon(repeater.Icon, size, offset);
+        marker = new OpenLayers.Marker(lonLat, icon);
+        marker.events.register( 'click', markers, function () { //            feature = evt.feature;
+            onPopupClose();
+            ppp = new OpenLayers.Popup.FramedCloud("popup",
+                                 lonLat,
+                                 new OpenLayers.Size(100,100),
+                                 "<h2>"+repeater.CallSign+"</h2>" + 
+                                 repeater.Frequency+"/"+repeater.Tone+"<br>" +
+                                 "<bold>"+repeater.Comment+"</bold><br>" + 
+                                 "Lon: "+repeater.Lon + " Lat: "+repeater.Lat,
+                                 null, true, onPopupClose);
+            map.addPopup(ppp);
+        });
+        
+        repeater.marker = marker;
+        markers.addMarker(marker);
+    };
+    var old_entry= 0;
+    function center_on_station(marker) {
+        for(i=0; i<RepeaterEntries.length; i++) {
+            if(RepeaterEntries[i].lonLat == marker) {
+                RepeaterEntries[i].marker.setUrl("http://127.0.0.1/repeatermap/icons/antenna_large.png");
+                map.setCenter (RepeaterEntries[i].lonLat, zoom);
+                if(old_entry > 0)
+                    RepeaterEntries[old_entry].marker.setUrl(RepeaterEntries[old_entry].Icon);
+                old_entry = i;
+                markers.redraw();
+                break;
+            }
+        }
+        return RepeaterEntries[i];
+    };
+    function center_zoom(marker) {
+        repeater = center_on_station(marker);
+        map.setCenter (repeater.lonLat, zoom);
+        repeater = center_on_station(marker);
+        marker.events.triggerEvent("click");
+    };
+    
+    map.setCenter (lonLat, zoom);
+
+    function fill_column(arr) {
+      var output_html = "<table>";
+    
+      for (var n = 0; n < arr.length; n++) {
+        output_html += "<tr> <td onclick=\"center_on_station('"+
+            arr[n].lonLat +
+            "');\" ondblclick=\"center_zoom('" + 
+            arr[n].lonLat +
+            "');\">" +
+            arr[n].CallSign +
+    /*        "</td><td>" + 
+            arr[n].Comment + */
+            "</td></tr>\n";
+        }
+    
+      output_html += "</table>";
+    
+      return output_html;
+    };
+    function fill_array(file, column, entries) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var Right = document.getElementById("ColumnDiv"+column);
+          Right.innerHTML = this.responseText;
+          var arr = Right.getElementsByTagName('script')
+          for (var n = 0; n < arr.length; n++)
+             eval(arr[n].innerHTML);
+//          var element = document.getElementById("ColumnDiv"+column);
+          Right.innerHTML = fill_column(entries);
+        };
+      };
+      xhttp.open("GET", "right.php?file="+file+"&column="+column, true);
+      xhttp.send();
+    }
+    function loadDoc() {
+      fill_array("RATS.csv", 2, Column2Entries);
+      fill_array("San Mateo County Fire.csv", 3, Column3Entries);
+    }
+    loadDoc();
+</script>
+</body></html>

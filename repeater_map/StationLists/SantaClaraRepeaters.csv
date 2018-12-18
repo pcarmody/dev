@@ -1,0 +1,13 @@
+Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,Mode,TStep,Skip,Comment,URCALL,RPT1CALL,RPT2CALL,DVCODE,,Latitude,Longitude
+58,KU6V,444.9,+,5,Tone,110.9,88.5,23,NN,FM,5,,"San Jose, Santa Cruz Mountains",,,,,,37.339439,-121.89389
+59,N6NAC,224.06,-,1.6,Tone,110.9,88.5,23,NN,FM,5,,Bonny Doon,,,,,,37.339439,-121.89389
+64,K9GVF,442.175,+,5,Tone,100,88.5,23,NN,FM,5,,"Campbell, Crystal Peak",,,,,,37.226669,-121.97361
+65,KI6YDR,145.35,-,0.6,Tone,94.8,88.5,23,NN,FM,5,,Boulder Creek,,,,,,37.1261,-122.122
+66,K6DND,927.9125,-,25,Tone,167.9,88.5,23,NN,FM,5,,"Los Gatos, Crystal Peak",,,,,,37.11311,-121.83579
+67,W6YYY,440.0375,+,5,,88.5,88.5,23,NN,DIG,5,,"Morgan Hill, Loma Prieta",,,,,,37.110918,-121.844279
+68,AE6KE,146.835,-,0.6,Tone,94.8,88.5,23,NN,FM,5,,"Santa Cruz, Loma Prieta",,,,,,37.110828,-121.84361
+69,K6HLE,444.025,+,5,,88.5,88.5,23,NN,DIG,5,,"San Jose, Loma Prieta",,,,,,37.110828,-121.84361
+70,K6JSI,442.9,+,5,Tone,162.2,88.5,23,NN,FM,5,,"San Jose, Loma Prieta",,,,,,37.110828,-121.84361
+71,WB6OQS,224.26,-,1.6,Tone,123,88.5,23,NN,FM,5,,"San Jose, Loma Prieta",,,,,,37.110828,-121.84361
+72,WB6OQS,146.76,-,0.6,Tone,151.4,88.5,23,NN,FM,5,,"San Jose, Loma Prieta",,,,,,37.110828,-121.84361
+73,WR6ABD,146.64,-,0.6,Tone,162.2,88.5,23,NN,FM,5,,"San Jose,  Loma Prieta",,,,,,37.110828,-121.84361

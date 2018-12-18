@@ -1,0 +1,8 @@
+#get_hourly 
+#10day > 10day.json 
+#python weather_day.py ~/bin/data/day_`today`.png  
+#python weather_10day.py ~/bin/data/10day_`today`.png  
+#python tidal_day.py ~/bin/data/tidal_day_`today`.png  
+display day_`today`.png &
+display tenday_`today`.png & 
+display tidal_day_`today`.png &

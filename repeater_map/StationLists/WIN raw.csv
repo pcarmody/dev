@@ -62,16 +62,17 @@ Tucson coverage",AllStar,27144,35.171593,-111.509394
 79,Mackay,QLD,VK4RBY,438.600  (-) 91.5,"13km NW of Mackay, Queensland, Australia",IRLP,6762,-21.141956,149.186515
 80,Santa Rosa/Hopland,CA,WA6RQX,444.750* (+) 123.0,"Sanel Mountain, 3,329', ",AllStar,1460,38.947956,-123.216117
 81,El Paso,TX,WB5LJO,442.100  (+) 123.0,"3,941'  City of El Paso",AllStar,27669,31.761877,-106.485023
+,,,,,,,,,
 83,"Mesa,  East Valley",AZ,N7OKN,440.675  (+) 107.2 ,"John's house, 46' tower
-@ Main & Dobson  ",AllStar,29600,,
-84,Lake Havasu City,AZ,K6PNG,449.125  (-) 67.0,Lake Havasu City,,,,
-85,Costa Mesa,CA,K6IXQ,145.725 Simplex  67.0,"Costa Mesa, good local coverage",IRLP,3653,,
-86,Omaha,NE,KF6SWL,442.350  (+)  100.0,"Ashland, NE.  25 miles SW of Omaha   Off Air",IRLP,4120,,
-89,Eureka,CA,WA6RQX,444.750* (+) 100.0,"Bunker Hill, 2,457' + 100'",,,,
-90,Willits,CA,K7WWA,147.120  (+) 103.5,"Laughlin Range, 3,250' + 100'",AllStar,1460,,
-91,Miami,FL,K4GET,441.425  (+) 103.5,"Plantation FL, 24 Miles North of Miami, FL",AllStar,29888,,
-92,SW Phoenix,AZ,AJ9Y,448.075  (-) 100.0,"At Bob's house in Tolleson, AZ.",IRLP,3423,,
-93,Crescent City,CA,KF6QBW,444.825  (+) 100.0,,AllStar,28839,,
-94,Seattle,WA,W7VTX,445.800 Simplex 103.5,Rich's House - Maple Leaf Neighborhood - 370 feet above sea level - 30' above the ground,AllStar,43667,,
-95,Seattle,WA,W7VTX,146.550 Simplex 123.0,Rich's House - Maple Leaf Neighborhood - 370 feet above sea level - 30' above the ground,AllStar,45911,,
-96,Chicago,IL,K2NSX,442.125   (+) 107.2,30',AllStar,29040,,
+@ Main & Dobson  ",AllStar,29600,33.41497,-111.87436
+84,Lake Havasu City,AZ,K6PNG,449.125  (-) 67.0,Lake Havasu City,,,34.49614,-114.34895
+85,Costa Mesa,CA,K6IXQ,145.725 Simplex  67.0,"Costa Mesa, good local coverage",IRLP,3653,33.66386,-117.90477
+86,Omaha,NE,KF6SWL,442.350  (+)  100.0,"Ashland, NE.  25 miles SW of Omaha   Off Air",IRLP,4120,41.03614,-96.360939
+89,Eureka,CA,WA6RQX,444.750* (+) 100.0,"Bunker Hill, 2,457' + 100'",,,40.802071,-124.163673
+90,Willits,CA,K7WWA,147.120  (+) 103.5,"Laughlin Range, 3,250' + 100'",AllStar,1460,39.40934,-123.41332
+91,Miami,FL,K4GET,441.425  (+) 103.5,"Plantation FL, 24 Miles North of Miami, FL",AllStar,29888,26.127586,-80.233101
+92,SW Phoenix,AZ,AJ9Y,448.075  (-) 100.0,"At Bob's house in Tolleson, AZ.",IRLP,3423,33.45038,-112.25519
+93,Crescent City,CA,KF6QBW,444.825  (+) 100.0,,AllStar,28839,41.754768,-124.204369
+94,Seattle,WA,W7VTX,445.800 Simplex 103.5,Rich's House - Maple Leaf Neighborhood - 370 feet above sea level - 30' above the ground,AllStar,43667,47.69854,-122.31761
+95,Seattle,WA,W7VTX,146.550 Simplex 123.0,Rich's House - Maple Leaf Neighborhood - 370 feet above sea level - 30' above the ground,AllStar,45911,47.69854,-122.31761
+96,Chicago,IL,K2NSX,442.125   (+) 107.2,30',AllStar,29040,41.88323,-87.6324

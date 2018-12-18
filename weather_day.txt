@@ -1,0 +1,17 @@
+Weather Day Image:
+
+This program generates an image of concentric circles based on the time of day.  Each circle indicates a different measure of weather and uses an individual color code to indicate the value given at that time of day.  The image is of the entire 24 hour day.
+
+Temperature: Ring One
+    This ring shows the varying temperature from 20 degrees as White/Blue to Black/Red as 110.  Bright green is precisely in the center at about 65 degrees.
+
+Wind: Ring Two
+    This ring shows the wind speed and direction.
+    Direction is indicated by color: White -> North, Red -> East, Green -> South, Blue -> West.
+    Speed is indicated by shading: completely covered is zero and no shading at all is 18 MPH or higher.
+
+Precipitation: Ring Three
+    This is indicated by a percentage chance of rain: Black/Red is zero and White/Blue is 100%, Green being 50%.
+
+Humidity: Ring Four
+    This is and indication of humidity as a percentage: Black/Red is zero and White/Blue is 100%.

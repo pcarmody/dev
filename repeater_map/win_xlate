@@ -1,0 +1,71 @@
+#!/usr/bin/ruby 
+
+require 'csv'
+
+count = 0
+header_list = ["Location","Name","Frequency","Duplex","Offset","Tone","rToneFreq","cToneFreq","DtcsCode","DtcsPolarity","Mode","TStep","Skip","Comment","URCALL","RPT1CALL","RPT2CALL","DVCODE","","Latitude","Longitude"]
+
+out_hash = {}
+
+put_headers = 1
+
+CSV.foreach(ARGV[0], headers: true) do | row |
+#  puts "Number:"+row["Number"] if row["Number"]
+#  puts "Service Area:"+row["Service Area"] if row["Service Area"]
+
+  next if !row["CallSign"]
+  out_hash["Location"] = row["Number"]
+  out_hash["Name"] = row["CallSign"]
+  out_hash["Latitude"] = row["Lat"]
+  out_hash["Longitude"] = row["Lon"]
+
+#
+#  parse the frequency field
+#
+
+  freq = row["FREQ/Offset/PL"][0..6]
+
+  if row["FREQ/Offset/PL"].include? "(+)"
+    sign = "+"
+  elsif row["FREQ/Offset/PL"].include? "(-)"
+    sign = "-"
+  else
+    sign = ""
+  end
+
+  simplex = ""
+
+  if row["FREQ/Offset/PL"].include? "Simplex"
+    simplex = "Simplex"
+  end
+
+  offset = ' '
+  if row["FREQ/Offset/PL"] =~ /.*\) ([0-9.]*)$/
+#    puts "out = " + $1
+    offset = $1.dup
+  end
+#  puts "frequency is "+freq+" "+sign+" "+offset+" "+simplex
+
+  out_hash["Frequency"] = freq
+  out_hash["Duplex"] = simplex
+  out_hash["Offset"] = sign
+  out_hash["Tone"] = "Tone"
+  out_hash["rToneFreq"] = offset
+  out_hash["cToneFreq"] = "88.5"
+  out_hash["DtcsCode"] = "23"
+  out_hash["DtcsPolarity"] = "NN"
+  out_hash["Mode"] = "FM"
+  out_hash["TStep"] = "5"
+  out_hash["Skip"] = " "
+  out_hash["Comment"] = '"'+row["AllStar or IRLP"].to_s + " (" + row["Node #"].to_s + "): " + row["Location Information"].to_s+'"'
+  out_hash["URCALL"] = " "
+  out_hash["RPT1CALL"] = " "
+  out_hash["RPT2CALL"] = " "
+  out_hash["DVCODE"] = " "
+  out_hash["Features"] = '"'+row["AllStar or IRLP"].to_s + " (" + row["Node #"].to_s + ")" +'"'
+
+  puts out_hash.keys.join(",") if put_headers > 0
+  put_headers = 0
+
+  puts out_hash.map{|k,v| v}.join(",")
+end

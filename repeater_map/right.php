@@ -45,6 +45,7 @@ while (($line = fgetcsv($f)) !== false) {
         echo "   add_freq_marker(markers, RepeaterEntry );\n";
         echo "   RepeaterEntries.push(RepeaterEntry);\n";
         echo "   Column".$_GET['column']."Entries.push(RepeaterEntry);\n";
+        echo "   Column".$_GET['column']."Object.add_station(RepeaterEntry);\n";
 #        echo "   alert(\"Column".$_GET['column']."\");\n";
     }
 }

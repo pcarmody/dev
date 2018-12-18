@@ -8,17 +8,8 @@
 <h1>this is a header</h1>
 <table>
 <tbody>
-<tr id="TitleRow">
-</tr>
-<tr id="DataRow">
-  <td id="ColumnDiv1" valign="top" height="100%">
-    <p> stuff and nonsense</p>
-  </td>
-  <td id="ColumnDiv2" valign="top" style="diplay: flex; flex-direction: column;"> Secondary </td>
-  <td id="ColumnDiv3" valign="top" style="diplay: flex; flex-direction: column;">
-Right 
-</td>
-</tr>
+<tr id="TitleRow"> </tr>
+<tr id="DataRow"> </tr>
 </tbody>
 <table>
 <div id="BottomDiv" style="clear: both;">Below</div>
@@ -131,6 +122,56 @@ Right
     
     map.setCenter (lonLat, zoom);
 
+//
+// column object definition
+//
+
+    function ColumnObject(name, file, num, titles, rows) {
+
+      var obj = new Object();
+
+      obj.StationList = new Array();
+      obj.Name = name;
+      obj.File = file;
+      obj.Num = num;
+      obj.Column = "Col " + name;
+
+      obj.fill_array = function(name, file, num, column, entries) {
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var Right = document.getElementById(column);
+              Right.innerHTML = this.responseText;
+              var arr = Right.getElementsByTagName('script')
+              for (var n = 0; n < arr.length; n++)
+                 eval(arr[n].innerHTML);
+    //          var element = document.getElementById("ColumnDiv"+column);
+              Right.innerHTML = fill_column(entries);
+            };
+          };
+          xhttp.open("GET", "right.php?file="+file+"&column="+num+"&name="+name, true);
+          xhttp.send();
+      };
+    
+      obj.add_title = function() {
+          return "<th>" + this.Name + "</th>";
+      };
+
+      obj.add_row = function() {
+          return "<td id=\"Col " + name + "\" valign='top'></td>";
+      };
+
+      obj.add_station = function (station) {
+           this.StationList.push(station);
+      };
+
+      titles.innerHTML += "<th>" + obj.Name + "</th>";
+      rows.innerHTML += "<td id=\"" + obj.Column + "\" valign='top'></td>";
+
+      obj.fill_array(name, file, num, obj.Column, obj.StationList);
+
+      return obj;
+    }
     function fill_column(arr) {
       var output_html = "<table>";
     
@@ -166,24 +207,20 @@ Right
       xhttp.open("GET", "right.php?file="+file+"&column="+num+"&name="+name, true);
       xhttp.send();
     }
-/*    function allowDrop(ev) {
-      ev.preventDefault();
-    }
-    function make_favorite(e) {
-      alert("dropping");
-    }
-    function start_drag(e) {
-      alert("start drag");
-    }*/
 
+    var titles = document.getElementById("TitleRow");
+    var datarow = document.getElementById("DataRow");
+    var ColumnObjects = new Array();
+    var Favorites = ColumnObject("Favorites", " ", 1, titles, datarow);
+    ColumnObjects.push(Favorites);
 <?php
     $list = `ls StationLists`;
     $file_names = str_getcsv($list, "\n");
 #    echo $file_names[0];
     $f = fopen("StationLists/lists.csv", "r");
     $arrays = "";
-    $titles = "<tr><th>Favorites</th>";
-#    $new_row = "<tr><td id='Col Favorites' ondrop='make_favorite(e);'  ondragover='allowDrop(e);'></td>";
+#    $titles = "<tr><th>Favorites</th>";
+    $titles = "";
     $new_row = "<tr><td id='Col Favorites'></td>";
     $new_fill = "";
     $i = 0;
@@ -192,30 +229,30 @@ Right
         if($i == 1) {
             continue;
         }
-        $titles = $titles. "<th>" . $line[0]. "</th>";
+        $new_obj = "Column".$i."Object ";
+#        $titles = $titles. "<th>" . $line[0]. "</th>";
+        $titles = $titles. " + " . $new_obj.".add_title()";
         $col_title = "Col ".$line[0];
-#        $new_row = $new_row."<td id=\"".$col_title."\" valign='top' draggable='true' ondragstart='start_drag(e);'></td>";
         $new_row = $new_row."<td id=\"".$col_title."\" valign='top'></td>";
         $new_array = "Column".$i."Entries ";
         $arrays = $arrays. "    var ".$new_array."= new Array();\n";
-        $new_fill = $new_fill . "    fill_array(\"".$line[0]."\", \"".$line[1]."\", ".$i.", \"".$col_title."\", ".$new_array.");\n";
+#        $new_fill = $new_fill . "    fill_array(\"".$line[0]."\", \"".$line[1]."\", ".$i.", \"".$col_title."\", ".$new_array.");\n";
+        $arrays = $arrays ."    var ".$new_obj." = ColumnObject(\"".$line[0]."\", \"".$line[1]."\", ".$i.", titles, datarow);\n";
+        $arrays = $arrays ."    ColumnObjects.push(".$new_obj.");\n";
     }
-    $titles = $titles."</tr>\n";
+#    $titles = $titles."</tr>\n";
     $new_row = $new_row."</tr>\n";
     $new_fill = $new_fill."";
     echo $arrays;
 ?>
     function loadDoc() {
-      var titles = document.getElementById("TitleRow");
-      titles.innerHTML = `
-<?php
-      echo $titles;
-?>`;
-      var datarow = document.getElementById("DataRow");
-      datarow.innerHTML = `
-<?php
-      echo $new_row;
-?>`;
+//      var titles = document.getElementById("TitleRow");
+ //     var titles, datarow = document.getElementById("DataRow");
+//      titles.innerHTML = Favorites.add_title() <?php echo $titles; ?>;
+//      for(var a = 0; a < ColumnObjects.length; a++){
+//          titles.innerHTML += ColumnObjects[a].add_title();
+//          titles, datarow.innerHTML += ColumnObjects[1].add_row();
+//      }
 <?php
       echo $new_fill;
 ?>

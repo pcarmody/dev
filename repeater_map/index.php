@@ -34,7 +34,10 @@
     });
     map.addLayer(new OpenLayers.Layer.OSM());
 
-    var lonLat = new OpenLayers.LonLat(-122.365530, 37.251690) 
+    var GPSlon = -122.365530;
+    var GPSlat = 37.251690; 
+//    var GPSlonLat = new OpenLayers.LonLat(-122.365530, 37.251690) 
+    var GPSlonLat = new OpenLayers.LonLat(GPSlon, GPSlat)
           .transform(
             new OpenLayers.Projection("EPSG:4326"), // transform from WGS 1984
             map.getProjectionObject() // to Spherical Mercator Projection
@@ -125,11 +128,14 @@
         marker.events.triggerEvent("click");
     };
     
-    map.setCenter (lonLat, zoom);
+    map.setCenter (GPSlonLat, zoom);
 
 //
 // station object definition
 //
+
+var Geographic  = new OpenLayers.Projection("EPSG:4326"); 
+var Mercator = new OpenLayers.Projection("EPSG:900913");
 
     function StationObject(markers, call_sign, freq, tone, comment, icon, lon, lat, list_name) {
 
@@ -144,11 +150,25 @@
         obj.Lat = lat;
         obj.ListName = list_name;
 
+    //This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+
+    var GPSlon = -122.365530;
+    var GPSlat = 37.251690; 
+        obj.Distance = function() {
+        var point1 = new OpenLayers.Geometry.Point(this.Lon, this.Lat).transform(Geographic, Mercator);
+        var point2 = new OpenLayers.Geometry.Point(GPSlon, GPSlat).transform(Geographic, Mercator);       
+//        var point2 = new OpenLayers.Geometry.Point(GPSlonLat.lon, GPSlonLat.lat).transform(Geographic, Mercator);       
+            retval = point1.distanceTo(point2) * 0.61 / 1000.0;
+//            return retval.toFixed(2) + " miles";
+            return retval;//.toFixed(2) + " miles";
+//            return point2;
+        };
+
         obj.array_string = function() {
            return this.parent_array + "[" + this.parent_index + "]";
         };
 
-        obj.gen_html = function() {
+        obj.gen_html = function(button_type) {
 
               var is_a_favorite = 0;
               var arr = Favorites.StationList;
@@ -165,7 +185,7 @@
               }
                
               return "<tr><td><div class='dropdown'>" +
-              "  <button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>" +
+              "  <button type='button' class='btn " + button_type + "dropdown-toggle' data-toggle='dropdown'>" +
               //"    Dropdown button" +
               this.CallSign +
               "  </button>" +
@@ -176,6 +196,7 @@
                    "</button><br>" +  
                    this.Frequency + "/" + this.Tone + "<br>" + 
                    "<div class='font-weight-bold'>" + this.Comment + "</div><br>"  +
+                this.Distance().toFixed(2) + " miles"; + 
 //              "    <a class='dropdown-item' href='#'>"+this.ListName+"</a>" +
 //              "    <a class='dropdown-item' href='#'>"+this.CallSign+"</a>" +
 //              "    <a class='dropdown-item' href='#'>"+ this.Frequency + "/" + this.Tone + "</a>" +
@@ -214,7 +235,12 @@
           var output_html = "<table>";
     
           for (var n = 0; n < this.StationList.length; n++) {
-            output_html += this.StationList[n].gen_html();
+
+            if(this.StationList[n].Distance() > 40.0) {
+                output_html += this.StationList[n].gen_html("btn-light ");
+            } else {
+                output_html += this.StationList[n].gen_html("btn-primary ");
+            }
           }
     
           output_html += "</table>";
@@ -258,6 +284,19 @@
 //               Favorites.add_station(station);
       };
 
+      obj.sort_by_distance = function() {
+          this.StationList.sort( function(a, b)  {
+              if(a.Distance() < b.Distance()) { return -1 };
+              if(a.Distance() > b.Distance()) { return 1 };
+              return 0;
+/*  var x = a.type.toLowerCase();
+  var y = b.type.toLowerCase();
+  if (x < y) {return -1;}
+  if (x > y) {return 1;}
+  return 0; */
+});
+      };
+
       titles.innerHTML += "<th>" + obj.Name + "</th>";
       rows.innerHTML += "<td id=\"" + obj.Column + "\" valign='top'></td>";
 
@@ -268,9 +307,14 @@
 
     function fill_column(arr) {
       var output_html = "<table>";
+      var in_range = 1;
     
       for (var n = 0; n < arr.length; n++) {
-        output_html += arr[n].gen_html();
+
+        if(arr[n].Distance() > 40.0) {
+            output_html += arr[n].gen_html("btn-light ");
+        } else
+            output_html += arr[n].gen_html("btn-primary ");
       }
     
       output_html += "</table>";
@@ -294,11 +338,6 @@
     };
 
     Favorites.remove_station = function (station) {
-/*        this.StationList.filter(function(value, index, arr){
-
-            return value > station;
-
-        });*/
         var arr = this.StationList;
         for(var n=0; n<arr.length; n++) 
             if(arr[n] == station) {

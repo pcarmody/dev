@@ -39,6 +39,7 @@ while (($line = fgetcsv($f)) !== false) {
     }
 }
 fclose($f);
+echo "   Column".$_GET['column']."Object.sort_by_distance();\n";
 ?>
     map.addLayer(markers);
 </script>

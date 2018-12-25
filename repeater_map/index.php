@@ -144,6 +144,10 @@
         obj.Lat = lat;
         obj.ListName = list_name;
 
+        obj.array_string = function() {
+           return this.parent_array + "[" + this.parent_index + "]";
+        };
+
         obj.gen_html = function() {
 
               var is_a_favorite = 0;
@@ -154,8 +158,11 @@
                       is_a_favorite = 1;
 
               var text_format = "";
-              if(is_a_favorite)
+              var on_click = "Favorites.add_station("+this.array_string()+");";
+              if(is_a_favorite) {
                   text_format = 'text-primary font-italic font-weight-bold';
+                  on_click = "Favorites.remove_station("+this.array_string()+");";
+              }
                
               return "<tr><td><div class='dropdown'>" +
               "  <button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>" +
@@ -164,9 +171,11 @@
               "  </button>" +
               "  <div class='dropdown-menu'>" +
               "    <h3>"+this.ListName+"</h3>" +
-                   "<button class='" + text_format + "'>" + this.CallSign + "</button><br>" +  
+                   "<button class='" + text_format + "' onclick='" +  on_click + "'>" + 
+                       this.CallSign + 
+                   "</button><br>" +  
                    this.Frequency + "/" + this.Tone + "<br>" + 
-                   "<bold>" + this.Comment + "</bold><br>"  +
+                   "<div class='font-weight-bold'>" + this.Comment + "</div><br>"  +
 //              "    <a class='dropdown-item' href='#'>"+this.ListName+"</a>" +
 //              "    <a class='dropdown-item' href='#'>"+this.CallSign+"</a>" +
 //              "    <a class='dropdown-item' href='#'>"+ this.Frequency + "/" + this.Tone + "</a>" +
@@ -204,8 +213,8 @@
       obj.fill_column = function() {
           var output_html = "<table>";
     
-          for (var n = 0; n < obj.StationList.length; n++) {
-            output_html += obj.StationList[n].gen_html();
+          for (var n = 0; n < this.StationList.length; n++) {
+            output_html += this.StationList[n].gen_html();
           }
     
           output_html += "</table>";
@@ -214,12 +223,12 @@
       }
 
       obj.redraw_column = function(response) {
-          var Right = document.getElementById(obj.Column);
+          var Right = document.getElementById(this.Column);
           Right.innerHTML = response;
           var arr = Right.getElementsByTagName('script')
           for (var n = 0; n < arr.length; n++)
               eval(arr[n].innerHTML);
-          Right.innerHTML = obj.fill_column(obj.StationList); 
+          Right.innerHTML = this.fill_column(this.StationList); 
       };
 
       obj.fill_array = function(name, file, num, entries) {
@@ -243,10 +252,10 @@
 
       obj.add_station = function (station) {
            station.parent_index = this.StationList.length;
-           station.parent_array = "Column" + this.Num + "Object";
+           station.parent_array = "Column" + this.Num + "Object.StationList";
            this.StationList.push(station);
-           if(this.StationList.length < 2)
-               Favorites.add_station(station);
+//           if(this.StationList.length < 2)
+//               Favorites.add_station(station);
       };
 
       titles.innerHTML += "<th>" + obj.Name + "</th>";
@@ -280,9 +289,23 @@
 //
 
     Favorites.add_station = function (station) {
-//           station.array_index = this.StationList.length;
-//           station.parent_array = "Column" + this.Column + "Object";
         this.StationList.push(station);
+        this.redraw_column(" ");
+    };
+
+    Favorites.remove_station = function (station) {
+/*        this.StationList.filter(function(value, index, arr){
+
+            return value > station;
+
+        });*/
+        var arr = this.StationList;
+        for(var n=0; n<arr.length; n++) 
+            if(arr[n] == station) {
+                 arr.splice(n, 1);
+                 break;
+            }
+            
         this.redraw_column(" ");
     };
 <?php

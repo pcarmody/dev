@@ -1,5 +1,14 @@
-<html><body>
-  <div id="mapdiv" style="width: 50%; float: left;">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <div id="mapdiv" style="width: 30%; float: left;">
       <div id="popup" class="ol-popup">
           <a href="#" id="popup-closer" class="ol-popup-closer"></a>
           <div id="popup-content"></div>
@@ -86,11 +95,7 @@
             ppp = new OpenLayers.Popup.FramedCloud("popup",
                                  lonLat,
                                  new OpenLayers.Size(100,100),
-                                 "<h2>"+repeater.ListName +"</h2>" + 
-                                 "<h3>"+repeater.CallSign+"</h3>" + 
-                                 repeater.Frequency+"/"+repeater.Tone+"<br>" +
-                                 "<bold>"+repeater.Comment+"</bold><br>",
-//                               +  "Lon: "+repeater.Lon + " Lat: "+repeater.Lat,
+                                 repeater.gen_popup(), 
                                  null, true, onPopupClose);
             map.addPopup(ppp);
         });
@@ -123,6 +128,66 @@
     map.setCenter (lonLat, zoom);
 
 //
+// station object definition
+//
+
+    function StationObject(markers, call_sign, freq, tone, comment, icon, lon, lat, list_name) {
+
+        var obj = new Object();
+   
+        obj.CallSign = call_sign;
+        obj.Frequency = freq;
+        obj.Tone = tone;
+        obj.Comment = comment;
+        obj.Icon = icon;
+        obj.Lon = lon;
+        obj.Lat = lat;
+        obj.ListName = list_name;
+
+        obj.gen_html = function() {
+
+              var is_a_favorite = 0;
+              var arr = Favorites.StationList;
+
+              for (var n = 0; n < arr.length; n++) 
+                  if(arr[n] == this)
+                      is_a_favorite = 1;
+
+              var text_format = "";
+              if(is_a_favorite)
+                  text_format = 'text-primary font-italic font-weight-bold';
+               
+              return "<tr><td><div class='dropdown'>" +
+              "  <button type='button' class='btn btn-primary dropdown-toggle' data-toggle='dropdown'>" +
+              //"    Dropdown button" +
+              this.CallSign +
+              "  </button>" +
+              "  <div class='dropdown-menu'>" +
+              "    <h3>"+this.ListName+"</h3>" +
+                   "<button class='" + text_format + "'>" + this.CallSign + "</button><br>" +  
+                   this.Frequency + "/" + this.Tone + "<br>" + 
+                   "<bold>" + this.Comment + "</bold><br>"  +
+//              "    <a class='dropdown-item' href='#'>"+this.ListName+"</a>" +
+//              "    <a class='dropdown-item' href='#'>"+this.CallSign+"</a>" +
+//              "    <a class='dropdown-item' href='#'>"+ this.Frequency + "/" + this.Tone + "</a>" +
+//              "    <a class='dropdown-item' href='#'><bold>"+this.Comment+"</bold></a>" +
+              "  </div>" +
+              "</div></td></tr>";
+        };
+
+        obj.gen_popup = function() {
+            return "<h2>" + this.ListName + "</h2>" + 
+                   "<h3>" + this.CallSign + "</h3>" +  
+                   this.Frequency + "/" + this.Tone + "<br>" + 
+                   "<bold>" + this.Comment + "</bold><br>"; 
+        };
+
+        add_freq_marker(markers, obj);
+
+        return obj;
+    };
+
+//
 // column object definition
 //
 
@@ -136,17 +201,32 @@
       obj.Num = num;
       obj.Column = "Col " + name;
 
-      obj.fill_array = function(name, file, num, column, entries) {
+      obj.fill_column = function() {
+          var output_html = "<table>";
+    
+          for (var n = 0; n < obj.StationList.length; n++) {
+            output_html += obj.StationList[n].gen_html();
+          }
+    
+          output_html += "</table>";
+    
+          return output_html;
+      }
+
+      obj.redraw_column = function(response) {
+          var Right = document.getElementById(obj.Column);
+          Right.innerHTML = response;
+          var arr = Right.getElementsByTagName('script')
+          for (var n = 0; n < arr.length; n++)
+              eval(arr[n].innerHTML);
+          Right.innerHTML = obj.fill_column(obj.StationList); 
+      };
+
+      obj.fill_array = function(name, file, num, entries) {
           var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-              var Right = document.getElementById(column);
-              Right.innerHTML = this.responseText;
-              var arr = Right.getElementsByTagName('script')
-              for (var n = 0; n < arr.length; n++)
-                 eval(arr[n].innerHTML);
-    //          var element = document.getElementById("ColumnDiv"+column);
-              Right.innerHTML = fill_column(entries);
+                obj.redraw_column(this.responseText);
             };
           };
           xhttp.open("GET", "right.php?file="+file+"&column="+num+"&name="+name, true);
@@ -162,102 +242,69 @@
       };
 
       obj.add_station = function (station) {
+           station.parent_index = this.StationList.length;
+           station.parent_array = "Column" + this.Num + "Object";
            this.StationList.push(station);
+           if(this.StationList.length < 2)
+               Favorites.add_station(station);
       };
 
       titles.innerHTML += "<th>" + obj.Name + "</th>";
       rows.innerHTML += "<td id=\"" + obj.Column + "\" valign='top'></td>";
 
-      obj.fill_array(name, file, num, obj.Column, obj.StationList);
+      obj.fill_array(name, file, num, obj.StationList);
 
       return obj;
-    }
+    };
+
     function fill_column(arr) {
       var output_html = "<table>";
     
       for (var n = 0; n < arr.length; n++) {
-        output_html += "<tr> <td onclick=\"center_on_station('"+
-            arr[n].lonLat +
-            "');\" ondblclick=\"center_zoom('" + 
-            arr[n].lonLat +
-            "');\">" +
-            arr[n].CallSign +
-    /*        "</td><td>" + 
-            arr[n].Comment + */
-            "</td></tr>\n";
-        }
+        output_html += arr[n].gen_html();
+      }
     
       output_html += "</table>";
     
       return output_html;
     };
-    function fill_array(name, file, num, column, entries) {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          var Right = document.getElementById(column);
-          Right.innerHTML = this.responseText;
-          var arr = Right.getElementsByTagName('script')
-          for (var n = 0; n < arr.length; n++)
-             eval(arr[n].innerHTML);
-//          var element = document.getElementById("ColumnDiv"+column);
-          Right.innerHTML = fill_column(entries);
-        };
-      };
-      xhttp.open("GET", "right.php?file="+file+"&column="+num+"&name="+name, true);
-      xhttp.send();
-    }
 
     var titles = document.getElementById("TitleRow");
     var datarow = document.getElementById("DataRow");
     var ColumnObjects = new Array();
     var Favorites = ColumnObject("Favorites", " ", 1, titles, datarow);
     ColumnObjects.push(Favorites);
+
+//
+// redefine add_station for Favorites
+//
+
+    Favorites.add_station = function (station) {
+//           station.array_index = this.StationList.length;
+//           station.parent_array = "Column" + this.Column + "Object";
+        this.StationList.push(station);
+        this.redraw_column(" ");
+    };
 <?php
     $list = `ls StationLists`;
     $file_names = str_getcsv($list, "\n");
 #    echo $file_names[0];
     $f = fopen("StationLists/lists.csv", "r");
     $arrays = "";
-#    $titles = "<tr><th>Favorites</th>";
-    $titles = "";
-    $new_row = "<tr><td id='Col Favorites'></td>";
-    $new_fill = "";
     $i = 0;
     while (($line = fgetcsv($f)) !== false) {
         $i = $i + 1;
         if($i == 1) {
             continue;
         }
+        if($i >= 8) {
+            break;
+        }
         $new_obj = "Column".$i."Object ";
-#        $titles = $titles. "<th>" . $line[0]. "</th>";
-        $titles = $titles. " + " . $new_obj.".add_title()";
-        $col_title = "Col ".$line[0];
-        $new_row = $new_row."<td id=\"".$col_title."\" valign='top'></td>";
-        $new_array = "Column".$i."Entries ";
-        $arrays = $arrays. "    var ".$new_array."= new Array();\n";
-#        $new_fill = $new_fill . "    fill_array(\"".$line[0]."\", \"".$line[1]."\", ".$i.", \"".$col_title."\", ".$new_array.");\n";
         $arrays = $arrays ."    var ".$new_obj." = ColumnObject(\"".$line[0]."\", \"".$line[1]."\", ".$i.", titles, datarow);\n";
         $arrays = $arrays ."    ColumnObjects.push(".$new_obj.");\n";
     }
-#    $titles = $titles."</tr>\n";
-    $new_row = $new_row."</tr>\n";
-    $new_fill = $new_fill."";
     echo $arrays;
 ?>
-    function loadDoc() {
-//      var titles = document.getElementById("TitleRow");
- //     var titles, datarow = document.getElementById("DataRow");
-//      titles.innerHTML = Favorites.add_title() <?php echo $titles; ?>;
-//      for(var a = 0; a < ColumnObjects.length; a++){
-//          titles.innerHTML += ColumnObjects[a].add_title();
-//          titles, datarow.innerHTML += ColumnObjects[1].add_row();
-//      }
-<?php
-      echo $new_fill;
-?>
-
-    }
-    loadDoc();
 </script>
 </body></html>

@@ -20,9 +20,20 @@ function get_icon($freq) {
      
     return "http://127.0.0.1/repeatermap/icons/".$color;
 }
+
+function station_icon($freq, $tone) {
+    $file_name = "icons/stations/" . $freq . "_" . $tone . ".png";
+    if(!file_exists($file_name))
+        shell_exec("python station_icon.py " . $freq . " " . $tone);
+#        echo "python station_icon.py " . $freq . " " . $tone;
+
+    return $file_name;
+}
+
 $f = fopen("StationLists/".$_GET["file"], "r");
 while (($line = fgetcsv($f)) !== false) {
 
+    station_icon($line[2], $line[6]);
     if(is_numeric($line[19]) && is_numeric($line[20])) {
         echo "   var Station = StationObject(markers, ".
              "\"".$line[1]."\", ".

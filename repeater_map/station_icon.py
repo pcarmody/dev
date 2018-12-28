@@ -126,4 +126,7 @@ center = draw_center()
 image.paste(center, ring_shape(2), center)
 
 # rotate the entire image based on the current time.
-image.rotate(90).show()
+#image.rotate(90).show()
+
+file_name = "icons/stations/" + sys.argv[1] + "_" + sys.argv[2] + ".png"
+image.rotate(90).save(file_name);

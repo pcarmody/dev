@@ -14,7 +14,7 @@
           <div id="popup-content"></div>
       </div>
   </div>
-<h1>this is a header</h1>
+<h1 id='Active Station'>this is a header</h1>
 <table>
 <tbody>
 <tr id="TitleRow"> </tr>
@@ -234,7 +234,8 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
             return "<h2>" + this.ListName + "</h2>" + 
                    "<h3>" + this.CallSign + "</h3>" +  
                    this.Frequency + "/" + this.Tone + "<br>" + 
-                   "<bold>" + this.Comment + "</bold><br>"; 
+                   "<bold>" + this.Comment + "</bold><br>" +
+                this.Distance().toFixed(2) + " miles"; 
         };
 
         add_freq_marker(markers, obj);
@@ -345,6 +346,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     Favorites.add_station = function (station) {
         this.StationList.push(station);
         this.redraw_column(" ");
+        this.Scan();
     };
 
     Favorites.remove_station = function (station) {
@@ -356,6 +358,15 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
             }
             
         this.redraw_column(" ");
+    };
+
+    Favorites.Scan = function() {
+        var header = document.getElementById("Active Station");
+        var elem = this.StationList[1];
+
+        header.innerHTML = "<h2 align='center'>" + elem.ListName + "<h2>" +
+           "<h1 align='center' >" + elem.Frequency + "/" + elem.Tone + "<h1>" +
+           "<h3 align='center' >" + elem.CallSign+ "</h3>";   
     };
 <?php
     $list = `ls StationLists`;

@@ -121,11 +121,11 @@
         }
         return RepeaterEntries[i];
     };
-    function center_zoom(marker) {
-        repeater = center_on_station(marker);
+    function center_zoom(repeater) {
+//        repeater = center_on_station(marker);
         map.setCenter (repeater.lonLat, zoom);
-        repeater = center_on_station(marker);
-        marker.events.triggerEvent("click");
+//        center_on_station(marker);
+        repeater.marker.events.triggerEvent("click");
     };
     
     map.setCenter (GPSlonLat, zoom);
@@ -168,32 +168,57 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
            return this.parent_array + "[" + this.parent_index + "]";
         };
 
-        obj.gen_html = function(button_type) {
+        obj.toggle_skip = function() {
 
-              var is_a_favorite = 0;
-              var arr = Favorites.StationList;
+            this.skip_scan = (this.skip_scan)? 0 : 1;
 
-              for (var n = 0; n < arr.length; n++) 
-                  if(arr[n] == this)
-                      is_a_favorite = 1;
+        };
 
-              var text_format = "";
-              var on_click = "Favorites.add_station("+this.array_string()+");";
-              if(is_a_favorite) {
-                  text_format = 'text-primary font-italic font-weight-bold';
-                  on_click = "Favorites.remove_station("+this.array_string()+");";
-              }
-               
-              return "<tr><td><div class='dropdown'>" +
-              "  <button type='button' class='btn " + button_type + "dropdown-toggle' data-toggle='dropdown'>" +
-              //"    Dropdown button" +
+        obj.gen_html = function() {
+
+            var is_a_favorite = 0;
+            var arr = Favorites.StationList;
+
+            for (var n = 0; n < arr.length; n++) 
+                if(arr[n] == this)
+                    is_a_favorite = 1;
+
+            var button_type = "btn-light ";
+            var text_format = "";
+            var on_click = "Favorites.add_station("+this.array_string()+");";
+            if(is_a_favorite) {
+                text_format = 'text-primary font-italic font-weight-bold';
+                on_click = "Favorites.remove_station("+this.array_string()+");";
+            }
+
+            if(!this.in_range)
+                button_type += "font-italic text-info";
+
+            var call_sign_button = "<a class='' href='javascript: " +  on_click + "'>" + 
+                       "<div class='font-weight-bold'>" + this.CallSign +  "</div>" +
+                   "</a>";
+
+            var skip_button = "<a class='btn-light' href='javascript: " + this.array_string() + ".toggle_skip();'>";
+            if(this.skip_scan)
+                skip_button += 'scan';
+            else
+                skip_button += "skip";
+            skip_button += "</a>";  
+
+            var map_button = "<a class='btn-light' href='javascript: center_zoom(" + this.array_string() + ");'>map</a>";
+//            var map_button = "<a class='btn-light' href='javascript: alert(\"qqqq\");'>map</a>";
+//              "    <a class='dropdown-item' href='#'>"+this.ListName+"</a>" +
+             
+            return "<tr><td><div class='dropdown'>" +
+              "  <button type='button' class='btn " + button_type + " dropdown-toggle' data-toggle='dropdown'>" +
               this.CallSign +
               "  </button>" +
               "  <div class='dropdown-menu'>" +
               "    <h3>"+this.ListName+"</h3>" +
-                   "<button class='" + text_format + "' onclick='" +  on_click + "'>" + 
-                       this.CallSign + 
-                   "</button><br>" +  
+                   call_sign_button + skip_button + " " + map_button + "<br>" +
+//                   "<button class=' onclick='" +  on_click + "'>" + 
+//                       "<div class='font-weight-bold'>" + this.CallSign +  "</div>" +
+//                   "</button><button>button</button><br>" +  
                    this.Frequency + "/" + this.Tone + "<br>" + 
                    "<div class='font-weight-bold'>" + this.Comment + "</div><br>"  +
                 this.Distance().toFixed(2) + " miles"; + 
@@ -236,11 +261,16 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     
           for (var n = 0; n < this.StationList.length; n++) {
 
-            if(this.StationList[n].Distance() > 40.0) {
-                output_html += this.StationList[n].gen_html("btn-light ");
-            } else {
-                output_html += this.StationList[n].gen_html("btn-primary ");
-            }
+              if(this.StationList[n].Distance() > 40.0) {
+                  this.StationList[n].in_range = 0;
+                  this.StationList[n].skip_scan = 1;
+              } else {
+                  this.StationList[n].in_range = 1;
+                  this.StationList[n].skip_scan = 0;
+              }
+
+              output_html += this.StationList[n].gen_html();
+
           }
     
           output_html += "</table>";
@@ -269,7 +299,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       };
     
       obj.add_title = function() {
-          return "<th>" + this.Name + "</th>";
+          return "<th class='text-centered'>" + this.Name + "</th>";
       };
 
       obj.add_row = function() {
@@ -280,46 +310,26 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
            station.parent_index = this.StationList.length;
            station.parent_array = "Column" + this.Num + "Object.StationList";
            this.StationList.push(station);
-//           if(this.StationList.length < 2)
-//               Favorites.add_station(station);
       };
 
       obj.sort_by_distance = function() {
           this.StationList.sort( function(a, b)  {
               if(a.Distance() < b.Distance()) { return -1 };
-              if(a.Distance() > b.Distance()) { return 1 };
+              if(a.Distance() > b.Distance()) { return  1 };
+
               return 0;
-/*  var x = a.type.toLowerCase();
-  var y = b.type.toLowerCase();
-  if (x < y) {return -1;}
-  if (x > y) {return 1;}
-  return 0; */
-});
+          });
+ 
+          for(var n = 0; n < this.StationList.length; n++)
+              this.StationList[n].parent_index = n;
       };
 
-      titles.innerHTML += "<th>" + obj.Name + "</th>";
+      titles.innerHTML += "<th class='text-centered'>" + obj.Name + "</th>";
       rows.innerHTML += "<td id=\"" + obj.Column + "\" valign='top'></td>";
 
       obj.fill_array(name, file, num, obj.StationList);
 
       return obj;
-    };
-
-    function fill_column(arr) {
-      var output_html = "<table>";
-      var in_range = 1;
-    
-      for (var n = 0; n < arr.length; n++) {
-
-        if(arr[n].Distance() > 40.0) {
-            output_html += arr[n].gen_html("btn-light ");
-        } else
-            output_html += arr[n].gen_html("btn-primary ");
-      }
-    
-      output_html += "</table>";
-    
-      return output_html;
     };
 
     var titles = document.getElementById("TitleRow");

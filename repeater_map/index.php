@@ -211,7 +211,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
              
             return "<tr><td><div class='dropdown'>" +
               "  <button type='button' class='btn " + button_type + " dropdown-toggle' data-toggle='dropdown'>" +
-              this.CallSign +
+              this.CallSign + " <img src='" + this.Icon + "'>" +
               "  </button>" +
               "  <div class='dropdown-menu'>" +
               "    <h3>"+this.ListName+"</h3>" +

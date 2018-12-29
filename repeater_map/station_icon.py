@@ -14,9 +14,9 @@ if '.' in sys.argv[2]:
 else:
   DCS_tone = int(sys.argv[2])
 
-window_size = 40
+window_size = 30
 
-image = Image.new('RGBA',(window_size,window_size),(0,0,0,255))
+image = Image.new('RGBA',(window_size,window_size),(255,255,255,255))
 draw = ImageDraw.Draw(image)
 
 def ring_size(level):
@@ -122,8 +122,8 @@ image.paste(freq, ring_shape(0), freq)
 tone = draw_tone_arc()
 image.paste(tone, ring_shape(1), tone)
 
-center = draw_center()
-image.paste(center, ring_shape(2), center)
+#center = draw_center()
+#image.paste(center, ring_shape(2), center)
 
 # rotate the entire image based on the current time.
 #image.rotate(90).show()

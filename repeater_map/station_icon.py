@@ -14,17 +14,17 @@ if '.' in sys.argv[2]:
 else:
   DCS_tone = int(sys.argv[2])
 
-window_size = 30
+window_size = 25
 
-image = Image.new('RGBA',(window_size,window_size),(255,255,255,255))
+image = Image.new('RGBA',(window_size,window_size),(255,255,255,0))
 draw = ImageDraw.Draw(image)
 
 def ring_size(level):
-  percentage = window_size * 30/100
+  percentage = window_size * 50/100
   return window_size - (level * percentage)
 
 def ring_disp(level):
-  percentage = window_size * 15/100
+  percentage = window_size * 25/100
   return level * percentage
 
 def ring_shape(level):

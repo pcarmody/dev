@@ -211,7 +211,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
              
             return "<tr><td><div class='dropdown'>" +
               "  <button type='button' class='btn " + button_type + " dropdown-toggle' data-toggle='dropdown'>" +
-              this.CallSign + " <img src='" + this.Icon + "'>" +
+              "<img src='" + this.Icon + "'> " + this.CallSign +
               "  </button>" +
               "  <div class='dropdown-menu'>" +
               "    <h3>"+this.ListName+"</h3>" +
@@ -247,7 +247,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 // column object definition
 //
 
-    function ColumnObject(name, file, num, titles, rows) {
+    function ColumnObject(name, file, num, titles, rows, icon) {
 
       var obj = new Object();
 
@@ -256,6 +256,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       obj.File = file;
       obj.Num = num;
       obj.Column = "Col " + name;
+      obj.Icon = icon;
 
       obj.fill_column = function() {
           var output_html = "<table>";
@@ -303,6 +304,10 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
           return "<th class='text-centered'>" + this.Name + "</th>";
       };
 
+      obj.gen_icon = function() {
+          return "<img src='http://127.0.0.1/repeatermap/icons/" + this.Icon + "'>";
+      };
+
       obj.add_row = function() {
           return "<td id=\"Col " + name + "\" valign='top'></td>";
       };
@@ -310,6 +315,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       obj.add_station = function (station) {
            station.parent_index = this.StationList.length;
            station.parent_array = "Column" + this.Num + "Object.StationList";
+           station.MapIcon = this.Icon;
            this.StationList.push(station);
       };
 
@@ -325,7 +331,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
               this.StationList[n].parent_index = n;
       };
 
-      titles.innerHTML += "<th class='text-centered'>" + obj.Name + "</th>";
+      titles.innerHTML += "<th class='text-centered'>" + obj.gen_icon() + obj.Name + "</th>";
       rows.innerHTML += "<td id=\"" + obj.Column + "\" valign='top'></td>";
 
       obj.fill_array(name, file, num, obj.StationList);
@@ -384,7 +390,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
             break;
         }
         $new_obj = "Column".$i."Object ";
-        $arrays = $arrays ."    var ".$new_obj." = ColumnObject(\"".$line[0]."\", \"".$line[1]."\", ".$i.", titles, datarow);\n";
+        $arrays = $arrays ."    var ".$new_obj." = ColumnObject(\"".$line[0]."\", \"".$line[1]."\", ".$i.", titles, datarow, '" . $line[3] . "');\n";
         $arrays = $arrays ."    ColumnObjects.push(".$new_obj.");\n";
     }
     echo $arrays;

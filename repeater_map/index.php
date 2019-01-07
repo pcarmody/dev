@@ -152,8 +152,51 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 
     //This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
 
-    var GPSlon = -122.365530;
-    var GPSlat = 37.251690; 
+        obj.set_freq = function() {
+     
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  obj.rig_result = this.responseText;
+              };
+            };
+            var frequency = parseFloat(this.Frequency).toFixed(3);
+            cmd = "http://127.0.0.1:8080/?set_freq="+ frequency + "&set_ctcss_tone="+this.Tone;
+            xhttp.open("GET", cmd, true);
+            xhttp.send();
+        };
+
+        obj.get_strength = function() {
+// 
+//  call the rig server to ask for informaiton
+//    
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+//
+//  call the rig server again to get the result
+//
+                    var xhttp2 = new XMLHttpRequest();
+                    xhttp2.onreadystatechange = function() {
+                      if (this.readyState == 4 && this.status == 200) {
+                          obj.rig_result = this.responseText;
+                          alert("signal strength is" + obj.rig_result);
+                      };
+                    };
+                    cmd = "http://127.0.0.1:8080/?result="+obj.rig_result;
+                    xhttp2.open("GET", cmd, true);
+                    xhttp2.send();
+                  obj.rig_result = this.responseText;
+              };
+            };
+            cmd = "http://127.0.0.1:8080/?get_strength=1";
+            xhttp.open("GET", cmd, true);
+            xhttp.send();
+
+        }
+    
+        var GPSlon = -122.365530;
+        var GPSlat = 37.251690; 
         obj.Distance = function() {
         var point1 = new OpenLayers.Geometry.Point(this.Lon, this.Lat).transform(Geographic, Mercator);
         var point2 = new OpenLayers.Geometry.Point(GPSlon, GPSlat).transform(Geographic, Mercator);       
@@ -186,6 +229,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
             var button_type = "btn-light ";
             var text_format = "";
             var on_click = "Favorites.add_station("+this.array_string()+");";
+//            var on_click = this.array_string()+".set_freq();" + this.array_string()+".get_strength();";
             if(is_a_favorite) {
                 text_format = 'text-primary font-italic font-weight-bold';
                 on_click = "Favorites.remove_station("+this.array_string()+");";
@@ -352,7 +396,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     Favorites.add_station = function (station) {
         this.StationList.push(station);
         this.redraw_column(" ");
-        this.Scan();
+//        this.Scan();
     };
 
     Favorites.remove_station = function (station) {
@@ -366,9 +410,10 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         this.redraw_column(" ");
     };
 
-    Favorites.Scan = function() {
+    Favorites.Scan = function(index) {
         var header = document.getElementById("Active Station");
-        var elem = this.StationList[1];
+        var elem = this.StationList[index];
+        elem.set_freq();
 
         header.innerHTML = "<h2 align='center'>" + elem.ListName + "<h2>" +
            "<h1 align='center' >" + elem.Frequency + "/" + elem.Tone + "<h1>" +
@@ -395,5 +440,17 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     }
     echo $arrays;
 ?>
+
+    var scan_index = 0;
+
+    function scan_favorites() {
+        if(Favorites.StationList.length == 0)
+            return 0;
+        if(scan_index >= Favorites.StationList.length)
+            scan_index = 0;
+        return Favorites.Scan(scan_index++);
+    };
+
+    var MyVar = setInterval(scan_favorites, 3000);
 </script>
 </body></html>

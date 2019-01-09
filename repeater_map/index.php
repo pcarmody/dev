@@ -150,14 +150,27 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         obj.Lat = lat;
         obj.ListName = list_name;
 
-    //This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+        obj.get_results = function() {
+     
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  obj.rig_response = this.responseText;
+              };
+            };
+            cmd = "http://127.0.0.1:8080/?result="+obj.rig_result;
+            xhttp.open("GET", cmd, true);
+            xhttp.send();
+        };
 
         obj.set_freq = function() {
      
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
+//              if (this.readyState == 4) {
                   obj.rig_result = this.responseText;
+                  setTimeout(obj.get_results, 700)
               };
             };
             var frequency = parseFloat(this.Frequency).toFixed(3);
@@ -198,6 +211,9 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         var GPSlon = -122.365530;
         var GPSlat = 37.251690; 
         obj.Distance = function() {
+//
+// This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+//
         var point1 = new OpenLayers.Geometry.Point(this.Lon, this.Lat).transform(Geographic, Mercator);
         var point2 = new OpenLayers.Geometry.Point(GPSlon, GPSlat).transform(Geographic, Mercator);       
 //        var point2 = new OpenLayers.Geometry.Point(GPSlonLat.lon, GPSlonLat.lat).transform(Geographic, Mercator);       
@@ -417,7 +433,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 
         header.innerHTML = "<h2 align='center'>" + elem.ListName + "<h2>" +
            "<h1 align='center' >" + elem.Frequency + "/" + elem.Tone + "<h1>" +
-           "<h3 align='center' >" + elem.CallSign+ "</h3>";   
+           "<h3 align='center' >" + elem.CallSign+ " -- " + elem.Comment + "-- " + elem.rig_response + "</h3>";   
     };
 <?php
     $list = `ls StationLists`;

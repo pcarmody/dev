@@ -1,6 +1,7 @@
 Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,Mode,TStep,Skip,Comment,URCALL,RPT1CALL,RPT2CALL,DVCODE,,Latitude,Longitude
 0,WX2PA1,162.4,,0,,88.5,88.5,23,NN,FM,5,,Weather,,,,,,,
 16,MARIN,146.7,-,0.6,Tone,203.5,94.8,23,NN,FM,5,,"Big Rock Ridge, Marin, K6GWE",,,,,,38.0592,-122.6044
+15,WX2PA1,162.4,-,0.,Tone,88.5,94.8,23,NN,FM,5,,"Mt. Sutro, SF. NOAA",,,,,,37.758233,-122.457289
 17,Barnabe,149.7,,0.6,Tone,167.9,94.8,23,NN,FM,5,,"Mt. Barnabe,  K6GWE",,,,,,38.02678,-122.716341
 18,K6PEG,443.175,+,5,,94.8,88.5,23,NN,FM,5,,Mill Valley,,,,,,37.9,-122.52
 19,Tamalpais,149.7,,0.6,Tone,179.9,94.8,23,NN,FM,5,,"Mt. Tamalpais,  K6GWE",,,,,,37.889283,-122.537564

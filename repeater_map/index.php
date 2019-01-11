@@ -150,6 +150,36 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         obj.Lat = lat;
         obj.ListName = list_name;
 
+        obj.stringify = function() {
+            var txt = '{';
+  
+          txt += '"CallSign":"' + obj.CallSign + '"';
+          txt += ', ';
+  
+          txt += '"Frequency":"' + obj.Frequency + '"';
+          txt += ', ';
+  
+          txt += '"Tone":"' + obj.Tone + '"';
+          txt += ', ';
+  
+          txt += '"Comment":"' + obj.Comment + '"';
+          txt += ', ';
+  
+          txt += '"Icon":"' + obj.Icon + '"';
+          txt += ', ';
+  
+          txt += '"Lon":"' + obj.Lon + '"';
+          txt += ', ';
+  
+          txt += '"Lat":"' + obj.Lat + '"';
+          txt += ', ';
+  
+          txt += '"ListName":"' + obj.ListName + '"';
+          txt += '} ';
+
+          return txt;
+        };
+
         obj.get_results = function() {
      
             var xhttp = new XMLHttpRequest();
@@ -266,8 +296,6 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
             skip_button += "</a>";  
 
             var map_button = "<a class='btn-light' href='javascript: center_zoom(" + this.array_string() + ");'>map</a>";
-//            var map_button = "<a class='btn-light' href='javascript: alert(\"qqqq\");'>map</a>";
-//              "    <a class='dropdown-item' href='#'>"+this.ListName+"</a>" +
              
             return "<tr><td><div class='dropdown'>" +
               "  <button type='button' class='btn " + button_type + " dropdown-toggle' data-toggle='dropdown'>" +
@@ -288,6 +316,13 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 //              "    <a class='dropdown-item' href='#'><bold>"+this.Comment+"</bold></a>" +
               "  </div>" +
               "</div></td></tr>";
+        };
+
+        obj.gen_header = function() {
+            var header = document.getElementById("Active Station");
+            header.innerHTML = "<h2 align='center'>" + this.ListName + "<h2>" +
+               "<h1 align='center' >" + this.Frequency + "/" + this.Tone + "<h1>" +
+               "<h3 align='center' >" + this.CallSign+ " -- " + this.Comment + "-- " + this.rig_response + "</h3>";   
         };
 
         obj.gen_popup = function() {
@@ -317,6 +352,49 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       obj.Num = num;
       obj.Column = "Col " + name;
       obj.Icon = icon;
+
+      obj.stringify = function() {
+
+          var txt = "{"
+  
+          txt += '"Name":"' + obj.Name + '"';
+          txt += ', ';
+  
+          txt += '"Num":"' + obj.Num + '"';
+          txt += ', ';
+  
+          txt += '"File":"' + obj.File + '"';
+          txt += ', ';
+  
+          txt += '"Column":"' + obj.Column + '"';
+          txt += ', ';
+  
+          txt += '"Icon":"' + obj.Icon + '"';
+          txt += ', ';
+  
+          txt += '"StationList" : [';
+          for(var i=0; i<obj.StationList.length; i++)
+              txt += this.StationList[i].stringify() + ',';
+          txt += '""]';
+          txt += '} ';
+
+          return txt;
+      };
+
+      obj.load = function(storage) {
+          obj.Name = storage.Name;
+          obj.Num = storage.Num;
+          obj.File = storage.File;
+          obj.Column = storage.Column;
+          obj.Icon = storage.Icon;
+          obj.StationList = new Array();
+
+          for(int i=0; storage.StationList.length; i++) {
+              var stat = storage.StationList[i];
+              obj.StationList.push(StationObject(stat.CallSign, stat.Frequency, stat.Tone, stat.Comment, stat.Icon, stat.Lon, stat.Lat, stat.ListName));
+          }
+          obj.fill_column();
+      };
 
       obj.fill_column = function() {
           var output_html = "<table>";
@@ -409,10 +487,33 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 // redefine add_station for Favorites
 //
 
+    function load_favorites() {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var storage = JSON.parse(this.responseText);
+                Favorites.load(storage);
+            };
+          }; 
+        xhttp.open("GET", "http://127.0.0.1:8080/?load=1", true);
+        xhttp.send();
+    };
+
+    save_favorites = function() {
+        var xhttp = new XMLHttpRequest();
+/*        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                alert("qqq " + this.responseText);
+            };
+          }; */
+        xhttp.open("GET", "http://127.0.0.1:8080/?save="+Favorites.stringify(), true);
+        xhttp.send();
+    };
+
     Favorites.add_station = function (station) {
         this.StationList.push(station);
         this.redraw_column(" ");
-//        this.Scan();
+        save_favorites();
     };
 
     Favorites.remove_station = function (station) {
@@ -424,16 +525,18 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
             }
             
         this.redraw_column(" ");
+        this.save();
     };
 
     Favorites.Scan = function(index) {
         var header = document.getElementById("Active Station");
         var elem = this.StationList[index];
         elem.set_freq();
-
+        elem.gen_header();
+/*
         header.innerHTML = "<h2 align='center'>" + elem.ListName + "<h2>" +
            "<h1 align='center' >" + elem.Frequency + "/" + elem.Tone + "<h1>" +
-           "<h3 align='center' >" + elem.CallSign+ " -- " + elem.Comment + "-- " + elem.rig_response + "</h3>";   
+           "<h3 align='center' >" + elem.CallSign+ " -- " + elem.Comment + "-- " + elem.rig_response + "</h3>";   */
     };
 <?php
     $list = `ls StationLists`;
@@ -467,6 +570,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         return Favorites.Scan(scan_index++);
     };
 
+    load_favorites();
     var MyVar = setInterval(scan_favorites, 3000);
 </script>
 </body></html>

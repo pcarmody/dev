@@ -138,9 +138,7 @@ var Geographic  = new OpenLayers.Projection("EPSG:4326");
 var Mercator = new OpenLayers.Projection("EPSG:900913");
 
     function StationObject(markers, call_sign, freq, tone, comment, icon, lon, lat, list_name) {
-
         var obj = new Object();
-   
         obj.CallSign = call_sign;
         obj.Frequency = freq;
         obj.Tone = tone;
@@ -319,9 +317,9 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         };
 
         obj.gen_header = function() {
-            var header = document.getElementById("Active Station");
-            header.innerHTML = "<h2 align='center'>" + this.ListName + "<h2>" +
-               "<h1 align='center' >" + this.Frequency + "/" + this.Tone + "<h1>" +
+//            var header = document.getElementById("Active Station");
+            return "<h2 align='center'>" + this.ListName + "<h2>" +
+               "<h1 align='center' onclick='alert(\"clicked\");'>" + this.Frequency + "/" + this.Tone + "</h1>" +
                "<h3 align='center' >" + this.CallSign+ " -- " + this.Comment + "-- " + this.rig_response + "</h3>";   
         };
 
@@ -333,7 +331,8 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
                 this.Distance().toFixed(2) + " miles"; 
         };
 
-        add_freq_marker(markers, obj);
+        if(markers)
+            add_freq_marker(markers, obj);
 
         return obj;
     };
@@ -389,11 +388,14 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
           obj.Icon = storage.Icon;
           obj.StationList = new Array();
 
-          for(int i=0; storage.StationList.length; i++) {
+          for(var i=0; i<storage.StationList.length; i++) {
               var stat = storage.StationList[i];
-              obj.StationList.push(StationObject(stat.CallSign, stat.Frequency, stat.Tone, stat.Comment, stat.Icon, stat.Lon, stat.Lat, stat.ListName));
+              if(!stat.CallSign)
+                  break;
+              var station = StationObject(0, stat.CallSign, stat.Frequency, stat.Tone, stat.Comment, stat.Icon, stat.Lon, stat.Lat, stat.ListName);
+              obj.StationList.push(station);
           }
-          obj.fill_column();
+          obj.redraw_column(' ');
       };
 
       obj.fill_column = function() {
@@ -469,6 +471,27 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
               this.StationList[n].parent_index = n;
       };
 
+      obj.Scan = function(index) {
+          var header = document.getElementById("Active Station");
+          var elem = this.StationList[index];
+          elem.set_freq();
+          header.innerHTML = elem.gen_header();
+      };
+
+      obj.Scan_Next = function() {
+          if(obj.scan_index >= obj.StationList.length)
+              obj.scan_index = 0;
+          var header = document.getElementById("Active Station");
+          var elem = this.StationList[obj.scan_index++];
+          elem.set_freq();
+          header.innerHTML = elem.gen_header();
+      };
+
+      obj.Skip = function() {
+          var elem = this.StationList[obj.scan_index];
+          return 1;
+      };
+
       titles.innerHTML += "<th class='text-centered'>" + obj.gen_icon() + obj.Name + "</th>";
       rows.innerHTML += "<td id=\"" + obj.Column + "\" valign='top'></td>";
 
@@ -528,16 +551,33 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         this.save();
     };
 
-    Favorites.Scan = function(index) {
-        var header = document.getElementById("Active Station");
-        var elem = this.StationList[index];
-        elem.set_freq();
-        elem.gen_header();
-/*
-        header.innerHTML = "<h2 align='center'>" + elem.ListName + "<h2>" +
-           "<h1 align='center' >" + elem.Frequency + "/" + elem.Tone + "<h1>" +
-           "<h3 align='center' >" + elem.CallSign+ " -- " + elem.Comment + "-- " + elem.rig_response + "</h3>";   */
+    Favorites.Skip = 0;
+
+//
+//  global functions -- iterate through the columns
+//
+    var scan_index = 0;
+
+    function scan_favorites() {
+        if(Favorites.StationList.length == 0)
+            return 0;
+        if(scan_index >= Favorites.StationList.length)
+            scan_index = 0;
+        return Favorites.Scan(scan_index++);
     };
+
+    function scan_all() {
+        if(ColumnObjects.length == 0)
+            return 0;
+        if(scan_index >= ColumnObjects.length)
+            scan_index = 0;
+        var col = ColumnObjects[scan_index++];
+        if(col.Skip())
+            continue;
+        return col.Scan_Next();
+    };
+
+    ColumnObjects.push(Favorites);
 <?php
     $list = `ls StationLists`;
     $file_names = str_getcsv($list, "\n");
@@ -560,17 +600,8 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     echo $arrays;
 ?>
 
-    var scan_index = 0;
-
-    function scan_favorites() {
-        if(Favorites.StationList.length == 0)
-            return 0;
-        if(scan_index >= Favorites.StationList.length)
-            scan_index = 0;
-        return Favorites.Scan(scan_index++);
-    };
-
     load_favorites();
     var MyVar = setInterval(scan_favorites, 3000);
+//    var MyVar = setInterval(scan_all, 3000);
 </script>
 </body></html>

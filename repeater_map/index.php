@@ -178,6 +178,10 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
           return txt;
         };
 
+        obj.CanScan = function() {
+            return obj.in_range && !obj.skip_scan;
+        };
+
         obj.get_results = function() {
      
             var xhttp = new XMLHttpRequest();
@@ -238,17 +242,15 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     
         var GPSlon = -122.365530;
         var GPSlat = 37.251690; 
+
         obj.Distance = function() {
 //
-// This function takes in latitude and longitude of two location and returns the distance between them as the crow flies (in km)
+// two lat and lon and returns the distance between them as the crow flies (in km)
 //
-        var point1 = new OpenLayers.Geometry.Point(this.Lon, this.Lat).transform(Geographic, Mercator);
-        var point2 = new OpenLayers.Geometry.Point(GPSlon, GPSlat).transform(Geographic, Mercator);       
-//        var point2 = new OpenLayers.Geometry.Point(GPSlonLat.lon, GPSlonLat.lat).transform(Geographic, Mercator);       
+            var point1 = new OpenLayers.Geometry.Point(this.Lon, this.Lat).transform(Geographic, Mercator);
+            var point2 = new OpenLayers.Geometry.Point(GPSlon, GPSlat).transform(Geographic, Mercator);       
             retval = point1.distanceTo(point2) * 0.61 / 1000.0;
-//            return retval.toFixed(2) + " miles";
             return retval;//.toFixed(2) + " miles";
-//            return point2;
         };
 
         obj.array_string = function() {
@@ -351,6 +353,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       obj.Num = num;
       obj.Column = "Col " + name;
       obj.Icon = icon;
+      obj.scan_index = 0;
 
       obj.stringify = function() {
 
@@ -479,16 +482,28 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       };
 
       obj.Scan_Next = function() {
-          if(obj.scan_index >= obj.StationList.length)
-              obj.scan_index = 0;
+//          if(obj.Skip())
+//              return 0;
+          if(obj.StationList.length == 0)
+              return 0;
+          var elem = '';
+          do {
+              elem = obj.StationList[obj.scan_index++];
+          } while (!elem.CanScan() && obj.scan_index < obj.StationList.length);
+
+          if(obj.scan_index >= obj.StationList.length) 
+              return 0;
+
           var header = document.getElementById("Active Station");
-          var elem = this.StationList[obj.scan_index++];
           elem.set_freq();
           header.innerHTML = elem.gen_header();
+
+          return 1;
       };
 
       obj.Skip = function() {
-          var elem = this.StationList[obj.scan_index];
+alert('qqq skip');
+//          var elem = this.StationList[obj.scan_index];
           return 1;
       };
 
@@ -551,7 +566,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         this.save();
     };
 
-    Favorites.Skip = 0;
+    Favorites.Skip = function() { return 1; };
 
 //
 //  global functions -- iterate through the columns
@@ -571,13 +586,18 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
             return 0;
         if(scan_index >= ColumnObjects.length)
             scan_index = 0;
-        var col = ColumnObjects[scan_index++];
-        if(col.Skip())
+
+        while(scan_index < ColumnObjects.length)
+            if(ColumnObjects[scan_index].Scan_Next())
+                return;
+            else
+                scan_index++;
+//        scan_index++;
+/*        if(col.Skip())
             continue;
-        return col.Scan_Next();
+        return col.Scan_Next();*/
     };
 
-    ColumnObjects.push(Favorites);
 <?php
     $list = `ls StationLists`;
     $file_names = str_getcsv($list, "\n");
@@ -601,7 +621,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 ?>
 
     load_favorites();
-    var MyVar = setInterval(scan_favorites, 3000);
-//    var MyVar = setInterval(scan_all, 3000);
+//    var MyVar = setInterval(scan_favorites, 3000);
+    var MyVar = setInterval(scan_all, 3000);
 </script>
 </body></html>

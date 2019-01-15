@@ -39,6 +39,7 @@ while (($line = fgetcsv($f)) !== false) {
 
     if(is_numeric($line[19]) && is_numeric($line[20])) {
 #        station_icon($line[2], $line[6]);
+        $col_name = "Column".$_GET['column']."Object";
         echo "   var Station = StationObject(markers, ".
              "\"".$line[1]."\", ".
              "\"".$line[2]."\", ".
@@ -47,9 +48,11 @@ while (($line = fgetcsv($f)) !== false) {
              "\"".get_icon($line[2], $line[6])."\", ".
              $line[20].", ".
              $line[19].", ".
-             "\"".$_GET['name']."\");\n";
+#             "\"".$_GET['name']."\");\n";
+             $col_name.");\n";
         echo "   RepeaterEntries.push(Station);\n";
-        echo "   Column".$_GET['column']."Object.add_station(Station);\n";
+#        echo "   Column".$_GET['column']."Object.add_station(Station);\n";
+        echo "   ".$col_name.".add_station(Station);\n";
 #        echo "   alert(\"Column".$_GET['column']."\");\n";
     }
 }

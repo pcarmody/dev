@@ -134,10 +134,42 @@
 // station object definition
 //
 
+    function ConfigObject() {
+        var config = new Object();
+
+        config.Range = 40;
+        config.NodeServer = "http://127.0.0.1:8080/";
+        config.Rigctl_TCPIP_address = "127.0.0.1";
+        config.Rigctl_TCPIP_port = "4543";
+
+        config.stringify = function () {
+
+          var txt = "{";
+  
+          txt += '"Range":' + config.Range;
+          txt += ', ';
+
+          txt += '"NodeServer":"' + config.NodeServer + '"';
+          txt += ', ';
+  
+          txt += '"Rigctl_TcPIP_address":"' + config.Rigctl_TcPIP_address + '"';
+          txt += ', ';
+  
+          txt += '"Rigctl_TCPIP_port":"' + config.Rigctl_TCPIP_port + '"';
+          txt += '};';
+
+          return txt;
+        };
+
+        return config;
+    };
+
+var Config = ConfigObject();
+
 var Geographic  = new OpenLayers.Projection("EPSG:4326"); 
 var Mercator = new OpenLayers.Projection("EPSG:900913");
 
-    function StationObject(markers, call_sign, freq, tone, comment, icon, lon, lat, list_name) {
+    function StationObject(markers, call_sign, freq, tone, comment, icon, lon, lat, column_object) {
         var obj = new Object();
         obj.CallSign = call_sign;
         obj.Frequency = freq;
@@ -146,7 +178,8 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         obj.Icon = icon;
         obj.Lon = lon;
         obj.Lat = lat;
-        obj.ListName = list_name;
+        obj.ListName = column_object.Name;
+        obj.Column = column_object;
 
         obj.stringify = function() {
             var txt = '{';
@@ -178,6 +211,26 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
           return txt;
         };
 
+        obj.in_range = function() {
+
+            if(obj.Range)
+                return obj.Range;
+
+            return obj.Column.get_range();
+        };
+
+        obj.set_scan_flags = function() {
+
+              if(obj.Distance() > obj.in_range()) {
+                  obj.in_range = 0;
+                  obj.skip_scan = 1;
+              } else {
+                  obj.in_range = 1;
+                  obj.skip_scan = 0;
+              }
+
+        };
+
         obj.CanScan = function() {
             return obj.in_range && !obj.skip_scan;
         };
@@ -190,7 +243,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
                   obj.rig_response = this.responseText;
               };
             };
-            cmd = "http://127.0.0.1:8080/?result="+obj.rig_result;
+            cmd = Config.NodeServer+"?result="+obj.rig_result;
             xhttp.open("GET", cmd, true);
             xhttp.send();
         };
@@ -206,7 +259,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
               };
             };
             var frequency = parseFloat(this.Frequency).toFixed(3);
-            cmd = "http://127.0.0.1:8080/?set_freq="+ frequency + "&set_ctcss_tone="+this.Tone;
+            cmd = Config.NodeServer+"?set_freq="+ frequency + "&set_ctcss_tone="+this.Tone;
             xhttp.open("GET", cmd, true);
             xhttp.send();
         };
@@ -228,13 +281,13 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
                           alert("signal strength is" + obj.rig_result);
                       };
                     };
-                    cmd = "http://127.0.0.1:8080/?result="+obj.rig_result;
+                    cmd = Config.NodeServer+"?result="+obj.rig_result;
                     xhttp2.open("GET", cmd, true);
                     xhttp2.send();
                   obj.rig_result = this.responseText;
               };
             };
-            cmd = "http://127.0.0.1:8080/?get_strength=1";
+            cmd = Config.NodeServer+"?get_strength=1";
             xhttp.open("GET", cmd, true);
             xhttp.send();
 
@@ -250,7 +303,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
             var point1 = new OpenLayers.Geometry.Point(this.Lon, this.Lat).transform(Geographic, Mercator);
             var point2 = new OpenLayers.Geometry.Point(GPSlon, GPSlat).transform(Geographic, Mercator);       
             retval = point1.distanceTo(point2) * 0.61 / 1000.0;
-            return retval;//.toFixed(2) + " miles";
+            return retval;
         };
 
         obj.array_string = function() {
@@ -261,6 +314,10 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 
             this.skip_scan = (this.skip_scan)? 0 : 1;
 
+        };
+
+        obj.gen_icon = function() {
+            return "<img src='" + this.Icon + "'> ";
         };
 
         obj.gen_html = function() {
@@ -299,7 +356,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
              
             return "<tr><td><div class='dropdown'>" +
               "  <button type='button' class='btn " + button_type + " dropdown-toggle' data-toggle='dropdown'>" +
-              "<img src='" + this.Icon + "'> " + this.CallSign +
+              this.gen_icon() + this.CallSign +
               "  </button>" +
               "  <div class='dropdown-menu'>" +
               "    <h3>"+this.ListName+"</h3>" +
@@ -321,7 +378,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         obj.gen_header = function() {
 //            var header = document.getElementById("Active Station");
             return "<h2 align='center'>" + this.ListName + "<h2>" +
-               "<h1 align='center' onclick='alert(\"clicked\");'>" + this.Frequency + "/" + this.Tone + "</h1>" +
+               "<h1 align='center' onclick='alert(\"clicked\");'>" + this.gen_icon() + this.Frequency + "/" + this.Tone + "</h1>" +
                "<h3 align='center' >" + this.CallSign+ " -- " + this.Comment + "-- " + this.rig_response + "</h3>";   
         };
 
@@ -395,7 +452,8 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
               var stat = storage.StationList[i];
               if(!stat.CallSign)
                   break;
-              var station = StationObject(0, stat.CallSign, stat.Frequency, stat.Tone, stat.Comment, stat.Icon, stat.Lon, stat.Lat, stat.ListName);
+              var station = StationObject(0, stat.CallSign, stat.Frequency, stat.Tone, stat.Comment, stat.Icon, stat.Lon, stat.Lat, Favorites);
+//              var station = StationObject(0, stat.CallSign, stat.Frequency, stat.Tone, stat.Comment, stat.Icon, stat.Lon, stat.Lat, stat.ListName);
               obj.StationList.push(station);
           }
           obj.redraw_column(' ');
@@ -406,13 +464,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     
           for (var n = 0; n < this.StationList.length; n++) {
 
-              if(this.StationList[n].Distance() > 40.0) {
-                  this.StationList[n].in_range = 0;
-                  this.StationList[n].skip_scan = 1;
-              } else {
-                  this.StationList[n].in_range = 1;
-                  this.StationList[n].skip_scan = 0;
-              }
+              this.StationList[n].set_scan_flags();
 
               output_html += this.StationList[n].gen_html();
 
@@ -444,7 +496,8 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       };
     
       obj.add_title = function() {
-          return "<th class='text-centered'>" + this.Name + "</th>";
+          var header_id = obj.Name + "_header";
+          return "<th id='" + header_id + "' class='text-centered' onclick='alert(\"clicked\");'>" + obj.gen_icon() + obj.Name + "</th>";
       };
 
       obj.gen_icon = function() {
@@ -452,7 +505,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       };
 
       obj.add_row = function() {
-          return "<td id=\"Col " + name + "\" valign='top'></td>";
+          return "<td id=\"" + obj.Column + "\" valign='top'></td>";
       };
 
       obj.add_station = function (station) {
@@ -482,8 +535,6 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       };
 
       obj.Scan_Next = function() {
-//          if(obj.Skip())
-//              return 0;
           if(obj.StationList.length == 0)
               return 0;
           var elem = '';
@@ -501,14 +552,17 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
           return 1;
       };
 
-      obj.Skip = function() {
-alert('qqq skip');
-//          var elem = this.StationList[obj.scan_index];
-          return 1;
+      obj.get_range = function() {
+
+          if(obj.Range)
+              return obj.Range;
+
+          return Config.Range;
       };
 
-      titles.innerHTML += "<th class='text-centered'>" + obj.gen_icon() + obj.Name + "</th>";
-      rows.innerHTML += "<td id=\"" + obj.Column + "\" valign='top'></td>";
+      titles.innerHTML += obj.add_title();
+//      rows.innerHTML += "<td id=\"" + obj.Column + "\" valign='top'></td>";
+      rows.innerHTML += obj.add_row();
 
       obj.fill_array(name, file, num, obj.StationList);
 
@@ -533,7 +587,7 @@ alert('qqq skip');
                 Favorites.load(storage);
             };
           }; 
-        xhttp.open("GET", "http://127.0.0.1:8080/?load=1", true);
+        xhttp.open("GET", Config.NodeServer+"?load=1", true);
         xhttp.send();
     };
 
@@ -544,9 +598,23 @@ alert('qqq skip');
                 alert("qqq " + this.responseText);
             };
           }; */
-        xhttp.open("GET", "http://127.0.0.1:8080/?save="+Favorites.stringify(), true);
+        xhttp.open("GET", Config.NodeServer+"?save="+Favorites.stringify(), true);
         xhttp.send();
     };
+
+    function save_config() {
+alert('config = '+Config.stringify());
+        var xhttp = new XMLHttpRequest();
+/*        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                alert("qqq " + this.responseText);
+            };
+          }; */
+        xhttp.open("GET", Config.NodeServer+"?save_config="+Config.stringify(), true);
+        xhttp.send();
+    };
+
+save_config();
 
     Favorites.add_station = function (station) {
         this.StationList.push(station);
@@ -565,8 +633,6 @@ alert('qqq skip');
         this.redraw_column(" ");
         this.save();
     };
-
-    Favorites.Skip = function() { return 1; };
 
 //
 //  global functions -- iterate through the columns
@@ -592,10 +658,6 @@ alert('qqq skip');
                 return;
             else
                 scan_index++;
-//        scan_index++;
-/*        if(col.Skip())
-            continue;
-        return col.Scan_Next();*/
     };
 
 <?php

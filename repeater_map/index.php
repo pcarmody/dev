@@ -376,9 +376,15 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         };
 
         obj.gen_header = function() {
-//            var header = document.getElementById("Active Station");
+
+            var background_color = '';
+            if(ScanInterval == 0) 
+                background_color = ' style="background-color:rgb(255, 0, 0);"';
+
             return "<h2 align='center'>" + this.ListName + "<h2>" +
-               "<h1 align='center' onclick='alert(\"clicked\");'>" + this.gen_icon() + this.Frequency + "/" + this.Tone + "</h1>" +
+               "<h1 align='center' onclick='toggle_scan();'" + background_color + ">" + 
+                   this.gen_icon() + this.Frequency + "/" + this.Tone + 
+               "</h1>" +
                "<h3 align='center' >" + this.CallSign+ " -- " + this.Comment + "-- " + this.rig_response + "</h3>";   
         };
 
@@ -527,6 +533,10 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
               this.StationList[n].parent_index = n;
       };
 
+      obj.CanScan = function() {
+          return 0;
+      };
+
       obj.Scan = function(index) {
           var header = document.getElementById("Active Station");
           var elem = this.StationList[index];
@@ -535,19 +545,29 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
       };
 
       obj.Scan_Next = function() {
+
+          if(!obj.CanScan()) 
+              return 0; 
+
           if(obj.StationList.length == 0)
               return 0;
+
+          if(obj.scan_index >= obj.StationList.length) 
+              obj.scan_index = 0;
+
           var elem = '';
           do {
               elem = obj.StationList[obj.scan_index++];
           } while (!elem.CanScan() && obj.scan_index < obj.StationList.length);
 
-          if(obj.scan_index >= obj.StationList.length) 
+          if(obj.scan_index > obj.StationList.length) {
               return 0;
+          }
 
           var header = document.getElementById("Active Station");
           elem.set_freq();
           header.innerHTML = elem.gen_header();
+          CurrentStation = elem;
 
           return 1;
       };
@@ -572,6 +592,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     var titles = document.getElementById("TitleRow");
     var datarow = document.getElementById("DataRow");
     var ColumnObjects = new Array();
+    var CurrentStation = 0;
     var Favorites = ColumnObject("Favorites", " ", 1, titles, datarow);
     ColumnObjects.push(Favorites);
 
@@ -603,7 +624,6 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     };
 
     function save_config() {
-alert('config = '+Config.stringify());
         var xhttp = new XMLHttpRequest();
 /*        xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
@@ -614,7 +634,9 @@ alert('config = '+Config.stringify());
         xhttp.send();
     };
 
-save_config();
+    Favorites.CanScan = function() {
+        return 1;
+    };
 
     Favorites.add_station = function (station) {
         this.StationList.push(station);
@@ -650,11 +672,11 @@ save_config();
     function scan_all() {
         if(ColumnObjects.length == 0)
             return 0;
-        if(scan_index >= ColumnObjects.length)
+        if(scan_index > ColumnObjects.length)
             scan_index = 0;
 
         while(scan_index < ColumnObjects.length)
-            if(ColumnObjects[scan_index].Scan_Next())
+            if(ColumnObjects[scan_index].Scan_Next()) 
                 return;
             else
                 scan_index++;
@@ -682,8 +704,27 @@ save_config();
     echo $arrays;
 ?>
 
+    var ScanInterval = 0;
+    function start_scan() {
+        ScanInterval = setInterval(scan_all, 3000);
+    };
+
+    function stop_scan() {
+        clearInterval(ScanInterval);
+    };
+
+    function toggle_scan() {
+        if(ScanInterval) {
+            clearInterval(ScanInterval);
+            ScanInterval = 0;
+        } else
+            ScanInterval = setInterval(scan_all, 3000);
+        var header = document.getElementById("Active Station");
+        header.innerHTML = CurrentStation.gen_header();
+    };
+
     load_favorites();
+    toggle_scan();
 //    var MyVar = setInterval(scan_favorites, 3000);
-    var MyVar = setInterval(scan_all, 3000);
 </script>
 </body></html>

@@ -14,13 +14,45 @@
           <div id="popup-content"></div>
       </div>
   </div>
-<h1 id='Active Station'>this is a header</h1>
-<table>
-<tbody>
-<tr id="TitleRow"> </tr>
-<tr id="DataRow"> </tr>
-</tbody>
-<table>
+<h1 id='Active Station' align="center">
+   <br>Waiting...<br>
+</h1>
+<style>
+    #table-wrapper {
+      position:relative;
+    }
+    #table-scroll {
+      height:100%;
+      overflow:auto;  
+      margin-top:20px;
+    }
+    #table-wrapper table {
+      width:100%;
+    
+    }
+    #table-wrapper table * {
+      background:white;
+      color:black;
+    }
+    #table-wrapper table thead th .text {
+      position:absolute;   
+      top:-20px;
+      z-index:2;
+      height:20px;
+      width:35%;
+      border:1px solid red;
+    }
+</style>
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <table>
+    <tbody>
+    <tr id="TitleRow"> </tr>
+    <tr id="DataRow"> </tr>
+    </tbody>
+    </table>
+  </div>
+</div>
 <div id="BottomDiv" style="clear: both;">Below</div>
   <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
   <script>
@@ -212,7 +244,6 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         };
 
         obj.in_range = function() {
-
             if(obj.Range)
                 return obj.Range;
 
@@ -220,6 +251,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
         };
 
         obj.set_scan_flags = function() {
+if(debug) return;
 
               if(obj.Distance() > obj.in_range()) {
                   obj.in_range = 0;
@@ -405,6 +437,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 //
 // column object definition
 //
+var debug = 0;
 
     function ColumnObject(name, file, num, titles, rows, icon) {
 
@@ -467,7 +500,6 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
 
       obj.fill_column = function() {
           var output_html = "<table>";
-    
           for (var n = 0; n < this.StationList.length; n++) {
 
               this.StationList[n].set_scan_flags();
@@ -487,7 +519,8 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
           var arr = Right.getElementsByTagName('script')
           for (var n = 0; n < arr.length; n++)
               eval(arr[n].innerHTML);
-          Right.innerHTML = this.fill_column(this.StationList); 
+//          Right.innerHTML = this.fill_column(this.StationList); 
+          Right.innerHTML = this.fill_column(); 
       };
 
       obj.fill_array = function(name, file, num, entries) {
@@ -639,6 +672,7 @@ var Mercator = new OpenLayers.Projection("EPSG:900913");
     };
 
     Favorites.add_station = function (station) {
+debug = 1;
         this.StationList.push(station);
         this.redraw_column(" ");
         save_favorites();

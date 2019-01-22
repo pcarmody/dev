@@ -20,6 +20,7 @@
 <style>
     #table-wrapper {
       position:relative;
+      height:50%;
     }
     #table-scroll {
       height:100%;
@@ -47,8 +48,18 @@
   <div id="table-scroll">
     <table>
     <tbody>
-    <tr id="TitleRow"> </tr>
-    <tr id="DataRow"> </tr>
+    <tr id="TitleRow0"> </tr>
+    <tr id="DataRow0"> </tr>
+    </tbody>
+    </table>
+  </div>
+</div>
+<div id="table-wrapper">
+  <div id="table-scroll">
+    <table>
+    <tbody>
+    <tr id="TitleRow1"> </tr>
+    <tr id="DataRow1"> </tr>
     </tbody>
     </table>
   </div>
@@ -439,7 +450,10 @@ if(debug) return;
 //
 var debug = 0;
 
-    function ColumnObject(name, file, num, titles, rows, icon) {
+    function ColumnObject(name, file, num, titles_name, rows_name, icon) {
+alert("qqq "+titles_name+":"+rows_name);
+      var titles = document.getElementById(titles_name);
+      var rows = document.getElementById(rows_name);
 
       var obj = new Object();
 
@@ -622,11 +636,14 @@ var debug = 0;
       return obj;
     };
 
-    var titles = document.getElementById("TitleRow");
-    var datarow = document.getElementById("DataRow");
+    var titles = document.getElementById("TitleRow0");
+    var datarow = document.getElementById("DataRow0");
+    var titles_name = "TitleRow0";
+    var datarow_name = "DataRow0";
     var ColumnObjects = new Array();
     var CurrentStation = 0;
-    var Favorites = ColumnObject("Favorites", " ", 1, titles, datarow);
+//    var Favorites = ColumnObject("Favorites", " ", 1, titles, datarow);
+    var Favorites = ColumnObject("Favorites", " ", 1, titles_name, datarow_name);
     ColumnObjects.push(Favorites);
 
 //
@@ -723,16 +740,29 @@ debug = 1;
     $f = fopen("StationLists/lists.csv", "r");
     $arrays = "";
     $i = 0;
+    $row = 0;
+    $titles_name = "TitleRow".$row;
+    $datarow_name = "DataRow".$row;
     while (($line = fgetcsv($f)) !== false) {
         $i = $i + 1;
         if($i == 1) {
             continue;
         }
-        if($i >= 8) {
-            break;
+        if($i == 8) {
+            $row = $row + 1;
+            $titles_name = "TitleRow".$row;
+            $datarow_name = "DataRow".$row;
+#            break;
         }
         $new_obj = "Column".$i."Object ";
-        $arrays = $arrays ."    var ".$new_obj." = ColumnObject(\"".$line[0]."\", \"".$line[1]."\", ".$i.", titles, datarow, '" . $line[3] . "');\n";
+#        $arrays = $arrays ."    var ".$new_obj." = ColumnObject(\"".$line[0]."\", \"".$line[1]."\", ".$i.", titles, datarow, '" . $line[3] . "');\n";
+        $parm1 = '"'.$line[0].'"';
+        $parm2 = '"'.$line[1].'"';
+        $parm3 = $i;
+        $parm4 = '"'.$titles_name.'"';
+        $parm5 = '"'.$datarow_name.'"';
+        $parm6 = '"'.$line[3].'"';
+        $arrays = $arrays ."    var ".$new_obj." = ColumnObject(".$parm1.','.$parm2.','.$parm3.','.$parm4.','.$parm5.','.$parm6.");\n";
         $arrays = $arrays ."    ColumnObjects.push(".$new_obj.");\n";
     }
     echo $arrays;

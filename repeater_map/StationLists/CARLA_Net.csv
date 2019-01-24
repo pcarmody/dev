@@ -33,37 +33,3 @@ Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPola
 164, Gualala,147.000,,0,Tone,173.8,88.5,23,NN,FM,5,, Gualala,,,,,,38.76752,-123.5297
 165, Oakland,146.850,0,Tone,162.2,88.5,23,NN,FM,5,, Oakland,,,,,,37.880878,-122.186127
 166, Willows,146.115,,0,Tone,173.8,88.5,23,NN,FM,5,, Willows,,,,,,49.39278,-119.90995
-167, local San Francisco,442.075,,0,Tone,100,88.5,23,NN,FM,5,, local San Francisco,,,,,,37.794575,-122.399948
-168, local Pt. Arena,443.075,,0,Tone,100,88.5,23,NN,FM,5,, local Pt. Arena,,,,,,32.61717,-116.46291
-169, local Greenfield,442.075,,0,Tone,114.8,88.5,23,NN,FM,5,, local Greenfield,,,,,,35.26683,-119.00073
-170, local Oakland,443.050,,0,Tone,114.8,88.5,23,NN,FM,5,, local Oakland,,,,,,37.880878,-122.186127
-171, local Willows,443.075,,0,Tone,114.8,88.5,23,NN,FM,5,, local Willows,,,,,,40.15052,-122.2379
-172, local San Jose,443.075,,0,Tone,123,88.5,23,NN,FM,5,, local San Jose,,,,,,37.29787,-121.86034
-173, local South Lake Tahoe,442.075,,0,Tone,127.3,88.5,23,NN,FM,5,, local South Lake Tahoe,,,,,,38.8248,-120.03402
-174, local Modesto,442.075,,0,Tone,123,88.5,23,NN,FM,5,, local Modesto,,,,,,37.72695,-121.43031
-175, local Monterey Bay,443.475,,0,Tone,123,88.5,23,NN,FM,5,, local Monterey Bay,,,,,,37.17839,-121.81725
-176, local Walnut Creek,443.475,,0,Tone,114.8,88.5,23,NN,FM,5,, local Walnut Creek,,,,,,37.91367,-122.01807
-177, local Pleasanton,442.075,,0,Tone,103.5,88.5,23,NN,FM,5,, local Pleasanton,,,,,,37.65836,-121.95966
-178, local Shasta Lake,442.075,,0,Tone,114.8,88.5,23,NN,FM,5,, local Shasta Lake,,,,,,40.86072,-122.39739
-179, local Cisco Grove,443.475,,0,Tone,100,88.5,23,NN,FM,5,, local Cisco Grove,,,,,,39.30716,-120.53786
-180, local Fresno,440.750,,0,Tone,114.8,88.5,23,NN,FM,5,, local Fresno,,,,,,36.26978,-120.40018
-181, local Sacramento,440.750,,0,Tone,107.2,88.5,23,NN,FM,5,, local Sacramento,,,,,,38.34842,-121.90865
-182, local Sonora,443.475,,0,Tone,103.5,88.5,23,NN,FM,5,, local Sonora,,,,,,38.0659,-120.27574
-183, local Topaz Lake,443.475,,0,Tone,110.9,88.5,23,NN,FM,5,, local Topaz Lake,,,,,,38.69727,-119.54934
-184, local Hayward,443.325,,0,Tone,114.8,88.5,23,NN,FM,5,, local Hayward,,,,,,37.65836,-121.95966
-185, local Burney,440.750,,0,Tone,123,88.5,23,NN,FM,5,, local Burney,,,,,,40.92382,-121.82634
-186, local Reno,440.750,,0,Tone,127.3,88.5,23,NN,FM,5,, local Reno,,,,,,39.61352,-119.89635
-187, local Hawthorne,440.725,,0,Tone,127.3,88.5,23,NN,FM,5,, local Hawthorne,,,,,,38.50394,-118.65292
-188, local North Lake Tahoe,441.550,,0,Tone,127.3,88.5,23,NN,FM,5,, local North Lake Tahoe,,,,,,39.43387,-119.80736
-189, local Carson Valley,443.325,,0,Tone,127.3,88.5,23,NN,FM,5,, local Carson Valley,,,,,,39.2325,-119.68697
-190, local Redding,444.325,,0,Tone,100,88.5,23,NN,FM,5,, local Redding,,,,,,40.60878,-122.34735
-191, local Geyserville,443.475,,0,Tone,110.9,88.5,23,NN,FM,5,, local Geyserville,,,,,,38.82653,-122.99658
-192, local Quincy,440.725,,0,Tone,100,88.5,23,NN,FM,5,, local Quincy,,,,,,40.04083,-120.88001
-193, local Mt. Shasta,443.475,,0,Tone,107.2,88.5,23,NN,FM,5,, local Mt. Shasta,,,,,,41.20867,-122.31135
-194, local San Luis Obispo,443.500,,0,Tone,100,88.5,23,NN,FM,5,, local San Luis Obispo,,,,,,35.48077,-120.66644
-195, local Bakersfield,443.075,,0,Tone,127.3,88.5,23,NN,FM,5,, local Bakersfield,,,,,,34.95963,-119.44521
-196, local Los Angeles,448.080,0,Tone,88.5,88.5,23,NN,FM,5,, local Los Angeles,,,,,,33.71447,-117.77079
-197, local Pacifica,440.725,,0,Tone,114.8,88.5,23,NN,FM,5,, local Pacifica,,,,,,37.57477,-122.48308
-198, local Gualala,147.000,,0,Tone,114.8,88.5,23,NN,FM,5,, local Gualala,,,,,,38.76752,-123.5297
-199, local Oakland,146.850,0,Tone,103.5,88.5,23,NN,FM,5,, local Oakland,,,,,,37.880878,-122.186127
-200, local Willows,146.115,,0,Tone,123,88.5,23,NN,FM,5,, local Willows,,,,,,49.39278,-119.90995

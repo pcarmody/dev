@@ -398,7 +398,7 @@ if(debug) return;
             var map_button = "<a class='btn-light' href='javascript: center_zoom(" + this.array_string() + ");'>map</a>";
              
             return "<tr><td><div class='dropdown'>" +
-              "  <button type='button' class='btn " + button_type + " dropdown-toggle' data-toggle='dropdown'>" +
+              "  <button type='button' class='btn " + button_type + "' data-toggle='dropdown'>" +
               this.gen_icon() + this.CallSign +
               "  </button>" +
               "  <div class='dropdown-menu'>" +
@@ -450,8 +450,7 @@ if(debug) return;
 //
 var debug = 0;
 
-    function ColumnObject(name, file, num, titles_name, rows_name, icon) {
-alert("qqq "+titles_name+":"+rows_name);
+    function ColumnObject(name, file, num, titles_name, rows_name, icon, link) {
       var titles = document.getElementById(titles_name);
       var rows = document.getElementById(rows_name);
 
@@ -463,6 +462,7 @@ alert("qqq "+titles_name+":"+rows_name);
       obj.Num = num;
       obj.Column = "Col " + name;
       obj.Icon = icon;
+      obj.Link = link;
       obj.scan_index = 0;
 
       obj.stringify = function() {
@@ -550,7 +550,24 @@ alert("qqq "+titles_name+":"+rows_name);
     
       obj.add_title = function() {
           var header_id = obj.Name + "_header";
-          return "<th id='" + header_id + "' class='text-centered' onclick='alert(\"clicked\");'>" + obj.gen_icon() + obj.Name + "</th>";
+          var button_type = "btn-light ";
+          var link = "";
+          if(obj.Link)
+              link = '<a href="' + obj.Link + '">website</a>';
+//          return "<th id='" + header_id + "' class='text-centered' onclick='alert(\"clicked\");'>" + obj.gen_icon() + obj.Name + "</th>";
+          return "<th id= '" + header_id + "' class='text-centered'><div class='dropdown'>" +
+            "  <button type='button' class='btn " + button_type + "' data-toggle='dropdown'>" +
+            obj.gen_icon() + obj.Name +
+            "  </button>" +
+            "  <div class='dropdown-menu'>" +
+            "    <h3>"+obj.Name+"</h3>" +
+            link +
+//                   call_sign_button + skip_button + " " + map_button + "<br>" +
+//                   this.Frequency + "/" + this.Tone + "<br>" + 
+//                   "<div class='font-weight-bold'>" + this.Comment + "</div><br>"  +
+//                this.Distance().toFixed(2) + " miles"; + 
+            "  </div>" +
+            "</div></th>";
       };
 
       obj.gen_icon = function() {
@@ -748,7 +765,7 @@ debug = 1;
         if($i == 1) {
             continue;
         }
-        if($i == 8) {
+        if($i == 6) {
             $row = $row + 1;
             $titles_name = "TitleRow".$row;
             $datarow_name = "DataRow".$row;
@@ -762,7 +779,8 @@ debug = 1;
         $parm4 = '"'.$titles_name.'"';
         $parm5 = '"'.$datarow_name.'"';
         $parm6 = '"'.$line[3].'"';
-        $arrays = $arrays ."    var ".$new_obj." = ColumnObject(".$parm1.','.$parm2.','.$parm3.','.$parm4.','.$parm5.','.$parm6.");\n";
+        $parm7 = '"'.$line[4].'"';
+        $arrays = $arrays ."    var ".$new_obj." = ColumnObject(".$parm1.','.$parm2.','.$parm3.','.$parm4.','.$parm5.','.$parm6.','.$parm7.");\n";
         $arrays = $arrays ."    ColumnObjects.push(".$new_obj.");\n";
     }
     echo $arrays;

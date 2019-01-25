@@ -463,6 +463,7 @@ var debug = 0;
       obj.Column = "Col " + name;
       obj.Icon = icon;
       obj.Link = link;
+      obj.skip_scan = 1;
       obj.scan_index = 0;
 
       obj.stringify = function() {
@@ -547,11 +548,27 @@ var debug = 0;
           xhttp.open("GET", "right.php?file="+file+"&column="+num+"&name="+name, true);
           xhttp.send();
       };
+
+      obj.update_title = function() {
+          var header_id = obj.Name + "_header";
+          var header = document.getElementById(header_id);
+          header.innerHTML = obj.add_title();
+      };
     
       obj.add_title = function() {
           var header_id = obj.Name + "_header";
           var button_type = "btn-light ";
           var link = "";
+          var object_name = "Column"+obj.Num+"Object";
+
+          var skip_button = "<a class='btn-light' href='javascript: " + object_name + ".toggle_skip();'>";
+          if(obj.CanScan())
+              skip_button += 'skip';
+          else
+              button_type += "font-italic text-info";
+              skip_button += "scan";
+          skip_button += "</a>";  
+
           if(obj.Link)
               link = '<a href="' + obj.Link + '">website</a>';
 //          return "<th id='" + header_id + "' class='text-centered' onclick='alert(\"clicked\");'>" + obj.gen_icon() + obj.Name + "</th>";
@@ -561,7 +578,7 @@ var debug = 0;
             "  </button>" +
             "  <div class='dropdown-menu'>" +
             "    <h3>"+obj.Name+"</h3>" +
-            link +
+            link + " " + skip_button +
 //                   call_sign_button + skip_button + " " + map_button + "<br>" +
 //                   this.Frequency + "/" + this.Tone + "<br>" + 
 //                   "<div class='font-weight-bold'>" + this.Comment + "</div><br>"  +
@@ -597,8 +614,15 @@ var debug = 0;
               this.StationList[n].parent_index = n;
       };
 
+      obj.toggle_skip = function() {
+          obj.skip_scan = (obj.skip_scan)? 0 : 1;
+          obj.update_title();
+//          obj.skip_scan = !obj.skip_scan;
+      };
+          
+
       obj.CanScan = function() {
-          return 0;
+          return !obj.skip_scan;
       };
 
       obj.Scan = function(index) {
@@ -701,9 +725,10 @@ var debug = 0;
         xhttp.send();
     };
 
-    Favorites.CanScan = function() {
-        return 1;
-    };
+    Favorites.toggle_skip();
+//    Favorites.CanScan = function() {
+//        return 1;
+//    };
 
     Favorites.add_station = function (station) {
 debug = 1;

@@ -8,6 +8,34 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+<div style="display:none">
+  <div id='superfluous'>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="ColumnScanNNN">
+      <label class="form-check-label" for="ColumnScanNNN">
+        Default checkbox
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="defaultCheck2" disabled>
+      <label class="form-check-label" for="defaultCheck2">
+        Disabled checkbox
+      </label>
+    </div>
+  </div>
+  <div id='ColumnForm'>
+    <form>
+      <div class="form-group">
+        <label for="ColumnNameNNN">Name</label>
+        <input type="text" class="form-control" id="ColumnNameNNN" value="mydata" onchange="ColumnNNNObject.update_data(this.value);">
+      </div>
+      <div class="form-group">
+        <label for="formGroupExampleInput2">Another label</label>
+        <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input">
+      </div>
+    </form>
+  </div>
+</div>
   <div id="mapdiv" style="width: 30%; float: left;">
       <div id="popup" class="ol-popup">
           <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -500,6 +528,7 @@ var debug = 0;
           obj.File = storage.File;
           obj.Column = storage.Column;
           obj.Icon = storage.Icon;
+          obj.Link = storage.Link;
           obj.StationList = new Array();
 
           for(var i=0; i<storage.StationList.length; i++) {
@@ -554,19 +583,29 @@ var debug = 0;
           var header = document.getElementById(header_id);
           header.innerHTML = obj.add_title();
       };
+
+      obj.update_data = function(evnt) {
+
+              alert("changed in "+obj.Name+":"+evnt);
+      };
     
       obj.add_title = function() {
           var header_id = obj.Name + "_header";
           var button_type = "btn-light ";
           var link = "";
           var object_name = "Column"+obj.Num+"Object";
+          var column_name = document.getElementById('ColumnNameNNN');
+          column_name.value = obj.Name;
+          var ColumnForm = document.getElementById("ColumnForm").innerHTML.replace(/NNN/g, obj.Num).replace(/mydata/, obj.Name);
+          
 
           var skip_button = "<a class='btn-light' href='javascript: " + object_name + ".toggle_skip();'>";
           if(obj.CanScan())
               skip_button += 'skip';
-          else
+          else {
               button_type += "font-italic text-info";
               skip_button += "scan";
+          }
           skip_button += "</a>";  
 
           if(obj.Link)
@@ -578,7 +617,7 @@ var debug = 0;
             "  </button>" +
             "  <div class='dropdown-menu'>" +
             "    <h3>"+obj.Name+"</h3>" +
-            link + " " + skip_button +
+            link + " " + skip_button + "<hr>" + ColumnForm +
 //                   call_sign_button + skip_button + " " + map_button + "<br>" +
 //                   this.Frequency + "/" + this.Tone + "<br>" + 
 //                   "<div class='font-weight-bold'>" + this.Comment + "</div><br>"  +

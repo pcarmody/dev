@@ -8,6 +8,140 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 </head>
 <body>
+  <!-- Modal - rig control -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Rig Control</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <h2 align='center'>List Name<h2>
+               <h1 align='center' onclick='toggle_scan();'> 
+                <div class="row justify-content-md-center input-group input-group-lg">
+                   <input type="number" class="form-control col-sm-4" id="exampleInputEmail1"  placeholder="164.200">/
+                   <input type="text" class="form-control col-sm-2" id="exampleInputEmail1"  placeholder="89.0">
+                </div>
+               </h1>
+               <h3 align='center' > AJ6HF -- Me, Myself and I</h3>   
+                <div class="row justify-content-md-center">
+                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                   <label class="btn btn-secondary active">
+                     <input type="radio" name="options" id="option1" autocomplete="off" checked>Contact
+                   </label>
+                   <label class="btn btn-secondary">
+                     <input type="radio" name="options" id="option2" autocomplete="off">Station
+                   </label>
+                   <label class="btn btn-secondary">
+                     <input type="radio" name="options" id="option3" autocomplete="off">Repeater
+                   </label>
+                 </div>
+                </div>
+                <div class="row justify-content-md-center">
+                   <div class="col-xs-2">
+                     Mode:
+                    <select class="form-control input-small" id="sel1">
+                      <option>LSB</option>
+                      <option>USB</option>
+                      <option>CW-U</option>
+                      <option>FM</option>
+                      <option>AM</option>
+                      <option>RTTY-LSB</option>
+                      <option>CW-L</option>
+                      <option>DATA-LSB</option>
+                      <option>RTTY-USB</option>
+                      <option>DATA-FM</option>
+                      <option>FM-N</option>
+                      <option>DATA-USB</option>
+                      <option>AM-N</option>
+                      <option>C4FM</option>
+                    </select>
+                   </div>
+                   <div class="col-xs-2">
+                     Power:
+                    <select class="form-control input-small" id="sel1">
+                      <option>10</option>
+                      <option>50</option>
+                      <option>100</option>
+                    </select>
+                   </div>
+                   <div class="col-xs-2">
+                     CTCSS:
+                    <select class="form-control input-small" id="sel1">
+                     <option>67.0</option>
+                     <option>69.3</option>
+                     <option>71.9</option>
+                     <option>74.4</option>
+                     <option>77.0</option>
+                     <option>79.7</option>
+                     <option>82.5</option>
+                     <option>85.4</option>
+                     <option>88.5</option>
+                     <option>91.5</option>
+                     <option>94.8</option>
+                     <option>97.4</option>
+                     <option>100.0</option>
+                     <option>103.5</option>
+                     <option>107.2</option>
+                     <option>110.9</option>
+                     <option>114.8</option>
+                     <option>118.8</option>
+                     <option>123.0</option>
+                     <option>127.3</option>
+                     <option>131.8</option>
+                     <option>136.5</option>
+                     <option>141.3</option>
+                     <option>146.2</option>
+                     <option>151.4</option>
+                     <option>156.7</option>
+                     <option>159.8</option>
+                     <option>162.2</option>
+                     <option>165.5</option>
+                     <option>167.9</option>
+                     <option>171.3</option>
+                     <option>173.8</option>
+                     <option>177.3</option>
+                     <option>179.9</option>
+                     <option>183.5</option>
+                     <option>186.2</option>
+                     <option>189.9</option>
+                     <option>192.8</option>
+                     <option>196.6</option>
+                     <option>199.5</option>
+                     <option>203.5</option>
+                     <option>206.5</option>
+                     <option>210.7</option>
+                     <option>218.1</option>
+                     <option>225.7</option>
+                     <option>229.1</option>
+                     <option>233.6</option>
+                     <option>241.8</option>
+                     <option>25.3</option>
+                     <option>254.1</option>
+                    </select>
+                   </div>
+                </div>
+                <div class="row justify-content-md-center">
+                <div class="row justify-content-md-center input-group input-group-lg">
+                   Lattitude
+                   <input type="number" class="form-control col-sm-3" id="exampleInputEmail1"  placeholder="164.200">
+                   Longitude
+                   <input type="number" class="form-control col-sm-3" id="exampleInputEmail1"  placeholder="89.0">
+                </div>
+                </div>
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- define the <div> sections that will be used later and mark them as 'hidden' -->
 <div style="display:none">
   <div id='superfluous'>
     <div class="form-check">
@@ -36,6 +170,47 @@
     </form>
   </div>
 </div>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Link</a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" href="#stuff">Action</a>
+          <a class="dropdown-item" href="/nonsense">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Disabled</a>
+      </li>
+    </ul>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="alert('clicked');">
+      Rig
+    </button>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
   <div id="mapdiv" style="width: 30%; float: left;">
       <div id="popup" class="ol-popup">
           <a href="#" id="popup-closer" class="ol-popup-closer"></a>
@@ -306,12 +481,13 @@ if(debug) return;
             return obj.in_range && !obj.skip_scan;
         };
 
-        obj.get_results = function() {
+        obj.get_results = function(header) {
      
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
                   obj.rig_response = this.responseText;
+                  header.innerHTML = obj.gen_header();
               };
             };
             cmd = Config.NodeServer+"?result="+obj.rig_result;
@@ -319,14 +495,15 @@ if(debug) return;
             xhttp.send();
         };
 
-        obj.set_freq = function() {
+        obj.set_freq = function(header) {
      
             var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
 //              if (this.readyState == 4) {
                   obj.rig_result = this.responseText;
-                  setTimeout(obj.get_results, 700)
+//                  setTimeout(obj.get_results, 700)
+                  obj.get_results(header);
               };
             };
             var frequency = parseFloat(this.Frequency).toFixed(3);
@@ -432,16 +609,9 @@ if(debug) return;
               "  <div class='dropdown-menu'>" +
               "    <h3>"+this.ListName+"</h3>" +
                    call_sign_button + skip_button + " " + map_button + "<br>" +
-//                   "<button class=' onclick='" +  on_click + "'>" + 
-//                       "<div class='font-weight-bold'>" + this.CallSign +  "</div>" +
-//                   "</button><button>button</button><br>" +  
                    this.Frequency + "/" + this.Tone + "<br>" + 
                    "<div class='font-weight-bold'>" + this.Comment + "</div><br>"  +
                 this.Distance().toFixed(2) + " miles"; + 
-//              "    <a class='dropdown-item' href='#'>"+this.ListName+"</a>" +
-//              "    <a class='dropdown-item' href='#'>"+this.CallSign+"</a>" +
-//              "    <a class='dropdown-item' href='#'>"+ this.Frequency + "/" + this.Tone + "</a>" +
-//              "    <a class='dropdown-item' href='#'><bold>"+this.Comment+"</bold></a>" +
               "  </div>" +
               "</div></td></tr>";
         };
@@ -451,10 +621,11 @@ if(debug) return;
             var background_color = '';
             if(ScanInterval == 0) 
                 background_color = ' style="background-color:rgb(255, 0, 0);"';
+            var value =  this.gen_icon() + this.Frequency + "/" + this.Tone ;
 
             return "<h2 align='center'>" + this.ListName + "<h2>" +
                "<h1 align='center' onclick='toggle_scan();'" + background_color + ">" + 
-                   this.gen_icon() + this.Frequency + "/" + this.Tone + 
+                   value + 
                "</h1>" +
                "<h3 align='center' >" + this.CallSign+ " -- " + this.Comment + "-- " + this.rig_response + "</h3>";   
         };
@@ -501,7 +672,7 @@ var debug = 0;
           txt += '"Name":"' + obj.Name + '"';
           txt += ', ';
   
-          txt += '"Num":"' + obj.Num + '"';
+          txt += '"Num":' + obj.Num;
           txt += ', ';
   
           txt += '"File":"' + obj.File + '"';
@@ -511,6 +682,9 @@ var debug = 0;
           txt += ', ';
   
           txt += '"Icon":"' + obj.Icon + '"';
+          txt += ', ';
+  
+          txt += '"Range":' + obj.Range;
           txt += ', ';
   
           txt += '"StationList" : [';
@@ -529,6 +703,7 @@ var debug = 0;
           obj.Column = storage.Column;
           obj.Icon = storage.Icon;
           obj.Link = storage.Link;
+          obj.Range = storage.Range;
           obj.StationList = new Array();
 
           for(var i=0; i<storage.StationList.length; i++) {
@@ -611,17 +786,14 @@ var debug = 0;
           if(obj.Link)
               link = '<a href="' + obj.Link + '">website</a>';
 //          return "<th id='" + header_id + "' class='text-centered' onclick='alert(\"clicked\");'>" + obj.gen_icon() + obj.Name + "</th>";
-          return "<th id= '" + header_id + "' class='text-centered'><div class='dropdown'>" +
+          return "<th id= '" + header_id + "' class='text-centered'>" + 
+            "<div class='dropdown'>" +
             "  <button type='button' class='btn " + button_type + "' data-toggle='dropdown'>" +
             obj.gen_icon() + obj.Name +
             "  </button>" +
             "  <div class='dropdown-menu'>" +
             "    <h3>"+obj.Name+"</h3>" +
-            link + " " + skip_button + "<hr>" + ColumnForm +
-//                   call_sign_button + skip_button + " " + map_button + "<br>" +
-//                   this.Frequency + "/" + this.Tone + "<br>" + 
-//                   "<div class='font-weight-bold'>" + this.Comment + "</div><br>"  +
-//                this.Distance().toFixed(2) + " miles"; + 
+                 link + " " + skip_button + "<hr>" + ColumnForm +
             "  </div>" +
             "</div></th>";
       };
@@ -667,8 +839,8 @@ var debug = 0;
       obj.Scan = function(index) {
           var header = document.getElementById("Active Station");
           var elem = this.StationList[index];
-          elem.set_freq();
-          header.innerHTML = elem.gen_header();
+          elem.set_freq(header);
+//          header.innerHTML = elem.gen_header();
       };
 
       obj.Scan_Next = function() {
@@ -692,8 +864,8 @@ var debug = 0;
           }
 
           var header = document.getElementById("Active Station");
-          elem.set_freq();
-          header.innerHTML = elem.gen_header();
+          elem.set_freq(header);
+//          header.innerHTML = elem.gen_header();
           CurrentStation = elem;
 
           return 1;
@@ -715,6 +887,14 @@ var debug = 0;
 
       return obj;
     };
+
+/*
+    notes from HamLib
+
+int tone_list [] = { 670,693,719,744,77,797,825,854,885,915,948,974,1000,1035,1072,11009,1148,1188,1230,1273,1318,1365,1413,1462,1514,1567,1598,1622,1655,1679,1713,1738,1773,1799,1835,1862,1899,1928,1966,1995,2035,2065,2107,2181,2257,2291,2336,2418,253,2541 };
+
+// P2 MODE 1: LSB 2: USB 3: CW-U 4: FM 5: AM 6: RTTY-LSB 7: CW-L 8: DATA-LSB 9: RTTY-USB A: DATA-FM B: FM-N C: DATA-USB D: AM-N E: C4FM
+char *modes [] = { "", "LSB", "USB", "CW-U", "FM", "AM", "RTTY-LSB", "CW-L", "DATA-LSB", "RTTY-USB", "DATA-FM", "FM-N", "DATA-USB", "AM-N", "C4FM" }; */
 
     var titles = document.getElementById("TitleRow0");
     var datarow = document.getElementById("DataRow0");

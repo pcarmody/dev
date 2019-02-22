@@ -1,10 +1,18 @@
-#!/bin/sh
+#!/usr/bin/ruby
 
-url='http://maps.yahoo.com/ajax/geocode'
-args='?appid=onestep&qt=1&id=m&qs='
-converter="$url$args"
+#
+# parameter one is a string of the following form
+#    Address=<physical address>
+#    Call=<callsign>
+#    Grid=<grid locator>
+#
 
-addr="$(echo $* | sed 's/ /+/g')"
-echo "$converter$addr"
-curl -s "$converter$addr"
-exit 0
+cmd_string = "curl 'http://www.levinecentral.com/ham/grid_square.php?#{ARGV[0]}' | grep -i grid:"
+input = `#{cmd_string}`
+
+#Latitude: 37.2552 / 37&deg; 15' 18" N  Longitude: -122.383 / 122&deg; 22' 58" W<br><p>Grid: <font color="blue"><b>CM87tg
+#input ~= /Lattitude: (\d*\.\d*).* Longitude: ([+-]?\d.\d).*Grid: .*([A-Z][A-Z]\d\d[a-z]-a-z]/
+puts input
+matches = input.match(/Latitude: (\d*.\d*) \/.* Longitude: (.*) \/.*Grid: .*([A-Z][A-Z]\d\d[a-z][a-z])/)
+
+puts "Lat: "+matches[1]+" Lon: "+matches[2]+" Grid: "+matches[3]

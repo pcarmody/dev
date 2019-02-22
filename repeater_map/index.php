@@ -18,7 +18,25 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id='modalbody'>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- define the <div> sections that will be used later and mark them as 'hidden' -->
+<div style="display:none">
+        <div id="Rig Status">
+          <h2 align="center">XXXListName</h2>
+          <h1 align="center">XXXFrequency</h1>
+          <h3 align="center">XXXCallSign -- XXXComment</h3>
+          <p align="center">Mode: XXXMode Power: XXXPower CTCSS: XXXCTCSS</p>
+          <p align="center">Lattitude: XXXLattitude Longitutde: XXXLongitude </p>
+        </div>
+        <div class="modal-body" id='mymodalbody'>
             <h2 align='center'>List Name<h2>
                <h1 align='center' onclick='toggle_scan();'> 
                 <div class="row justify-content-md-center input-group input-group-lg">
@@ -134,15 +152,6 @@
                 </div>
           ...
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-<!-- define the <div> sections that will be used later and mark them as 'hidden' -->
-<div style="display:none">
   <div id='superfluous'>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" value="" id="ColumnScanNNN">
@@ -201,7 +210,7 @@
         <a class="nav-link disabled" href="#">Disabled</a>
       </li>
     </ul>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="alert('clicked');">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="get_insertmymodal();">
       Rig
     </button>
     <form class="form-inline my-2 my-lg-0">
@@ -270,6 +279,60 @@
 <div id="BottomDiv" style="clear: both;">Below</div>
   <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
   <script>
+    function retrieve_rig_info(rig_info_num, count) {
+              var xhttp2= new XMLHttpRequest();
+              xhttp2.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    rig_info = JSON.parse(this.responseText);
+                    if(rig_info == 'waiting') 
+                        if(count > 9)
+                            alert("Rig not responding");
+                        else
+                            setTimeout(function() { retrieve_rig_info(rig_info_num, count+1); }, 700)
+                    else
+                        insertmymodal(rig_info);
+                };
+              };
+              cmd = Config.NodeServer+"?result="+rig_info_num;
+              xhttp2.open("GET", cmd, true);
+              xhttp2.send();
+    };
+
+    function get_insertmymodal() {
+        var xhttp = new XMLHttpRequest();
+        var rig_info_num = 0; 
+        var rig_info = "";
+
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
+              rig_info_num = this.responseText;
+//alert("retrieved rig_info_num = "+rig_info_num);
+              retrieve_rig_info(rig_info_num, 0);
+          };
+        };
+        cmd = Config.NodeServer+"?get_rig_info=1";
+        xhttp.open("GET", cmd, true);
+        xhttp.send();
+
+i//        setTimeout(insertmymodal, 700)
+    };
+
+    function insertmymodal(rig_info) {
+//        var mymodal = document.getElementById('mymodalbody');
+        var mymodal = document.getElementById('Rig Status');
+        var modal = document.getElementById('modalbody');
+        modal.innerHTML = mymodal.innerHTML. //"<h1>my header</h1>";
+            replace(/XXXListName/g,"Favorites").
+            replace(/XXXFrequency/g,"7.200 MHz").
+            replace(/XXXMode/g, "FM").
+            replace(/XXXComment/g,"Yours, Mine and Hours").
+            replace(/XXXPower/g,"50 watts").
+            replace(/XXXLattitude/g,"Lat").
+            replace(/XXXLongitude/g,"Lon").
+            replace(/XXXCTCSS/g,"69.7").
+            replace(/XXXCallSign/g,"AJ6HF");
+    };
+
     var ppp = 0;
     map = new OpenLayers.Map("mapdiv", {
         controls:[

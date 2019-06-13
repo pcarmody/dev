@@ -1,0 +1,29 @@
+<html>
+<head>
+<script type='text/javascript'>
+ 
+//$.get('http://127.0.0.1:8080', function(responseText) {
+//    alert(responseText);
+//});    
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+alert("qqq "+xhttp.readyState+":"+xhttp.status.toString()+":"+xhttp.responseText+":"+xhttp.statusText+":"+xhttp.getAllResponseHeaders());
+//              if (xhttp.readyState == 4 && xhttp.status == 200) {
+              if (xhttp.readyState == XMLHttpRequest.DONE) {
+                  alert("response = "+xhttp.responseText);
+              };
+            };
+            var cmd = "http://127.0.0.1:8080/?result=4";
+//            var cmd = "http://hmbma.com/?result=4";
+            xhttp.open("GET", cmd, true);
+            xhttp.send();
+
+//send_get();
+
+</script>
+</head>
+<body>
+<h1> header </h1>
+</body>
+</html>
+

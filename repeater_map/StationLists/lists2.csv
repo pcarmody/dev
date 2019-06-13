@@ -1,0 +1,7 @@
+Name,Filename,Description,Icon,URL
+Carla_Net,CARLA Net.csv,California Amateur Radio Linking Association,bullet_blue.png,http://www.carlaradio.net/
+GMRS,GMRS--BF88.csv,General Mobile Radio Service,bullet_green.png,
+SM Fire,San_Mateo_County_Fire.csv,San Mateo Emergency Services,bullet_red.png,
+SM Repeaters,SMRepeaters.csv,Repeaters of San Mateo County,bullet_purple.png,
+Santa Clara Repeaters,SantaClaraRepeaters.csv,Repeaters of Santa Clara County,bullet_black.png,
+SF Marin Repeaters,SF-Marin.csv,Repeaters in SF and Marin County,bullet_white.png,

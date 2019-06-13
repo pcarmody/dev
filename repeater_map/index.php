@@ -33,7 +33,7 @@
           <h2 align="center">XXXListName</h2>
           <h1 align="center">XXXFrequency</h1>
           <h3 align="center">XXXCallSign -- XXXComment</h3>
-          <p align="center">Mode: XXXMode Power: XXXPower CTCSS: XXXCTCSS</p>
+          <p align="center">Mode: XXXMode  Power: XXXPower  CTCSS: XXXCTCSS  Signal: XXXSignal</p>
           <p align="center">Lattitude: XXXLattitude Longitutde: XXXLongitude </p>
         </div>
         <div class="modal-body" id='mymodalbody'>
@@ -210,7 +210,7 @@
         <a class="nav-link disabled" href="#">Disabled</a>
       </li>
     </ul>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="get_insertmymodal();">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" onclick="retrieve_rig_info();">
       Rig
     </button>
     <form class="form-inline my-2 my-lg-0">
@@ -279,21 +279,22 @@
 <div id="BottomDiv" style="clear: both;">Below</div>
   <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
   <script>
-    function retrieve_rig_info(rig_info_num, count) {
+    function retrieve_rig_info() {
               var xhttp2= new XMLHttpRequest();
               xhttp2.onreadystatechange = function() {
                 if (this.readyState == 4 && this.status == 200) {
-                    rig_info = JSON.parse(this.responseText);
-                    if(rig_info == 'waiting') 
-                        if(count > 9)
+                    rig_info = this.responseText;
+alert("rig_info "+rig_info);
+/*                    if(rig_info == 'waiting') 
+                        if(count > 90)
                             alert("Rig not responding");
                         else
-                            setTimeout(function() { retrieve_rig_info(rig_info_num, count+1); }, 700)
-                    else
-                        insertmymodal(rig_info);
+                            setTimeout(function() { retrieve_rig_info(rig_info_num, count+1); }, 70)
+                    else*/
+                        insertmymodal(JSON.parse(rig_info));
                 };
               };
-              cmd = Config.NodeServer+"?result="+rig_info_num;
+              cmd = Config.NodeServer+"?get_rig_info=1";
               xhttp2.open("GET", cmd, true);
               xhttp2.send();
     };
@@ -322,15 +323,18 @@ i//        setTimeout(insertmymodal, 700)
         var mymodal = document.getElementById('Rig Status');
         var modal = document.getElementById('modalbody');
         modal.innerHTML = mymodal.innerHTML. //"<h1>my header</h1>";
-            replace(/XXXListName/g,"Favorites").
-            replace(/XXXFrequency/g,"7.200 MHz").
-            replace(/XXXMode/g, "FM").
+            replace(/XXXListName/g, "Favorites").
+            replace(/XXXFrequency/g, rig_info.frequency/1000).
+            replace(/XXXMode/g, rig_info.mode).
             replace(/XXXComment/g,"Yours, Mine and Hours").
-            replace(/XXXPower/g,"50 watts").
+            replace(/XXXPower/g, rig_info.power).
             replace(/XXXLattitude/g,"Lat").
             replace(/XXXLongitude/g,"Lon").
-            replace(/XXXCTCSS/g,"69.7").
+            replace(/XXXCTCSS/g, rig_info.ctcss_code).
+            replace(/XXXSignal/g, rig_info.s_meter).
             replace(/XXXCallSign/g,"AJ6HF");
+
+        get_insertmymodal();
     };
 
     var ppp = 0;

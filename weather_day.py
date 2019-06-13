@@ -243,7 +243,7 @@ def draw_temp_ring(shape):
     temp = (temp1*100*delta_A + temp2*100*delta_B) / delta_hour
 #    print str(j)+':'+str(first)+':'+str(temp)+':'+str(beg)+':'+str(end)
 #    color = get_color(10000-temp, (2000, 10000)) 
-    color = map_color_value(temp-2000, 10000)
+    color = map_color_value(temp-1500, 10000)
     draw.pieslice((0,0,shape,shape), beg, end, color, color)
   return image
 

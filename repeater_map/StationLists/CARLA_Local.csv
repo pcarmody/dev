@@ -1,0 +1,35 @@
+Location,Name,Frequency,Duplex,Offset,Tone,rToneFreq,cToneFreq,DtcsCode,DtcsPolarity,Mode,TStep,Skip,Comment,URCALL,RPT1CALL,RPT2CALL,DVCODE,,Latitude,Longitude
+167,San Francisco,442.075,,0,Tone,100,88.5,23,NN,FM,5,,San Francisco,,,,,,37.794575,-122.399948
+168,Pt. Arena,443.075,,0,Tone,100,88.5,23,NN,FM,5,,Pt. Arena,,,,,,32.61717,-116.46291
+169,Greenfield,442.075,,0,Tone,114.8,88.5,23,NN,FM,5,,Greenfield,,,,,,35.26683,-119.00073
+170,Oakland,443.050,,0,Tone,114.8,88.5,23,NN,FM,5,,Oakland,,,,,,37.880878,-122.186127
+171,Willows,443.075,,0,Tone,114.8,88.5,23,NN,FM,5,,Willows,,,,,,40.15052,-122.2379
+172,San Jose,443.075,,0,Tone,123,88.5,23,NN,FM,5,,San Jose,,,,,,37.29787,-121.86034
+173,South Lake Tahoe,442.075,,0,Tone,127.3,88.5,23,NN,FM,5,,South Lake Tahoe,,,,,,38.8248,-120.03402
+174,Modesto,442.075,,0,Tone,123,88.5,23,NN,FM,5,,Modesto,,,,,,37.72695,-121.43031
+175,Monterey Bay,443.475,,0,Tone,123,88.5,23,NN,FM,5,,Monterey Bay,,,,,,37.17839,-121.81725
+176,Walnut Creek,443.475,,0,Tone,114.8,88.5,23,NN,FM,5,,Walnut Creek,,,,,,37.91367,-122.01807
+177,Pleasanton,442.075,,0,Tone,103.5,88.5,23,NN,FM,5,,Pleasanton,,,,,,37.65836,-121.95966
+178,Shasta Lake,442.075,,0,Tone,114.8,88.5,23,NN,FM,5,,Shasta Lake,,,,,,40.86072,-122.39739
+179,Cisco Grove,443.475,,0,Tone,100,88.5,23,NN,FM,5,,Cisco Grove,,,,,,39.30716,-120.53786
+180,Fresno,440.750,,0,Tone,114.8,88.5,23,NN,FM,5,,Fresno,,,,,,36.26978,-120.40018
+181,Sacramento,440.750,,0,Tone,107.2,88.5,23,NN,FM,5,,Sacramento,,,,,,38.34842,-121.90865
+182,Sonora,443.475,,0,Tone,103.5,88.5,23,NN,FM,5,,Sonora,,,,,,38.0659,-120.27574
+183,Topaz Lake,443.475,,0,Tone,110.9,88.5,23,NN,FM,5,,Topaz Lake,,,,,,38.69727,-119.54934
+184,Hayward,443.325,,0,Tone,114.8,88.5,23,NN,FM,5,,Hayward,,,,,,37.65836,-121.95966
+185,Burney,440.750,,0,Tone,123,88.5,23,NN,FM,5,,Burney,,,,,,40.92382,-121.82634
+186,Reno,440.750,,0,Tone,127.3,88.5,23,NN,FM,5,,Reno,,,,,,39.61352,-119.89635
+187,Hawthorne,440.725,,0,Tone,127.3,88.5,23,NN,FM,5,,Hawthorne,,,,,,38.50394,-118.65292
+188,North Lake Tahoe,441.550,,0,Tone,127.3,88.5,23,NN,FM,5,,North Lake Tahoe,,,,,,39.43387,-119.80736
+189,Carson Valley,443.325,,0,Tone,127.3,88.5,23,NN,FM,5,,Carson Valley,,,,,,39.2325,-119.68697
+190,Redding,444.325,,0,Tone,100,88.5,23,NN,FM,5,,Redding,,,,,,40.60878,-122.34735
+191,Geyserville,443.475,,0,Tone,110.9,88.5,23,NN,FM,5,,Geyserville,,,,,,38.82653,-122.99658
+192,Quincy,440.725,,0,Tone,100,88.5,23,NN,FM,5,,Quincy,,,,,,40.04083,-120.88001
+193,Mt. Shasta,443.475,,0,Tone,107.2,88.5,23,NN,FM,5,,Mt. Shasta,,,,,,41.20867,-122.31135
+194,San Luis Obispo,443.500,,0,Tone,100,88.5,23,NN,FM,5,,San Luis Obispo,,,,,,35.48077,-120.66644
+195,Bakersfield,443.075,,0,Tone,127.3,88.5,23,NN,FM,5,,Bakersfield,,,,,,34.95963,-119.44521
+196,Los Angeles,448.080,0,Tone,88.5,88.5,23,NN,FM,5,,Los Angeles,,,,,,33.71447,-117.77079
+197,Pacifica,440.725,,0,Tone,114.8,88.5,23,NN,FM,5,,Pacifica,,,,,,37.57477,-122.48308
+198,Gualala,147.000,,0,Tone,114.8,88.5,23,NN,FM,5,,Gualala,,,,,,38.76752,-123.5297
+199,Oakland,146.850,0,Tone,103.5,88.5,23,NN,FM,5,,Oakland,,,,,,37.880878,-122.186127
+200,Willows,146.115,,0,Tone,123,88.5,23,NN,FM,5,,Willows,,,,,,49.39278,-119.90995
